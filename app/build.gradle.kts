@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    kotlin("kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -63,4 +65,49 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    // dagger hilt
+    implementation("com.google.dagger:hilt-android:2.48.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.48.1")
+
+    // courotines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("androidx.hilt:hilt-navigation-fragment:1.1.0")
+
+    val nav_version = "2.7.7"
+
+    // Jetpack Compose Integration
+    implementation("androidx.navigation:navigation-compose:$nav_version")
+    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
+    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
+
+    //coil library
+    implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation ("io.coil-kt:coil-gif:2.1.0")
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
+    val lifecycle_version = "2.7.0"
+    val arch_version = "2.2.0"
+
+    // ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
+    // ViewModel utilities for Compose
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
+    // LiveData
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
+    // Lifecycle utilities for Compose
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version")
+
+    // Saved state module for ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version")
+
+    // Annotation processor
+    //noinspection LifecycleAnnotationProcessorWithJava8
+    kapt("androidx.lifecycle:lifecycle-compiler:$lifecycle_version")
+
+// canva
+    implementation ("androidx.compose.ui:ui-geometry:1.0.0")
+    implementation ("androidx.compose.ui:ui-graphics:1.0.0")
+
+
 }
