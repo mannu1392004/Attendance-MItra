@@ -16,14 +16,26 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Indication
+import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.indication
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -34,14 +46,20 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.BlendMode.Companion.Color
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.times
 import androidx.navigation.NavHostController
 import com.example.savera.R
@@ -51,6 +69,18 @@ import java.nio.file.WatchEvent
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
+
+    val textgradient = Brush.linearGradient(
+        listOf(
+            Color(0xffFF5858),
+
+            Color(0xffFFFF45)
+        )
+    )
+
+    val showpassword = remember {
+        mutableStateOf(false)
+    }
 
     var email = remember {
         mutableStateOf("")
@@ -68,32 +98,35 @@ fun LoginScreen(navController: NavHostController) {
     LaunchedEffect(Unit) {
         animitable.animateTo(
             targetValue = 1.0f,
-            animationSpec = tween(durationMillis = 1500)
+            animationSpec = tween(durationMillis = 1000)
         )
 
     }
 
 
 
-    Surface(modifier = Modifier.fillMaxSize(),
+    Surface(
+        modifier = Modifier.fillMaxSize(),
         color = Color(0xFFFFD60A)
     ) {
 
 
         Column(
-            modifier = Modifier.fillMaxSize()
-                .offset(y = (animitable.value-1)*500.dp)
-                .background(androidx.compose.ui.graphics.Color.White),
+            modifier = Modifier
+                .fillMaxSize()
+                .offset(y = (animitable.value - 1) * 500.dp)
+                .background(androidx.compose.ui.graphics.Color.White)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
 
 
-
-        ) {
+            ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(300.dp)
+
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.img_2), contentDescription = "",
@@ -116,15 +149,18 @@ fun LoginScreen(navController: NavHostController) {
             Column(
                 modifier = Modifier
                     .padding(
-                        top = 30.dp,
+                        top = 5.dp,
                         start = 50.dp,
-                        end = 80.dp
-                    )
-                    .fillMaxWidth()
-            ) {
+                        end = 50.dp,
+
+                        )
+                    .fillMaxWidth(),
+
+                ) {
                 Text(
                     text = "Welcome Back!",
                     fontFamily = ralewayfamilt,
+                    fontSize = 5.em
                 )
                 Text(
                     text = "Please sign in to continue..",
@@ -133,44 +169,156 @@ fun LoginScreen(navController: NavHostController) {
 
                 Spacer(modifier = Modifier.height(40.dp))
 
+
+
+                Text(
+                    text = "Email",
+                    fontFamily = ralewayfamilt,
+                    fontSize = 3.em,
+                    style = TextStyle(
+
+                    )
+                )
+
+
                 OutlinedTextField(value = email.value, onValueChange = {
                     email.value = it
-                })
+
+                },
+
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(
+                            width = 2.dp, brush = Brush.linearGradient(
+                                listOf(
+                                    Color(0xffFF5858),
+
+                                    Color(0xffFFFF45)
+                                )
+                            ), shape = RoundedCornerShape(8.dp)
+                        ),
+                    shape = RoundedCornerShape(8.dp),
+                    placeholder = {
+                        Text(
+                            text = "Savera@test.com",
+                            fontFamily = lightrale, modifier = Modifier.padding(bottom = 5.dp)
+                        )
+                    }, singleLine = true,
+                    maxLines = 1, colors = TextFieldDefaults.colors(
+                        focusedContainerColor = androidx.compose.ui.graphics.Color.White,
+                        unfocusedContainerColor = androidx.compose.ui.graphics.Color.White,
+                        focusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent
+                    )
+
+
+                )
+
+
                 Spacer(modifier = Modifier.height(30.dp))
+
+
+
+                Text(
+                    text = "Password", fontFamily = ralewayfamilt,
+                    fontSize = 3.em,
+                    style = TextStyle(
+                    )
+
+                )
+
+
 
                 OutlinedTextField(value = password.value, onValueChange = {
                     password.value = it
-                })
-                Spacer(modifier = Modifier.height(30.dp))
 
-                Row(modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End) {
-                    Button(onClick = { /*TODO*/ },
-                        modifier = Modifier.background(
-                            brush = Brush.linearGradient(
-                                colors = listOf(Color(0xffFF5858),
-
+                },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(
+                            width = 2.dp, brush = Brush.linearGradient(
+                                listOf(
+                                    Color(0xffFF5858),
 
                                     Color(0xffFFFF45)
-
                                 )
+                            ), shape = RoundedCornerShape(8.dp)
+                        ),
 
-                            ), shape = RoundedCornerShape(10.dp)
+
+                    shape = RoundedCornerShape(8.dp),
+                    placeholder = {
+                        Text(
+                            text = "********",
+                            fontFamily = lightrale
+                        )
+                    }, trailingIcon = {
+                        Image(painter = painterResource(
+                            id = if (!showpassword.value) R.drawable.img_3
+                            else R.drawable.img_4
+                        ), contentDescription = "",
+                            modifier = Modifier
+                                .size(20.dp)
+                                .clickable {
+                                    if (!password.value.isNullOrEmpty())
+                                        showpassword.value = !showpassword.value
+
+                                }
 
                         )
+
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    singleLine = true,
+                    maxLines = 1,
+
+                    visualTransformation = if (showpassword.value) PasswordVisualTransformation()
+                    else VisualTransformation.None
+
+                )
+
+
+
+                Spacer(modifier = Modifier.height(30.dp))
+
+
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+
+                    Button(
+                        onClick = { /*TODO*/ },
+
+                        modifier = Modifier
+                            .background(
+                                brush = Brush.linearGradient(
+                                    colors = listOf(
+                                        Color(0xffFF5858),
+
+                                        Color(0xffFFFF45),
+
+                                        )
+
+                                ), shape = RoundedCornerShape(10.dp)
+
+                            )
                             .padding()
-                            .clip(RoundedCornerShape(10.dp))
-                    ,
+                            .clip(RoundedCornerShape(10.dp)),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = androidx.compose.ui.graphics.Color.Transparent
                         )
 
                     ) {
-Text(text = "SIGN iN")
+
+
+                        Text(
+                            text = "SIGN IN",
+                            color = androidx.compose.ui.graphics.Color.White
+                        )
                     }
 
                 }
-
 
 
             }

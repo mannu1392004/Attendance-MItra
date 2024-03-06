@@ -42,7 +42,8 @@ val scale = remember {
     androidx.compose.animation.core.Animatable(1f)
 }
     LaunchedEffect(Unit) {
-        delay(2000)
+
+        delay(1000)
         animationchange.value = !animationchange.value
 
 
@@ -50,7 +51,7 @@ val scale = remember {
 scale.animateTo(
 targetValue = 6f,
     animationSpec = tween(
-        durationMillis =800
+        durationMillis =200
         ,easing = {
             OvershootInterpolator(3f)
                 .getInterpolation(it)

@@ -3,6 +3,8 @@ plugins {
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("com.google.gms.google-services")
+
 }
 
 android {
@@ -105,9 +107,11 @@ dependencies {
     //noinspection LifecycleAnnotationProcessorWithJava8
     kapt("androidx.lifecycle:lifecycle-compiler:$lifecycle_version")
 
-// canva
-    implementation ("androidx.compose.ui:ui-geometry:1.0.0")
-    implementation ("androidx.compose.ui:ui-graphics:1.0.0")
+// firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.7.3"))
 
+    // auth and firestore
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
 
 }
