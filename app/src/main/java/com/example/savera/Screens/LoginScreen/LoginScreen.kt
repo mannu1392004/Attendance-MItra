@@ -1,6 +1,8 @@
 package com.example.savera.Screens.LoginScreen
 
+import android.app.Activity
 import android.graphics.LinearGradient
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -51,6 +53,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.BlendMode.Companion.Color
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -61,14 +64,27 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.times
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.savera.Components.alertdialogue
+import com.example.savera.Navigation.Screens
 import com.example.savera.R
 import com.example.savera.ui.theme.lightrale
 import com.example.savera.ui.theme.ralewayfamilt
 import java.nio.file.WatchEvent
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(navController: NavHostController,
+                loginScreenViewmodel: LoginScreenViewmodel = viewModel()) {
+
+    val activity1 = LocalContext.current as? Activity
+
+    BackHandler {
+          activity1?.finish()
+
+    }
+
+
 
     val textgradient = Brush.linearGradient(
         listOf(
@@ -77,6 +93,19 @@ fun LoginScreen(navController: NavHostController) {
             Color(0xffFFFF45)
         )
     )
+
+    val loading = remember {
+        mutableStateOf(false)
+    }
+
+    val showdialogue  = remember {
+        mutableStateOf(false)
+
+    }
+    val errormessage = remember {
+        loginScreenViewmodel.errormessage
+    }
+
 
     val showpassword = remember {
         mutableStateOf(false)
@@ -94,6 +123,9 @@ fun LoginScreen(navController: NavHostController) {
     val animitable = remember {
         Animatable(0f)
     }
+
+
+
 
     LaunchedEffect(Unit) {
         animitable.animateTo(
@@ -248,7 +280,7 @@ fun LoginScreen(navController: NavHostController) {
                     shape = RoundedCornerShape(8.dp),
                     placeholder = {
                         Text(
-                            text = "********",
+                            text = "* * * * * * * *",
                             fontFamily = lightrale
                         )
                     }, trailingIcon = {
@@ -271,7 +303,7 @@ fun LoginScreen(navController: NavHostController) {
                     singleLine = true,
                     maxLines = 1,
 
-                    visualTransformation = if (showpassword.value) PasswordVisualTransformation()
+                    visualTransformation = if (!showpassword.value) PasswordVisualTransformation()
                     else VisualTransformation.None
 
                 )
@@ -288,7 +320,30 @@ fun LoginScreen(navController: NavHostController) {
                 ) {
 
                     Button(
-                        onClick = { /*TODO*/ },
+
+
+
+
+                        onClick = {
+if (email.value.isNullOrEmpty()||password.value.length<=6){
+    showdialogue.value= true
+    errormessage.value = "Uh-oh! Either your email field is as empty as deep space, or your password is not playing by the rules. Remember, passwords should be at least 6 characters long."
+}
+
+
+else {
+    loginScreenViewmodel.signIn(
+        email = email.value.trim(),
+        password = password.value.trim(),
+        home = {
+            navController.navigate(route = Screens.HomeScreen.name)
+        },
+
+    )
+
+
+}
+                        },
 
                         modifier = Modifier
                             .background(
@@ -323,6 +378,9 @@ fun LoginScreen(navController: NavHostController) {
 
             }
 
+
+
+            alertdialogue(detail = errormessage.value, show =showdialogue )
 
         }
     }

@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.savera.Navigation.Navigation
+import com.example.savera.Screens.LoadingScreen.loadingScreen
 import com.example.savera.ui.theme.SaveraTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -24,7 +25,6 @@ class MainActivity : ComponentActivity() {
 
 
 Navigation()
-
                 }
             }
         }

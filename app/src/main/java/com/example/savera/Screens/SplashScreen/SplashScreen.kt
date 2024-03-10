@@ -29,10 +29,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.savera.Navigation.Screens
 import com.example.savera.R
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(navController: NavHostController) {
+val auth:FirebaseAuth = Firebase.auth
+
 
     val animationchange = remember {
         mutableStateOf(true)
@@ -59,7 +64,13 @@ targetValue = 6f,
     )
 )
 
+
+
+        if (FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty())
 navController.navigate(Screens.LoginScreen.name)
+
+        else
+            navController.navigate(Screens.HomeScreen.name)
 
 
     }
