@@ -2,13 +2,10 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="Drawshape">
+      <entry key="GroupView">
         <State />
       </entry>
       <entry key="HomeScreen">
-        <State />
-      </entry>
-      <entry key="alertdialogue">
         <State />
       </entry>
       <entry key="app">
@@ -24,10 +21,10 @@
               </deviceKey>
             </Target>
           </runningDeviceTargetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-03-09T18:13:34.698360800Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-03-12T10:10:22.136141800Z" />
         </State>
       </entry>
-      <entry key="loadingScreen">
+      <entry key="navbar (1)">
         <State />
       </entry>
     </value>

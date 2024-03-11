@@ -1,7 +1,7 @@
 package com.example.savera.Screens.LoginScreen
 
+import android.annotation.SuppressLint
 import android.app.Activity
-import android.graphics.LinearGradient
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -11,53 +11,41 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.absolutePadding
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Indication
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.indication
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.BlendMode.Companion.Color
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -66,13 +54,12 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.times
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.savera.Components.alertdialogue
 import com.example.savera.Navigation.Screens
 import com.example.savera.R
 import com.example.savera.ui.theme.lightrale
 import com.example.savera.ui.theme.ralewayfamilt
-import java.nio.file.WatchEvent
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun LoginScreen(navController: NavHostController,
                 loginScreenViewmodel: LoginScreenViewmodel = viewModel()) {
@@ -332,15 +319,8 @@ if (email.value.isNullOrEmpty()||password.value.length<=6){
 
 
 else {
-    loginScreenViewmodel.signIn(
-        email = email.value.trim(),
-        password = password.value.trim(),
-        home = {
-            navController.navigate(route = Screens.HomeScreen.name)
-        },
-
-    )
-
+    val screen = Screens.LoadingScreen.name
+    navController.navigate(route = "$screen/${email.value}/${password.value}")
 
 }
                         },
@@ -378,10 +358,18 @@ else {
 
             }
 
-
-
-            alertdialogue(detail = errormessage.value, show =showdialogue )
+if (showdialogue.value)
+alertbox(errormessage.value,showdialogue)
+          
 
         }
     }
+}
+@Composable
+fun alertbox(value: String, showdialogue: MutableState<Boolean>) {
+    AlertDialog(onDismissRequest = {showdialogue.value =!showdialogue.value  }, confirmButton = { /*TODO*/ },
+        title = { Text(text = "Error", color = Color.Black)},
+        text = { Text(text = value, color = Color.Black)}, modifier = Modifier
+    , containerColor = Color.White)
+    
 }

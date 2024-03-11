@@ -2,12 +2,14 @@ package com.example.savera.Experiment
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 
 
 @Preview(showSystemUi = true)
@@ -16,7 +18,7 @@ fun Drawshape() {
     Box(modifier =
     Modifier
         .fillMaxWidth()
-        .fillMaxHeight()
+        .height(90.dp)
         .drawBehind {
             val path = Path().apply {
                 moveTo(0f, 0f)

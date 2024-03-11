@@ -28,64 +28,84 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
+import androidx.navigation.NavController
 import com.example.savera.ui.theme.ralewayfamilt
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun alertdialogue(detail:String,show:MutableState<Boolean>){
-
-
-    Surface(modifier = Modifier.fillMaxSize()) {
-        Column {
+fun alertdialogue(detail:String,show:MutableState<Boolean>,navController: NavController,
+                  nav:String){
 
 
 
-}
+
         if (show.value)
-AlertDialog(onDismissRequest = {
-    show.value = !show.value
-}
-) {
- Surface (modifier = Modifier,
+        {
+ Surface (modifier = Modifier.fillMaxSize(),
      color = Color.White,
      shadowElevation = 10.dp,
-     shape = RoundedCornerShape(20.dp)
  ){
-Column(verticalArrangement = Arrangement.Top,
+
+Column(verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally,
-    modifier = Modifier.padding(10.dp)) {
-    Text(text = "Error!", fontFamily = ralewayfamilt,
-        fontSize = 6.em)
-    Spacer(modifier = Modifier.height(10.dp))
-    Text(text =detail,
-        color = Color(0xFFFF4A4A)
-    )
-    Spacer(modifier = Modifier.height(10.dp))
-    Row(modifier = Modifier.fillMaxWidth().padding(4.dp),
-        horizontalArrangement = Arrangement.End,
-        ) {
+    modifier = Modifier.padding(20.dp)) {
+    Surface(modifier = Modifier,
 
-        Button(onClick = { show.value=!show.value }
-        , colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Transparent
-        ),
-            modifier = Modifier.background(brush = Brush.linearGradient(
-                listOf(Color(0xffFF5858),
+        color = Color.White,
+        shadowElevation = 100.dp,
+        shape = RoundedCornerShape(20.dp)
+    ) {
+        Column(modifier = Modifier.padding(10.dp)) {
 
-                    Color(0xffFFFF45))
-            ),
-                shape = RoundedCornerShape(10.dp)
-                )
-,
-        ) {
 
-            Text(text = "OK", color = Color.White)
+            Text(
+                text = "Error!", fontFamily = ralewayfamilt,
+                fontSize = 6.em, color = Color.Black
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = detail,
+                color = Color(0xFFFF4A4A)
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(4.dp),
+                horizontalArrangement = Arrangement.End,
+            ) {
+
+                Button(
+                    onClick = {
+                        if (nav == "yes") {
+                            show.value = false
+                            navController.popBackStack()
+                        } else {
+                            show.value = false
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent
+                    ),
+                    modifier = Modifier.background(
+                        brush = Brush.linearGradient(
+                            listOf(
+                                Color(0xffFF5858),
+
+                                Color(0xffFFFF45)
+                            )
+                        ),
+                        shape = RoundedCornerShape(10.dp)
+                    ),
+                ) {
+
+                    Text(text = "OK", color = Color.White)
+                }
+
+            }
         }
-
     }
-
-
 
 
 }
@@ -99,4 +119,3 @@ Column(verticalArrangement = Arrangement.Top,
     }
 
 
-}

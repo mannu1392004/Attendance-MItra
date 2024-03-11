@@ -20,7 +20,11 @@ class LoginScreenViewmodel : ViewModel() {
 
     fun signIn(
         email: String, password: String,
-        home: () -> Unit
+        home: () -> Unit,
+        emailsent:(String)->Unit,
+        othererror:(String)->Unit,
+        anyelse:(String)->Unit
+
 
     ) {
         viewModelScope.launch {
@@ -34,13 +38,15 @@ class LoginScreenViewmodel : ViewModel() {
                             } else {
                                 user.sendEmailVerification().addOnCompleteListener() { task ->
                                     if (task.isSuccessful) {
+                                        emailsent(
+                                            "Your email is not yet verified. Please check your inbox for an email from Savera."
+                                        )
 
-                                        errormessage.value ="Your email is not yet verified. Please check your inbox for an email from Savera."
+
                                     } else {
                                         val err = task.exception?.localizedMessage
 
-
-                                        errormessage.value = "$err"
+                                       othererror(err.toString())
                                     }
 
                                 }
@@ -50,13 +56,15 @@ class LoginScreenViewmodel : ViewModel() {
                     }
                     if (!task.isSuccessful) {
 
-                        task.exception?.localizedMessage?.let { errormessage.value = "${it.toString()}" }
+                        task.exception?.localizedMessage?.let {
+                            anyelse(it)
+                        } }
 
-                    }
+
 
                 }
             } catch (e: Exception) {
-                Log.d("error", e.localizedMessage.toString())
+                e.localizedMessage?.let { Log.d("error", it.toString()) }
             }
         }
     }
