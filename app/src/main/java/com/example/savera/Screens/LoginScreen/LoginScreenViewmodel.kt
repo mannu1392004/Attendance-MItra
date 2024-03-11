@@ -56,7 +56,7 @@ class LoginScreenViewmodel : ViewModel() {
 
                 }
             } catch (e: Exception) {
-                Log.d("error", e.localizedMessage.toString())
+                e.localizedMessage?.let { Log.d("error", it.toString()) }
             }
         }
     }

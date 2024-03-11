@@ -56,7 +56,7 @@ Column(verticalArrangement = Arrangement.Top,
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier.padding(10.dp)) {
     Text(text = "Error!", fontFamily = ralewayfamilt,
-        fontSize = 6.em)
+        fontSize = 6.em,color=Color.Black)
     Spacer(modifier = Modifier.height(10.dp))
     Text(text =detail,
         color = Color(0xFFFF4A4A)
