@@ -2,16 +2,16 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="Drawshape">
-        <State />
-      </entry>
-      <entry key="HomeScreen">
-        <State />
-      </entry>
-      <entry key="alertdialogue">
+      <entry key="MyTest">
         <State />
       </entry>
       <entry key="app">
+        <State />
+      </entry>
+      <entry key="myTest">
+        <State />
+      </entry>
+      <entry key="scaffold">
         <State>
           <runningDeviceTargetSelectedWithDropDown>
             <Target>
@@ -19,16 +19,13 @@
               <deviceKey>
                 <Key>
                   <type value="SERIAL_NUMBER" />
-                  <value value="RZCT80DQEYN" />
+                  <value value="RZ8RB1ZXJPY" />
                 </Key>
               </deviceKey>
             </Target>
           </runningDeviceTargetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-03-09T18:13:34.698360800Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-03-10T20:42:46.445949200Z" />
         </State>
-      </entry>
-      <entry key="loadingScreen">
-        <State />
       </entry>
     </value>
   </component>
