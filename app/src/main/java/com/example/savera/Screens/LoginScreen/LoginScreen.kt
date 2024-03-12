@@ -148,7 +148,7 @@ fun LoginScreen(navController: NavHostController,
 
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.img_2), contentDescription = "",
+                    painter = painterResource(id = R.drawable.img_9), contentDescription = "",
                     modifier = Modifier
                         .fillMaxWidth(),
                     contentScale = ContentScale.FillBounds

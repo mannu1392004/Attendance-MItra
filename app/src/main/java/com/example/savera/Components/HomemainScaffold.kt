@@ -4,23 +4,29 @@ import android.view.ViewGroup
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -33,10 +39,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.LifecycleOwner
+import com.example.savera.R
+import com.example.savera.ui.theme.ralewayfamilt
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,10 +59,12 @@ fun mainContent() {
     var text by remember { mutableStateOf("") }
     Column(
         modifier = Modifier
+            .padding(10.dp)
             .verticalScroll(rememberScrollState())
             .fillMaxSize(),
 
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -58,9 +74,8 @@ fun mainContent() {
             ),
             modifier = Modifier
                 .fillMaxWidth(0.9f)
-                .height(500.dp)
-                .align(Alignment.CenterHorizontally)
-                .padding(10.dp)
+
+
                 .shadow(elevation = 120.dp)
                 .clip(
                     RoundedCornerShape(10.dp)
@@ -70,15 +85,17 @@ fun mainContent() {
             Text(
                 text = "Documentary",
                 style = TextStyle(
-                    fontSize = MaterialTheme.typography.headlineMedium.fontSize,
+                    fontSize = MaterialTheme.typography.headlineSmall.fontSize,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.typography.headlineMedium.color
                 ),                    modifier = Modifier
                     .fillMaxWidth()
-                    .padding(13.dp)
+                    .padding(top = 13.dp, start = 10.dp)
             )
-            Spacer(modifier = Modifier.height(8.dp))
-        MyApp()
+            Spacer(modifier = Modifier.height(0.dp))
+
+           MyApp()
+
         }
 
         Card(
@@ -87,8 +104,6 @@ fun mainContent() {
             ),
             modifier = Modifier
                 .fillMaxWidth(0.9f)
-                .align(Alignment.CenterHorizontally)
-                .padding(10.dp)
                 .shadow(elevation = 120.dp)
         ) {
             Text(
@@ -116,7 +131,8 @@ fun mainContent() {
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xffF57F17),
                     contentColor = Color.White),
-                modifier = Modifier.padding(9.dp)
+                modifier = Modifier.padding(9.dp),
+                shape = RoundedCornerShape(10.dp)
             ) {
                 Text("Know More")
             }
@@ -128,14 +144,12 @@ fun mainContent() {
             ),
             modifier = Modifier
                 .fillMaxWidth(0.9f)
-                .align(Alignment.CenterHorizontally)
-                .padding(10.dp)
                 .shadow(elevation = 120.dp)
         ) {
             Text(
                 text = "Any idea or suggestions",
                 style = TextStyle(
-                    fontSize = MaterialTheme.typography.headlineMedium.fontSize,
+                    fontSize = MaterialTheme.typography.headlineSmall.fontSize,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.typography.headlineMedium.color
                 ),
@@ -150,7 +164,8 @@ fun mainContent() {
                     unfocusedBorderColor = Color(0xFFFD8A09),
                     cursorColor = Color(0xFFFD8A09),
                     focusedLabelColor = Color(0xFFFD8A09),
-                    unfocusedLabelColor = Color(0xFFFD8A09)
+                    unfocusedLabelColor = Color(0xFFFD8A09),
+                    containerColor = Color.White
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -158,36 +173,84 @@ fun mainContent() {
                 value = text,
                 onValueChange = { text = it },
                 placeholder = { Text("Type your ideas here!") }
+
             )
+            Row(modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center) {
+                Button(onClick = { /*TODO*/ },
+                    colors = ButtonColors(containerColor = Color(0xffF57F17),
+                        contentColor = Color.White,
+                        disabledContainerColor = Color.Transparent,
+                        disabledContentColor = Color.Transparent
+                        )
+                    , shape = RoundedCornerShape(10.dp)
+                    ) {
+                    Text(text = "Submit", fontFamily = ralewayfamilt,)
+                }
+
+            }
+
+
         }
+        // soical media part
+
+       
+       
+    Card(modifier = Modifier
+        .fillMaxWidth()
+        .padding(20.dp)) {
+        Column (modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(10.dp)){
+            Text(text = "Connect With Us", fontFamily = ralewayfamilt,
+                modifier = Modifier.padding(top = 30.dp))
+Row {
+
+Image(painter = painterResource(id = R.drawable.img), contentDescription = "",
+    )
+    Spacer(modifier = Modifier.width(10.dp))
+    Image(painter = painterResource(id = R.drawable.img_1), contentDescription = "")
+    Spacer(modifier = Modifier.width(10.dp))
+    Image(painter = painterResource(id = R.drawable.img_9), contentDescription = "")
+}
+
+            Spacer(modifier = Modifier.height(30.dp))
+        }
+    }
+
+
+
+
     }
 }
 
 @Composable
-fun GoogleDriveVideoPlayer(embeddedUrl: String) {
-    AndroidView(modifier = Modifier.fillMaxSize(), factory = { context ->
-        WebView(context).apply {
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
+fun YouTubePlayer(
+    youtubeVideoId: String,
+    lifecycleOwner: LifecycleOwner
+){
+    AndroidView(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clip(RoundedCornerShape(16.dp)),
+        factory = { context->
+            YouTubePlayerView(context = context).apply {
+                lifecycleOwner.lifecycle.addObserver(this)
 
-            webViewClient = WebViewClient()
-            settings.javaScriptEnabled = true
-            settings.loadWithOverviewMode = true
-            settings.useWideViewPort = true
-            settings.domStorageEnabled = true
-            settings.setSupportZoom(true)
-            settings.pluginState = WebSettings.PluginState.ON
-            loadDataWithBaseURL(null, "<html><body style='margin:0px;padding:0px;'><iframe width='100%' height='100%' src='$embeddedUrl' frameborder='0' allowfullscreen></iframe></body></html>", "text/html", "UTF-8", null)
+                addYouTubePlayerListener(object: AbstractYouTubePlayerListener(){
+                    override fun onReady(youTubePlayer: YouTubePlayer) {
+                        youTubePlayer.loadVideo(youtubeVideoId, 1f)
+                        youTubePlayer.setVolume(0)
+                    }
+                })
+            }
         }
-    })
+    )
 }
-
 @Composable
 fun MyApp() {
-    val embeddedUrl = "https://drive.google.com/file/d/12nhHt7RQSfWKPBKZ_g7l8onfSYfCDcJb/view?usp=drive_link"
-    GoogleDriveVideoPlayer(embeddedUrl = embeddedUrl)
+   YouTubePlayer(youtubeVideoId ="z8cqhEywCzc" , lifecycleOwner = LocalLifecycleOwner.current )
 }
 
 
