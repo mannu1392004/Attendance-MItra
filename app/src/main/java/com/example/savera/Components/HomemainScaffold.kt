@@ -59,7 +59,7 @@ fun mainContent() {
     var text by remember { mutableStateOf("") }
     Column(
         modifier = Modifier
-            .padding(10.dp)
+            .padding(start = 10.dp, end = 10.dp)
             .verticalScroll(rememberScrollState())
             .fillMaxSize(),
 
@@ -183,7 +183,8 @@ fun mainContent() {
                         disabledContainerColor = Color.Transparent,
                         disabledContentColor = Color.Transparent
                         )
-                    , shape = RoundedCornerShape(10.dp)
+                    , shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier.padding(bottom = 10.dp)
                     ) {
                     Text(text = "Submit", fontFamily = ralewayfamilt,)
                 }
@@ -198,6 +199,11 @@ fun mainContent() {
        
     Card(modifier = Modifier
         .fillMaxWidth()
+
+        .shadow(elevation = 120.dp)
+        .clip(
+            RoundedCornerShape(10.dp)
+        )
         .padding(20.dp)) {
         Column (modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
