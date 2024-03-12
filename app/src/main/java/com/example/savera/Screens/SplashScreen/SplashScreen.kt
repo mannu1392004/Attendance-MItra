@@ -63,12 +63,12 @@ targetValue = 6f,
 
 
 
-        if (FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty())
-navController.navigate(Screens.LoginScreen.name)
-
-        else
+        if (!FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty()&& FirebaseAuth.getInstance().currentUser?.isEmailVerified == true)
             navController.navigate(Screens.HomeScreen.name)
 
+        else
+
+        navController.navigate(Screens.LoginScreen.name)
 
     }
 

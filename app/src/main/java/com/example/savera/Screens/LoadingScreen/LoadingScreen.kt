@@ -1,5 +1,6 @@
 package com.example.savera.Screens.LoadingScreen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -47,30 +48,35 @@ fun loadingScreen(
         mutableStateOf(false)
     }
 
-    if (email != null) {
-        if (password != null) {
-            loginScreenViewmodel.signIn(
-                email = email,
-                password = password
-            , home = {
-navController.navigate(Screens.HomeScreen.name)
-                },
-                anyelse = {
-                      show.value  = true
-                    error.value  = it
-                },
-                othererror = {
-                    show.value  = true
-                    error.value  = it
-                },
-                emailsent = {
-                    show.value  = true
-                    error.value  = it
-                }
-            )
+    LaunchedEffect(key1 = true) {
+
+
+        if (email != null) {
+            if (password != null) {
+                loginScreenViewmodel.signIn(
+                    email = email,
+                    password = password, home = {
+                        navController.navigate(Screens.HomeScreen.name)
+                    },
+                    anyelse = {
+                        show.value = true
+                        error.value = it
+                        Log.d(error.value,error.value)
+                    },
+                    othererror = {
+                        show.value = true
+                        error.value = it
+                        Log.d(error.value,error.value)
+                    },
+                    emailsent = {
+                        show.value = true
+                        error.value = it
+                        Log.d(error.value,error.value)
+                    }
+                )
+            }
         }
     }
-
 
 
 
