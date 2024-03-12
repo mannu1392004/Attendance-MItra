@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navigation
 import com.example.savera.Screens.HomeScreen.HomeScreen
 import com.example.savera.Screens.LoadingScreen.loadingScreen
 import com.example.savera.Screens.LoginScreen.LoginScreen
@@ -16,7 +17,6 @@ fun Navigation() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = Screens.SplashScreen.name) {
-
         composable(route = Screens.SplashScreen.name) {
             SplashScreen(navController)
         }
@@ -39,6 +39,13 @@ fun Navigation() {
             val password =  it.arguments?.getString("password")
             loadingScreen(email,password, navController = navController)
         }
+
+  navigation(startDestination = Screens.HomeScreen.name
+  , route= "loggedin"){
+
+
+
+  }
 
     }
 

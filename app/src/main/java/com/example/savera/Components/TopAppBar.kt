@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,7 +22,7 @@ fun TopAppBar(title: String) {
             ),
         title = {
             Image(  // Use Image composable for the logo
-                painter = painterResource(id = R.drawable.savera_logo_removebg_preview),
+                painter = painterResource(id = R.drawable.savera_logo1_removebg_preview),
                 contentDescription = "App logo", // Provide content description
                 modifier = Modifier.size(width = 90.dp, height = 90.dp)
             )

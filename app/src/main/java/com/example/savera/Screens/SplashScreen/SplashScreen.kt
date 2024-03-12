@@ -1,6 +1,5 @@
 package com.example.savera.Screens.SplashScreen
 
-import android.util.Log
 import android.view.animation.OvershootInterpolator
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -13,9 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -101,7 +98,7 @@ navController.navigate(Screens.LoginScreen.name)
             horizontalAlignment = Alignment.CenterHorizontally) {
 
 if (animationchange.value)
-Image(painter = painterResource(id = R.drawable.savera_logo_removebg_preview), contentDescription = "",
+Image(painter = painterResource(id = R.drawable.savera_logo1_removebg_preview), contentDescription = "",
     modifier = Modifier.size(200.dp))
 
         }

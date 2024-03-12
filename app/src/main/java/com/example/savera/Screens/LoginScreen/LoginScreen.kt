@@ -155,7 +155,7 @@ fun LoginScreen(navController: NavHostController,
                 )
 
                 Image(
-                    painter = painterResource(id = R.drawable.savera_logo_removebg_preview),
+                    painter = painterResource(id = R.drawable.savera_logo1_removebg_preview),
                     contentDescription = "",
                     modifier = Modifier.absolutePadding(
                         left = 90.dp,
