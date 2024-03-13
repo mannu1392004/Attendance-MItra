@@ -6,10 +6,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import androidx.navigation.navigation
-import com.example.savera.Screens.HomeScreen.HomeScreen
 import com.example.savera.Screens.LoadingScreen.loadingScreen
 import com.example.savera.Screens.LoginScreen.LoginScreen
+import com.example.savera.Screens.MainScreen.MainScreen
 import com.example.savera.Screens.SplashScreen.SplashScreen
 
 @Composable
@@ -26,7 +25,7 @@ fun Navigation() {
         }
 
         composable(route = Screens.HomeScreen.name) {
-            HomeScreen()
+MainScreen()
         }
 
         val loadingroute = Screens.LoadingScreen.name

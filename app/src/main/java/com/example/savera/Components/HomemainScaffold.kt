@@ -218,7 +218,7 @@ fun mainContent() {
             ),
             modifier = Modifier
                 .fillMaxWidth(0.9f)
-                .shadow(elevation = 20.dp)
+                .shadow(elevation = 10.dp)
         ) {
             Column (modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -242,6 +242,7 @@ fun mainContent() {
 
 
             }
+        Spacer(modifier = Modifier.height(1.dp))
         }
     }
 
