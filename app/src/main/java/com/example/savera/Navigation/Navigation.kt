@@ -40,13 +40,6 @@ fun Navigation() {
             loadingScreen(email,password, navController = navController)
         }
 
-  navigation(startDestination = Screens.HomeScreen.name
-  , route= "loggedin"){
-
-
-
-  }
-
     }
 
 
