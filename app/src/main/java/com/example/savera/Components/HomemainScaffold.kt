@@ -5,6 +5,8 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -47,6 +49,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.LifecycleOwner
 import com.example.savera.R
+import com.example.savera.ui.theme.lightrale
+import com.example.savera.ui.theme.ralewaybold
 import com.example.savera.ui.theme.ralewayfamilt
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
@@ -59,6 +63,7 @@ fun mainContent() {
     var text by remember { mutableStateOf("") }
     Column(
         modifier = Modifier
+            .background( MaterialTheme.colorScheme.surfaceVariant)
             .padding(start = 10.dp, end = 10.dp)
             .verticalScroll(rememberScrollState())
             .fillMaxSize(),
@@ -76,7 +81,7 @@ fun mainContent() {
                 .fillMaxWidth(0.9f)
 
 
-                .shadow(elevation = 120.dp)
+                .shadow(elevation = 20.dp)
                 .clip(
                     RoundedCornerShape(10.dp)
                 ),
@@ -86,11 +91,11 @@ fun mainContent() {
                 text = "Documentary",
                 style = TextStyle(
                     fontSize = MaterialTheme.typography.headlineSmall.fontSize,
-                    fontWeight = FontWeight.Bold,
+                   fontFamily = ralewaybold,
                     color = MaterialTheme.typography.headlineMedium.color
                 ),                    modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 13.dp, start = 10.dp)
+                    .padding(top = 13.dp, start = 13.dp)
             )
             Spacer(modifier = Modifier.height(0.dp))
 
@@ -104,13 +109,13 @@ fun mainContent() {
             ),
             modifier = Modifier
                 .fillMaxWidth(0.9f)
-                .shadow(elevation = 120.dp)
+                .shadow(elevation = 20.dp)
         ) {
             Text(
                 text = "About Savera",
                 style = TextStyle(
                     fontSize = MaterialTheme.typography.headlineMedium.fontSize,
-                    fontWeight = FontWeight.Bold,
+                  fontFamily = ralewaybold,
                     color = MaterialTheme.typography.headlineMedium.color
                 ),
                 modifier = Modifier
@@ -121,6 +126,7 @@ fun mainContent() {
             Text(
                 text = "Savera School is an evening school in DCRUST Murthal run by Student volunteers to educate the underprivileged section of the society.",
                 style = MaterialTheme.typography.bodyMedium,
+                fontFamily = ralewayfamilt,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(13.dp)
@@ -134,7 +140,8 @@ fun mainContent() {
                 modifier = Modifier.padding(9.dp),
                 shape = RoundedCornerShape(10.dp)
             ) {
-                Text("Know More")
+                Text("Know More",
+                    fontFamily = ralewayfamilt)
             }
         }
 
@@ -144,35 +151,46 @@ fun mainContent() {
             ),
             modifier = Modifier
                 .fillMaxWidth(0.9f)
-                .shadow(elevation = 120.dp)
+                .shadow(elevation = 20.dp)
         ) {
             Text(
                 text = "Any idea or suggestions",
                 style = TextStyle(
                     fontSize = MaterialTheme.typography.headlineSmall.fontSize,
-                    fontWeight = FontWeight.Bold,
+                    fontFamily = ralewaybold,
                     color = MaterialTheme.typography.headlineMedium.color
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(9.dp)
+                    .padding(start = 13.dp, top = 15.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color(0xFFFD8A09),
-                    unfocusedBorderColor = Color(0xFFFD8A09),
-                    cursorColor = Color(0xFFFD8A09),
-                    focusedLabelColor = Color(0xFFFD8A09),
-                    unfocusedLabelColor = Color(0xFFFD8A09),
+                    focusedBorderColor = Color.Transparent,
+                    unfocusedBorderColor = Color.Transparent,
+                    cursorColor =  Color.Black,
+                    focusedLabelColor =  Color.Transparent,
+                    unfocusedLabelColor =  Color.Transparent,
                     containerColor = Color.White
                 ),
+
+
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(12.dp),
+                    .padding(12.dp)
+                    .border(width = 2.dp, color = Color(0xffF57F17), shape = RoundedCornerShape(15.dp))
+                    .clip(RoundedCornerShape(15.dp)
+                    )
+
+                ,
                 value = text,
                 onValueChange = { text = it },
-                placeholder = { Text("Type your ideas here!") }
+                placeholder = { Text("Type your ideas here!",
+                    fontFamily = ralewayfamilt,
+                    color =Color(0xff33333380)
+                )
+                }
 
             )
             Row(modifier = Modifier.fillMaxWidth(),
@@ -194,41 +212,42 @@ fun mainContent() {
 
         }
         // soical media part
+        Card(
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
+            ),
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .shadow(elevation = 20.dp)
+        ) {
+            Column (modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(10.dp)){
+                Text(text = "Connect With Us", fontFamily = ralewayfamilt,
+                    modifier = Modifier.padding(top = 30.dp))
+                Row {
 
-       
-       
-    Card(modifier = Modifier
-        .fillMaxWidth()
+                    Image(painter = painterResource(id = R.drawable.img), contentDescription = "",
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Image(painter = painterResource(id = R.drawable.img_1), contentDescription = "")
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Image(painter = painterResource(id = R.drawable.img_9), contentDescription = "")
+                }
 
-        .shadow(elevation = 120.dp)
-        .clip(
-            RoundedCornerShape(10.dp)
-        )
-        .padding(20.dp)) {
-        Column (modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(10.dp)){
-            Text(text = "Connect With Us", fontFamily = ralewayfamilt,
-                modifier = Modifier.padding(top = 30.dp))
-Row {
+                Spacer(modifier = Modifier.height(30.dp))
+            }
 
-Image(painter = painterResource(id = R.drawable.img), contentDescription = "",
-    )
-    Spacer(modifier = Modifier.width(10.dp))
-    Image(painter = painterResource(id = R.drawable.img_1), contentDescription = "")
-    Spacer(modifier = Modifier.width(10.dp))
-    Image(painter = painterResource(id = R.drawable.img_9), contentDescription = "")
-}
 
-            Spacer(modifier = Modifier.height(30.dp))
+
+
+            }
         }
     }
 
 
+       
 
-
-    }
-}
 
 @Composable
 fun YouTubePlayer(

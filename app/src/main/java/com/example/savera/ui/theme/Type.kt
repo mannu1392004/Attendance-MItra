@@ -47,3 +47,7 @@ val ralewayfamilt =         FontFamily(
 val lightrale = FontFamily(
         Font(R.font.raleway_light)
 )
+
+val ralewaybold = FontFamily(
+        Font(R.font.raleway_bold)
+)
