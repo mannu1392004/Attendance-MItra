@@ -1,5 +1,6 @@
 package com.example.savera.Screens.SplashScreen
 
+import android.annotation.SuppressLint
 import android.view.animation.OvershootInterpolator
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -31,6 +32,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.delay
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun SplashScreen(navController: NavHostController) {
 val auth:FirebaseAuth = Firebase.auth

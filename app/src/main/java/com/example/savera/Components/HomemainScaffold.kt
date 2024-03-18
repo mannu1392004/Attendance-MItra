@@ -1,9 +1,5 @@
 package com.example.savera.Components
 
-import android.view.ViewGroup
-import android.webkit.WebSettings
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -25,16 +21,16 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,12 +40,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.LifecycleOwner
 import com.example.savera.R
-import com.example.savera.ui.theme.lightrale
 import com.example.savera.ui.theme.ralewaybold
 import com.example.savera.ui.theme.ralewayfamilt
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
@@ -59,11 +53,13 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTube
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun mainContent() {
+fun mainContent(savedPosition: MutableState<Float>) {
+
+
     var text by remember { mutableStateOf("") }
     Column(
         modifier = Modifier
-            .background( MaterialTheme.colorScheme.surfaceVariant)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
             .padding(start = 10.dp, end = 10.dp)
             .verticalScroll(rememberScrollState())
             .fillMaxSize(),
@@ -99,7 +95,7 @@ fun mainContent() {
             )
             Spacer(modifier = Modifier.height(0.dp))
 
-           MyApp()
+      MyApp(savedPosition)
 
         }
 
@@ -179,8 +175,13 @@ fun mainContent() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(12.dp)
-                    .border(width = 2.dp, color = Color(0xffF57F17), shape = RoundedCornerShape(15.dp))
-                    .clip(RoundedCornerShape(15.dp)
+                    .border(
+                        width = 2.dp,
+                        color = Color(0xffF57F17),
+                        shape = RoundedCornerShape(15.dp)
+                    )
+                    .clip(
+                        RoundedCornerShape(15.dp)
                     )
 
                 ,
@@ -247,36 +248,45 @@ fun mainContent() {
     }
 
 
-       
+@Composable
+fun MyApp(savedPosition: MutableState<Float>) {
+    val youtubeVideoId = rememberSaveable { mutableStateOf("z8cqhEywCzc") }
+    val lifecycleOwner = LocalLifecycleOwner.current
 
+    YouTubePlayer(youtubeVideoId = youtubeVideoId.value, lifecycleOwner = lifecycleOwner,savedPosition)
+}
 
 @Composable
 fun YouTubePlayer(
     youtubeVideoId: String,
-    lifecycleOwner: LifecycleOwner
-){
+    lifecycleOwner: LifecycleOwner,
+    savedPosition: MutableState<Float>
+) {
+    val savedState = rememberSaveable { mutableStateOf(youtubeVideoId) }
+
+
     AndroidView(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
             .clip(RoundedCornerShape(16.dp)),
-        factory = { context->
+        factory = { context ->
             YouTubePlayerView(context = context).apply {
                 lifecycleOwner.lifecycle.addObserver(this)
 
-                addYouTubePlayerListener(object: AbstractYouTubePlayerListener(){
+                addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
                     override fun onReady(youTubePlayer: YouTubePlayer) {
-                        youTubePlayer.loadVideo(youtubeVideoId, 1f)
+                        youTubePlayer.loadVideo(savedState.value, savedPosition.value)
                         youTubePlayer.setVolume(0)
+                    }
+
+                    override fun onCurrentSecond(youTubePlayer: YouTubePlayer, second: Float) {
+                        savedPosition.value = second
                     }
                 })
             }
         }
     )
-}
-@Composable
-fun MyApp() {
-   YouTubePlayer(youtubeVideoId ="z8cqhEywCzc" , lifecycleOwner = LocalLifecycleOwner.current )
 }
 
 

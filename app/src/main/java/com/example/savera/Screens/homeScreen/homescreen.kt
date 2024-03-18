@@ -1,17 +1,16 @@
 package com.example.savera.Screens.homeScreen
 
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -23,14 +22,17 @@ fun homeScreen(selectindex: MutableIntState, mainscreennav: NavHostController, h
 
     val showDialog by homeScreenViewModel.showDialogState.collectAsState(initial = false)
     val userInput by homeScreenViewModel.userInputState.collectAsState(initial = "")
-    LaunchedEffect(Unit) {
-        homeScreenViewModel.checkYearInformation()
+
+    val youtubestate = remember {
+        mutableStateOf(0f)
     }
+
     BackHandler {
         selectindex.value = 2
        mainscreennav.navigate(route = mainScreen.Dashboard.name)
     }
 
+    mainContent(youtubestate)
     val selectIndex = remember { mutableIntStateOf(0) }
 
     if (showDialog) {
@@ -59,7 +61,5 @@ fun homeScreen(selectindex: MutableIntState, mainscreennav: NavHostController, h
             }
         )
     }
-
-    mainContent()
 
 }
