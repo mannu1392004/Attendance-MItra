@@ -6,6 +6,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -20,8 +21,13 @@ import com.example.savera.Navigation.mainScreenNavigation.mainScreen
 @Composable
 fun homeScreen(selectindex: MutableIntState, mainscreennav: NavHostController, homeScreenViewModel: HomeScreenViewModel = viewModel()) {
 
+    LaunchedEffect(Unit) {
+        homeScreenViewModel.checkYearInformation()
+    }
+
     val showDialog by homeScreenViewModel.showDialogState.collectAsState(initial = false)
     val userInput by homeScreenViewModel.userInputState.collectAsState(initial = "")
+
 
     val youtubestate = remember {
         mutableStateOf(0f)
@@ -33,7 +39,6 @@ fun homeScreen(selectindex: MutableIntState, mainscreennav: NavHostController, h
     }
 
     mainContent(youtubestate)
-    val selectIndex = remember { mutableIntStateOf(0) }
 
     if (showDialog) {
         AlertDialog(
