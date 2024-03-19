@@ -62,9 +62,12 @@ import com.example.savera.ui.theme.ralewayfamilt
 @Preview
 @Composable
 fun MainScreen() {
+
+    var selectedItemInAttendance = remember { mutableStateOf("") }
+
+
    val  AttendanceScreenViewmodel: AttendanceScreenViewmodel = viewModel()
 
-    val savedPosition = rememberSaveable { mutableStateOf(0f) }
 
     val x = rememberSaveable { mutableStateOf(0) }
 
@@ -104,8 +107,7 @@ fun MainScreen() {
                     .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
 
             ) {
-                val navBackStackEntry by mainscreennav.currentBackStackEntryAsState()
-                val currentRoute = navBackStackEntry?.destination?.route
+
 
 
                 Surface(
@@ -124,7 +126,14 @@ fun MainScreen() {
                                 indication = null,
                             ) {
                                 selectindex.value = 0
-                                mainscreennav.navigate(route = mainScreen.Home.name)
+                                mainscreennav.navigate(route = mainScreen.Home.name){
+                                    anim {
+                                        enter = androidx.constraintlayout.widget.R.anim.abc_fade_in
+                                        exit = androidx.appcompat.R.anim.abc_fade_in
+                                        popEnter = androidx.transition.R.anim.abc_fade_in
+                                        popExit = androidx.transition.R.anim.abc_fade_in
+                                    }
+                                }
 
 
                             },
@@ -196,7 +205,14 @@ fun MainScreen() {
                                 indication = null,
                             ) {
                                 selectindex.value = 1
-                                mainscreennav.navigate(route = mainScreen.Attendance.name)
+                                mainscreennav.navigate(route = mainScreen.Attendance.name){
+                                    anim {
+                                        enter = androidx.constraintlayout.widget.R.anim.abc_fade_in
+                                        exit = androidx.appcompat.R.anim.abc_fade_in
+                                        popEnter = androidx.transition.R.anim.abc_fade_in
+                                        popExit = androidx.transition.R.anim.abc_fade_in
+                                    }
+                                }
                             },
                             shape = CircleShape,
                             color = Color(0xffF9A825),
@@ -265,7 +281,14 @@ fun MainScreen() {
                                 indication = null,
                             ) {
                                 selectindex.value = 2
-                                mainscreennav.navigate(route = mainScreen.Dashboard.name)
+                                mainscreennav.navigate(route = mainScreen.Dashboard.name){
+                                    anim {
+                                        enter = androidx.constraintlayout.widget.R.anim.abc_fade_in
+                                        exit = androidx.appcompat.R.anim.abc_fade_in
+                                        popEnter = androidx.transition.R.anim.abc_fade_in
+                                        popExit = androidx.transition.R.anim.abc_fade_in
+                                    }
+                                }
                             },
                             shape = CircleShape,
                             color = Color(0xffF9A825),
@@ -335,7 +358,15 @@ fun MainScreen() {
                                 indication = null,
                             ) {
                                 selectindex.value = 3
-                                mainscreennav.navigate(route = mainScreen.Events.name)
+                                mainscreennav.navigate(route = mainScreen.Events.name) {
+                                    anim {
+                                        enter = 0
+                                        exit = 0
+                                        popEnter = 0
+                                        popExit = 0
+                                    }
+                                }
+
                             },
                             shape = CircleShape,
                             color = Color(0xffF9A825),
@@ -404,7 +435,14 @@ fun MainScreen() {
 
                                 onClick = {
                                     selectindex.value = 4
-                                    mainscreennav.navigate(route = mainScreen.Account.name)
+                                    mainscreennav.navigate(route = mainScreen.Account.name){
+                                        anim {
+                                            enter = 0
+                                            exit = 0
+                                            popEnter = 0
+                                            popExit = 0
+                                        }
+                                    }
 
                                 }
 
@@ -501,7 +539,7 @@ fun MainScreen() {
                     }
 
                     composable(route = mainScreen.Attendance.name) {
-                        AttendanceScreen(selectindex, mainscreennav,AttendanceScreenViewmodel)
+                        AttendanceScreen(selectindex, mainscreennav,AttendanceScreenViewmodel,selectedItemInAttendance)
                     }
 
                     composable(route = mainScreen.Dashboard.name) {

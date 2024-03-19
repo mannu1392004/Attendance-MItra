@@ -49,11 +49,14 @@ import com.example.savera.ui.theme.ralewayfamilt
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun mainContent(savedPosition: MutableState<Float>) {
+
 
 
     var text by remember { mutableStateOf("") }
@@ -271,17 +274,21 @@ fun YouTubePlayer(
             .padding(8.dp)
             .clip(RoundedCornerShape(16.dp)),
         factory = { context ->
+
             YouTubePlayerView(context = context).apply {
                 lifecycleOwner.lifecycle.addObserver(this)
 
                 addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
                     override fun onReady(youTubePlayer: YouTubePlayer) {
-                        youTubePlayer.loadVideo(savedState.value, savedPosition.value)
-                        youTubePlayer.setVolume(0)
+                        GlobalScope.launch {
+                            youTubePlayer.loadVideo(savedState.value, savedPosition.value)
+                            youTubePlayer.setVolume(0)
+                        }
                     }
-
                     override fun onCurrentSecond(youTubePlayer: YouTubePlayer, second: Float) {
+                        GlobalScope.launch {
                         savedPosition.value = second
+                    }
                     }
                 })
             }
