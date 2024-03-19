@@ -1,8 +1,16 @@
 package com.example.savera.Components
 
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -44,20 +53,48 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.LifecycleOwner
 import com.example.savera.R
+import com.example.savera.Screens.homeScreen.HomeScreenViewModel
 import com.example.savera.ui.theme.ralewaybold
 import com.example.savera.ui.theme.ralewayfamilt
+import com.google.firebase.auth.FirebaseAuth
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun mainContent(savedPosition: MutableState<Float>) {
+fun mainContent(savedPosition: MutableState<Float>, homeScreenViewModel: HomeScreenViewModel) {
+    val openUrlLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { }
+
+val gmail = FirebaseAuth.getInstance().currentUser?.email?.split("@")?.get(0)
+
+    val localDate = remember {
+        LocalDate.now()
+    }
+    val localTime = remember {
+        LocalTime.now()
+    }
+
+    val formateddate  = remember(localDate) {
+        localDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+    }
+
+    val formattime = remember(localTime) {
+        localTime.format(DateTimeFormatter.ofPattern("HH:mm:ss a"))
+    }
 
 
+
+    val context  = LocalContext.current
 
     var text by remember { mutableStateOf("") }
     Column(
@@ -199,7 +236,25 @@ fun mainContent(savedPosition: MutableState<Float>) {
             )
             Row(modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center) {
-                Button(onClick = { /*TODO*/ },
+                Button(onClick = {
+
+                        homeScreenViewModel.addFeedback(
+                            collectionName = "Feedback",
+                            documentPath = gmail.toString(),
+                            data = hashMapOf(
+                                "$formateddate $formattime" to text
+                            ),
+                            error = {
+                                Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
+                            }
+                            ,
+                            Successfull = {
+                                Toast.makeText(context, "Sent to Admin", Toast.LENGTH_SHORT).show()
+                                text=  ""
+                            }
+                        )
+
+                },
                     colors = ButtonColors(containerColor = Color(0xffF57F17),
                         contentColor = Color.White,
                         disabledContainerColor = Color.Transparent,
@@ -234,9 +289,20 @@ fun mainContent(savedPosition: MutableState<Float>) {
                     Image(painter = painterResource(id = R.drawable.img), contentDescription = "",
                     )
                     Spacer(modifier = Modifier.width(10.dp))
-                    Image(painter = painterResource(id = R.drawable.img_1), contentDescription = "")
+                    Image(painter = painterResource(id = R.drawable.img_1), contentDescription = ""
+                    , modifier = Modifier.clickable {
+
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/saveraschool/"))
+                            openUrlLauncher.launch(intent)
+
+                        }
+                    )
                     Spacer(modifier = Modifier.width(10.dp))
-                    Image(painter = painterResource(id = R.drawable.img_9), contentDescription = "")
+                    Image(painter = painterResource(id = R.drawable.img_9), contentDescription = "",
+                        modifier = Modifier.clickable {
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/@SaveraSchool"))
+                            openUrlLauncher.launch(intent)
+                        })
                 }
 
                 Spacer(modifier = Modifier.height(30.dp))
@@ -280,15 +346,15 @@ fun YouTubePlayer(
 
                 addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
                     override fun onReady(youTubePlayer: YouTubePlayer) {
-                        GlobalScope.launch {
+
                             youTubePlayer.loadVideo(savedState.value, savedPosition.value)
                             youTubePlayer.setVolume(0)
-                        }
+
                     }
                     override fun onCurrentSecond(youTubePlayer: YouTubePlayer, second: Float) {
-                        GlobalScope.launch {
+
                         savedPosition.value = second
-                    }
+
                     }
                 })
             }

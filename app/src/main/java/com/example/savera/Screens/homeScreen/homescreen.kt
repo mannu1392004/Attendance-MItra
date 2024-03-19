@@ -1,6 +1,8 @@
 package com.example.savera.Screens.homeScreen
 
+import android.os.Build
 import androidx.activity.compose.BackHandler
+import androidx.annotation.RequiresApi
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -18,6 +20,7 @@ import androidx.navigation.NavHostController
 import com.example.savera.Components.mainContent
 import com.example.savera.Navigation.mainScreenNavigation.mainScreen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun homeScreen(selectindex: MutableIntState, mainscreennav: NavHostController, homeScreenViewModel: HomeScreenViewModel = viewModel()) {
 
@@ -38,7 +41,7 @@ fun homeScreen(selectindex: MutableIntState, mainscreennav: NavHostController, h
        mainscreennav.navigate(route = mainScreen.Dashboard.name)
     }
 
-    mainContent(youtubestate)
+    mainContent(youtubestate,homeScreenViewModel)
 
     if (showDialog) {
         AlertDialog(

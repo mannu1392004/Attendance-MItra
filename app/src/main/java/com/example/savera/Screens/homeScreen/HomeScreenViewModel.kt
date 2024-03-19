@@ -3,6 +3,7 @@ package com.example.savera.Screens.homeScreen
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.savera.Repository.AppRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -68,4 +69,29 @@ class HomeScreenViewModel: ViewModel() {
             }
         }
     }
+
+
+    // feedback functionality
+fun addFeedback(collectionName:String,documentPath:String,data:HashMap<String,String>,Successfull:()->Unit,
+                error:(String)->Unit){
+    AppRepository.addfeedback(collectionName,
+        documentPath = documentPath,
+        successfull = {
+Successfull()
+
+        }
+    , failure = {
+error(it)
+
+
+        }
+        , hashMap = data
+
+    )
+}
+
+
+
+
+
 }

@@ -50,7 +50,7 @@ object AppRepository {
             }
     }
 
-    // function to add the data
+    // function to add the data to attendance
     fun adddata(collectionName: String,documentPath: String,studentName:String,date:String,
                 data:Any,error:(String)->Unit){
         firestore.collection(collectionName)
@@ -67,6 +67,24 @@ object AppRepository {
                 error(it.localizedMessage)
             }
     }
+
+    // function to add the feed back
+    fun addfeedback(collectionName: String,documentPath: String,hashMap: HashMap<String,String>,successfull:()->Unit,
+                    failure:(String)->Unit){
+        firestore.collection(collectionName)
+            .document(documentPath)
+            .update(hashMap as Map<String, Any>)
+            .addOnSuccessListener {
+                successfull()
+            }
+            .addOnFailureListener{
+failure(it.localizedMessage.toString())
+
+            }
+    }
+
+
+
 
 
 
