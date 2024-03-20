@@ -40,45 +40,7 @@ fun homeScreen(selectindex: MutableIntState, mainscreennav: NavHostController, h
 
     BackHandler {
         selectindex.value = 2
-       mainscreennav.navigate(route = mainScreen.Dashboard.name)
+        mainscreennav.navigate(route = mainScreen.Dashboard.name)
     }
-
-    mainContent(youtubestate,homeScreenViewModel)
-
-//    if (showDialog) {
-//        AlertDialog(
-//            onDismissRequest = { homeScreenViewModel.onDialogDismiss() },
-//            title = { Text(text = "What's your year") },
-//            text = {
-//                Column { // Use Column to stack TextFields vertically
-//
-//                    TextField(
-//                        value = userNInput, //  for name input
-//                        onValueChange = { homeScreenViewModel.onUserNameInputChange(it) }, // Update ViewModel with name change
-//                        label = { Text(text = "Name") }
-//                    )
-//                    TextField(
-//                        value = userYInput,
-//                        onValueChange = { homeScreenViewModel.onUserYearInputChange(it) },
-//                        label = { Text(text = "Year") }
-//                    )
-//
-//                }
-//            },
-//            confirmButton = {
-//                Button(onClick = {
-//                    val enteredYear = userYInput.toIntOrNull() // Get and validate year
-//                    if (enteredYear != null) {
-//                        homeScreenViewModel.onYearNameEntered(enteredYear,userNInput) // Pass year to ViewModel
-//                    } else {
-//                        // Handle invalid year input (e.g., show error message)
-//
-//                    }
-//                }) {
-//                    Text(text = "OK")
-//                }
-//            }
-//        )
-//    }
-
+ mainContent(youtubestate,homeScreenViewModel)
 }
