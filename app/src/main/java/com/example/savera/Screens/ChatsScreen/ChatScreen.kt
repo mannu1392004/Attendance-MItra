@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -21,6 +22,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.savera.R
 import com.example.savera.ui.theme.ralewayfamilt
 
@@ -28,131 +32,32 @@ import com.example.savera.ui.theme.ralewayfamilt
 @Composable
 fun chatScreen() {
 
-    Column(
-        modifier = Modifier.fillMaxSize()
-            .padding(start = 20.dp,
-                end = 20.dp),
-        verticalArrangement = Arrangement.spacedBy(20.dp)
-    ) {
 
 
-        Card(modifier = Modifier.fillMaxWidth()
-            .shadow(elevation = 20.dp)
-            .clickable {
 
-            }
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth().padding( 20.dp),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Surface(modifier = Modifier.size(60.dp),
-                    color = Color.Transparent){
-                    Image(
-                        painter = painterResource(id = R.drawable.savera_logo1_removebg_preview),
-                        contentDescription = "",
-                    )
-                }
-                Column {
-                    Text(text = "Savera Official",
-                        fontFamily = ralewayfamilt,
-                         style= MaterialTheme.typography.headlineSmall)
-                    
-                    Text(text = "Free Volunteers come to Savera ASAP!")
-                }
-            }
+    val messagebar = rememberNavController()
 
-
+    NavHost(navController = messagebar, startDestination = "Groups"){
+        composable(route = "Groups"){
+            groupChatsScreen()
         }
-        Card(modifier = Modifier.fillMaxWidth()
-            .shadow(elevation = 20.dp)
-            .clickable {
-
-            }) {
-            Row(
-                modifier = Modifier.fillMaxWidth().padding( 20.dp),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Surface(modifier = Modifier.size(60.dp),
-                    color = Color.Transparent){
-                    Image(
-                        painter = painterResource(id = R.drawable.savera_logo1_removebg_preview),
-                        contentDescription = "",
-                    )
-                }
-                Column {
-                    Text(text = "Savera 3rd and 4th year",
-                        fontFamily = ralewayfamilt,
-                        style= MaterialTheme.typography.headlineSmall)
-
-                    Text(text = "Free Volunteers come to Savera ASAP!")
-                }
-            }
-
-
+        composable(route = "chatscreen"){
+            messagingScreen()
         }
 
-        Card(modifier = Modifier.fillMaxWidth()
-            .shadow(elevation = 20.dp)
-            .clickable {
-
-            }) {
-            Row(
-                modifier = Modifier.fillMaxWidth().padding( 20.dp),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Surface(modifier = Modifier.size(60.dp),
-                    color = Color.Transparent){
-                    Image(
-                        painter = painterResource(id = R.drawable.savera_logo1_removebg_preview),
-                        contentDescription = "",
-                    )
-                }
-                Column {
-                    Text(text = "Savera 2nd and 3rd year",
-                        fontFamily = ralewayfamilt,
-                        style= MaterialTheme.typography.headlineSmall)
-
-                    Text(text = "Free Volunteers come to Savera ASAP!")
-                }
-            }
-
-
-        }
-        Card(modifier = Modifier.fillMaxWidth()
-            .shadow(elevation = 20.dp)
-            .clickable {
-
-            }) {
-            Row(
-                modifier = Modifier.fillMaxWidth().padding( 20.dp),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Surface(modifier = Modifier.size(60.dp),
-                    color = Color.Transparent){
-                    Image(
-                        painter = painterResource(id = R.drawable.savera_logo1_removebg_preview),
-                        contentDescription = "",
-                    )
-                }
-                Column {
-                    Text(text = "Savera 1st and 2nd year",
-                        fontFamily = ralewayfamilt,
-                        style= MaterialTheme.typography.headlineSmall)
-
-                    Text(text = "Free Volunteers come to Savera ASAP!")
-                }
-            }
-
-
-        }
 
 
     }
+
+
+
+
+
+
+
+
+
+
 
 
 }

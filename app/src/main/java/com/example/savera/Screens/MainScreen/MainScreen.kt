@@ -97,7 +97,9 @@ fun MainScreen() {
                 TopAppBar(title = "", showmessagetopbar)
         },
 
+
         bottomBar = {
+            if(!showmessagetopbar.value)
             NavigationBar(
 
                 modifier = Modifier
