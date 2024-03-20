@@ -38,36 +38,8 @@ fun homeScreen(selectindex: MutableIntState, mainscreennav: NavHostController, h
 
     BackHandler {
         selectindex.value = 2
-       mainscreennav.navigate(route = mainScreen.Dashboard.name)
+        mainscreennav.navigate(route = mainScreen.Dashboard.name)
     }
 
-    mainContent(youtubestate,homeScreenViewModel)
-
-    if (showDialog) {
-        AlertDialog(
-            onDismissRequest = { homeScreenViewModel.onDialogDismiss() },
-            title = { Text(text = "What's your year") },
-            text = {
-                TextField(
-                    value = userInput, // Use the actual value
-                    onValueChange = { homeScreenViewModel.onUserInputChange(it) },
-                    label = { Text(text = "Year") }
-                )
-            },
-            confirmButton = {
-                Button(onClick = {
-                    val enteredYear = userInput.toIntOrNull() // Get and validate year
-                    if (enteredYear != null) {
-                        homeScreenViewModel.onYearEntered(enteredYear) // Pass year to ViewModel
-                    } else {
-                        // Handle invalid year input (e.g., show error message)
-
-                    }
-                }) {
-                    Text(text = "OK")
-                }
-            }
-        )
-    }
-
+    mainContent(youtubestate, homeScreenViewModel)
 }

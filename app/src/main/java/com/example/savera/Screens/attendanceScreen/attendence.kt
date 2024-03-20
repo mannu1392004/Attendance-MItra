@@ -1,10 +1,12 @@
 package com.example.savera.Screens.attendanceScreen
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -41,6 +43,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -55,6 +60,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
 
+@SuppressLint("UnrememberedMutableState")
 @RequiresApi(Build.VERSION_CODES.O)
 
 @Composable
@@ -102,7 +108,7 @@ fun AttendanceScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 10.dp, start = 10.dp, end = 10.dp)
+                .padding(top = 10.dp, start = 10.dp, end = 10.dp, bottom = 20.dp)
         ) {
 
 
@@ -110,7 +116,7 @@ fun AttendanceScreen(
 
 
                 Surface(
-                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    color = Color(0xffF9A825),
                     shadowElevation = 7.dp,
                     modifier = Modifier.weight(1f),
                     shape = RoundedCornerShape(10.dp)
@@ -120,18 +126,18 @@ fun AttendanceScreen(
 
                         Text(
                             text = "$currentDayOfWeek ", modifier = Modifier,
-                            fontFamily = ralewayfamilt,
+                            fontFamily = ralewayfamilt, color = Color.White
                         )
                         Text(
                             text = " $formattedDate", modifier = Modifier,
-                            fontFamily = ralewayfamilt,
+                            fontFamily = ralewayfamilt,color = Color.White
                         )
                     }
                 }
                 Spacer(modifier = Modifier.weight(0.2f))
 
                 Surface(
-                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    color = Color(0xffF9A825),
                     shadowElevation = 7.dp,
                     modifier = Modifier
                         .weight(1f)
@@ -143,17 +149,21 @@ fun AttendanceScreen(
                     Column(modifier = Modifier.padding(10.dp)) {
                         Text(
                             text = "Select the Class", modifier = Modifier,
-                            fontFamily = ralewayfamilt,
+                            fontFamily = ralewayfamilt,color = Color.White
                         )
 
                         Row() {
-                            Text(text = selectedItemInAttendance.value, fontFamily = ralewaybold)
+                            Text(text = selectedItemInAttendance.value, fontFamily = ralewaybold,
+                                color = Color.White)
                             if (!list.value.isNullOrEmpty())
                                 Icon(imageVector = Icons.Filled.ArrowDropDown,
                                     contentDescription = "",
-                                    modifier = Modifier.clickable {
+                                    modifier = Modifier
+
+                                        .clickable {
                                         dropdownmenu.value = !dropdownmenu.value
-                                    })
+                                    }, tint = Color.White
+                                ,)
                         }
 
 
@@ -176,9 +186,9 @@ fun AttendanceScreen(
 
 
                                        }
-                                           
+
                                        )
-                                       
+
 
                                    }
 
@@ -193,12 +203,49 @@ fun AttendanceScreen(
 
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             if (Student_List.value.isNotEmpty()&&!selectedItemInAttendance.value.isNullOrEmpty())
-                LazyColumn {
+                LazyColumn(modifier = Modifier
+                    .background(
+                        color = Color(0xffF9A825),
+                        shape = RoundedCornerShape(20.dp)
+                    )
+                    .padding(10.dp)
+
+                ) {
+                    item {
+                        Row(modifier = Modifier.fillMaxWidth().padding(start = 10.dp, top = 10.dp,
+                            end = 10.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween) {
+Surface(modifier = Modifier,
+    shape = RoundedCornerShape(topStart =  25.dp,
+        bottomEnd = 25.dp,)
+    , color = Color(0xffD9D9D9).copy(alpha = 0.4f)
+) {
+    Text(text = "Name", modifier = Modifier.padding(10.dp)
+        , color = Color.White,
+        fontFamily = ralewaybold)
+}
+                            Surface(modifier = Modifier,
+                                shape = RoundedCornerShape(topStart =  25.dp,
+                                    bottomEnd = 25.dp),
+                                 color = Color(0xffD9D9D9).copy(alpha = 0.4f)) {
+                                Text(text = "Mark(Present/Absent)",
+                                    modifier = Modifier.padding(10.dp),
+                                     color = Color.White,
+                                    fontFamily = ralewaybold)
+                            }
+
+
+                        }
+
+Spacer(modifier = Modifier.height(10.dp))
+                    }
+
+
                     items(Student_List.value) {
-                        var Selection = remember {
+                        var Selection = AttendanceScreenViewmodel.studentSelectionMap.getOrPut(it) {
                             mutableStateOf(0)
                         }
                         studentname(
@@ -225,8 +272,9 @@ fun AttendanceScreen(
                    Image(painter = painterResource(id = R.drawable.cart), contentDescription = "")
                 }
 
-            }
 
+
+            }
 
         }
     }
@@ -242,20 +290,35 @@ fun studentname(
     selectedItem: String,
     currentDayOfWeek: String
 ) {
+    Surface(modifier = Modifier.clip(RoundedCornerShape(topStart =  25.dp,
+        bottomEnd = 25.dp))
+        ,color = Color(0xffD9D9D9).copy(alpha = 0.4f)
+
+    ) {
+
+
 Row(modifier = Modifier
     .fillMaxWidth()
     .horizontalScroll(rememberScrollState())
-    .padding(4.dp), verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.SpaceBetween) {
+    .padding(start = 20.dp, top = 10.dp, bottom = 10.dp, end = 10.dp)
+    , verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.SpaceBetween
+) {
     Text(text = it, modifier = Modifier
         .padding(4.dp)
         .weight(1f),
-        fontFamily = ralewaybold)
+        fontFamily = ralewaybold,
+        color = Color.White)
 
-    Surface(color = MaterialTheme.colorScheme.surfaceVariant,
-        modifier = Modifier.weight(1f)) {
+
+
+
+    Surface(
+        modifier = Modifier.weight(1f),
+        color = Color.Transparent
+    ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = "Present", fontFamily = ralewayfamilt, color = Color(0xff008133))
+            Text(text = "Present", fontFamily = ralewayfamilt, color = Color.White)
             RadioButton(selected =  (Selection.value==1)
 
                 , onClick = { Selection.value=1
@@ -284,10 +347,11 @@ Row(modifier = Modifier
 
 
 
-    Surface(color = MaterialTheme.colorScheme.surfaceVariant
-            ,modifier = Modifier.weight(1f)) {
+    Surface(
+            modifier = Modifier.weight(1f)
+    , color = Color.Transparent) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = "Absent", fontFamily = ralewayfamilt, color = Color(0xffFF0000))
+            Text(text = "Absent", fontFamily = ralewayfamilt, color = Color.White)
             RadioButton(selected = Selection.value==2, onClick = {Selection.value=2
 
 
@@ -319,5 +383,7 @@ Row(modifier = Modifier
 
 }
 
+}
+    Spacer(modifier = Modifier.height(10.dp))
 }
 

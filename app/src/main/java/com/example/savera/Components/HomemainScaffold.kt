@@ -287,7 +287,10 @@ val gmail = FirebaseAuth.getInstance().currentUser?.email?.split("@")?.get(0)
                 Row {
 
                     Image(painter = painterResource(id = R.drawable.img), contentDescription = "",
-                    )
+                  modifier = Modifier.clickable {
+                      val intent = Intent(Intent.ACTION_VIEW,Uri.parse("https://www.facebook.com/saveradcrust"))
+                      openUrlLauncher.launch(intent)
+                  }  )
                     Spacer(modifier = Modifier.width(10.dp))
                     Image(painter = painterResource(id = R.drawable.img_1), contentDescription = ""
                     , modifier = Modifier.clickable {
