@@ -125,4 +125,6 @@ dependencies {
 
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha06")
 
+    implementation("com.google.firebase:firebase-database-ktx:20.3.1")
+
 }
