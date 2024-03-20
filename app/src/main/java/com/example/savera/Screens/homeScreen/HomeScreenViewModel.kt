@@ -12,21 +12,28 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-class HomeScreenViewModel: ViewModel() {
+class HomeScreenViewModel : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
     private val _showDialogState = MutableStateFlow(false)
     val showDialogState: StateFlow<Boolean> = _showDialogState.asStateFlow()
 
-    private var _userInputState = MutableStateFlow("")
-    var userInputState: StateFlow<String> = _userInputState.asStateFlow()
+    private var _userNInputState = MutableStateFlow("")
+    var userNInputState: StateFlow<String> = _userNInputState.asStateFlow()
+
+    private var _userYInputState = MutableStateFlow("")
+    var userYInputState: StateFlow<String> = _userYInputState.asStateFlow()
 
     fun onDialogDismiss() {
         _showDialogState.value = false
     }
 
-    fun onUserInputChange(newValue: String) {
-        _userInputState.value = newValue
+    fun onUserYearInputChange(newValue: String) {
+        _userYInputState.value = newValue
+    }
+
+    fun onUserNameInputChange(newValue: String) {
+        _userNInputState.value = newValue
     }
 
     fun checkYearInformation() {
@@ -51,47 +58,59 @@ class HomeScreenViewModel: ViewModel() {
         }
     }
 
-    fun onYearEntered(year: Int) {
-        saveYearInformation(year)
+    fun onYearNameEntered(year: Int, name: String) {
+        saveYearInformation(year, name)
         _showDialogState.value = false
     }
 
-    private fun saveYearInformation(year: Int) {
+    private fun saveYearInformation(year: Int, name: String) {
         val currentUser = auth.currentUser
         if (currentUser != null) {
-            val userId = currentUser.uid
-            val userUpdates = hashMapOf<String, Any>("year" to year)
-            val userDocRef = firestore.collection("teachers").document(userId)
+
+            val userId = currentUser.email?.split("@")?.get(0)
+            val userUpdates = hashMapOf<String, Any>(
+                "year" to year,
+                "name" to name
+            )
+            val userDocRef = userId?.let { firestore.collection("teachers").document(it) }
             viewModelScope.launch {
-                userDocRef.set(userUpdates)
-                    .addOnSuccessListener { Log.d("TAG", "Year information saved!") }
-                    .addOnFailureListener { e -> Log.w("TAG", "Error saving year information", e) }
+                if (userDocRef != null) {
+                    userDocRef.set(userUpdates)
+                        .addOnSuccessListener { Log.d("TAG", "Year information saved!") }
+                        .addOnFailureListener { e ->
+                            Log.w(
+                                "TAG",
+                                "Error saving year information",
+                                e
+                            )
+                        }
+                }
             }
         }
     }
 
 
     // feedback functionality
-fun addFeedback(collectionName:String,documentPath:String,data:HashMap<String,String>,Successfull:()->Unit,
-                error:(String)->Unit){
-    AppRepository.addfeedback(collectionName,
-        documentPath = documentPath,
-        successfull = {
-Successfull()
+    fun addFeedback(
+        collectionName: String,
+        documentPath: String,
+        data: HashMap<String, String>,
+        Successfull: () -> Unit,
+        error: (String) -> Unit,
+    ) {
+        AppRepository.addfeedback(collectionName,
+            documentPath = documentPath,
+            successfull = {
+                Successfull()
 
-        }
-    , failure = {
-error(it)
-
-
-        }
-        , hashMap = data
-
-    )
-}
+            }, failure = {
+                error(it)
 
 
+            }, hashMap = data
 
+        )
+    }
 
 
 }

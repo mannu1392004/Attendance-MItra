@@ -22,10 +22,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.savera.R
+import com.example.savera.Screens.messageScreen.ChatScreen
+import com.example.savera.Screens.messageScreen.messageScreenViewModel
 import com.example.savera.ui.theme.ralewayfamilt
 
 @Preview
@@ -33,7 +37,7 @@ import com.example.savera.ui.theme.ralewayfamilt
 fun chatScreen() {
 
 
-
+val  messageScreenViewModel:messageScreenViewModel = viewModel ()
 
     val messagebar = rememberNavController()
 
@@ -42,7 +46,7 @@ fun chatScreen() {
             groupChatsScreen()
         }
         composable(route = "chatscreen"){
-            messagingScreen()
+          ChatScreen(viewModel = messageScreenViewModel, msgNavigation = messagebar)
         }
 
 
