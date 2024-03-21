@@ -1,6 +1,7 @@
 package com.example.savera.Repository
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -20,13 +21,11 @@ object AppRepository {
                     documentList.add(document.id)
                 }
                 onSuccess(documentList)
-                Log.d("lisssssssssssssssssssssssssssssssssssswdnndejkdemdrj",
-                    documentList.toString())
+
             }
             .addOnFailureListener { exception ->
                 onFailure(exception)
-                Log.d("failureeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-                    exception.toString())
+
             }
     }
 
@@ -70,18 +69,72 @@ object AppRepository {
 
     // function to add the feed back
     fun addfeedback(collectionName: String,documentPath: String,hashMap: HashMap<String,String>,successfull:()->Unit,
-                    failure:(String)->Unit){
+                    failure:(String)->Unit) {
+
+        firestore.collection(collectionName).get().addOnSuccessListener { documentSnapshot ->
+            val documentList = mutableListOf<String>()
+            for (document in documentSnapshot.documents) {
+                documentList.add(document.id)
+            }
+
+
+
+
+            if (documentList.contains(documentPath))
+                firestore.collection(collectionName)
+                    .document(documentPath)
+                    .update(hashMap as Map<String, Any>)
+                    .addOnSuccessListener {
+                        successfull()
+                    }
+                    .addOnFailureListener {
+                        failure(it.localizedMessage.toString())
+                    }
+            else
+                firestore.collection(collectionName)
+                    .document(documentPath)
+                    .set(hashMap as Map<String, Any>)
+                    .addOnSuccessListener {
+                        successfull()
+                    }
+                    .addOnFailureListener {
+                        failure(it.localizedMessage.toString())
+
+
+                    }
+
+
+        }
+
+
+        }
+
+
+
+
+// add events details
+
+    fun addevents(collectionName: String,
+                  documentPath: String,
+                  list: HashMap<String,String>
+                  ,successfull:()->Unit,
+                  failure:(String)->Unit
+                  ){
         firestore.collection(collectionName)
             .document(documentPath)
-            .update(hashMap as Map<String, Any>)
+            .set(list)
             .addOnSuccessListener {
                 successfull()
             }
             .addOnFailureListener{
-failure(it.localizedMessage.toString())
-
+                failure(it.localizedMessage)
             }
+
+
     }
+
+
+
 
 
 

@@ -20,11 +20,12 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.savera.R
 import com.example.savera.ui.theme.ralewayfamilt
 
 @Composable
-fun groupChatsScreen(){
+fun groupChatsScreen(messagebar: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -50,7 +51,10 @@ fun groupChatsScreen(){
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Surface(modifier = Modifier.size(60.dp),
+                Surface(modifier = Modifier.size(60.dp)
+                    .clickable {
+                               messagebar.navigate(route = "chatscreen/official")
+                    },
                     color = Color.Transparent){
                     Image(
                         painter = painterResource(id = R.drawable.savera_logo1_removebg_preview),
@@ -72,6 +76,7 @@ fun groupChatsScreen(){
             .fillMaxWidth()
             .shadow(elevation = 20.dp)
             .clickable {
+                messagebar.navigate(route = "chatscreen/thirdandfour")
 
             }) {
             Row(
@@ -104,6 +109,7 @@ fun groupChatsScreen(){
             .fillMaxWidth()
             .shadow(elevation = 20.dp)
             .clickable {
+                messagebar.navigate(route = "chatscreen/secondandthird")
 
             }) {
             Row(
@@ -135,6 +141,7 @@ fun groupChatsScreen(){
             .fillMaxWidth()
             .shadow(elevation = 20.dp)
             .clickable {
+                messagebar.navigate(route = "chatscreen/firstandsecond")
 
             }) {
             Row(

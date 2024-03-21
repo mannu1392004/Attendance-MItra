@@ -29,7 +29,9 @@ import androidx.lifecycle.LiveData
 import androidx.navigation.NavHostController
 
 @Composable
-fun ChatScreen(viewModel: messageScreenViewModel,msgNavigation : NavHostController) {
+fun ChatScreen(viewModel: messageScreenViewModel,msgNavigation : NavHostController,groupSelected:String?) {
+
+
     val messageText = remember { mutableStateOf(TextFieldValue("")) }
     val currUserName = remember { viewModel.userName }
     val year = remember { viewModel.year }

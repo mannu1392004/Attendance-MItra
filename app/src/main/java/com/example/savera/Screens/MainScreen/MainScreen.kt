@@ -66,7 +66,7 @@ fun MainScreen() {
     var selectedItemInAttendance = remember { mutableStateOf("") }
 
 
-   val  AttendanceScreenViewmodel: AttendanceScreenViewmodel = viewModel()
+    val AttendanceScreenViewmodel: AttendanceScreenViewmodel = viewModel()
 
 
     val x = rememberSaveable { mutableStateOf(0) }
@@ -76,7 +76,7 @@ fun MainScreen() {
     val activity = LocalContext.current as? Activity
 
     val selectindex = remember {
-        mutableIntStateOf(1)
+        mutableIntStateOf(3)
     }
     val showmessagetopbar = remember {
         mutableStateOf(false)
@@ -99,72 +99,82 @@ fun MainScreen() {
 
 
         bottomBar = {
-            if(!showmessagetopbar.value)
-            NavigationBar(
+            if (!showmessagetopbar.value)
+                NavigationBar(
 
-                modifier = Modifier
-                    .height(70.dp)
+                    modifier = Modifier
+                        .height(70.dp)
 
-                    .background(color = Color.Transparent)
-                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                        .background(color = Color.Transparent)
+                        .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
 
-            ) {
-
-
-
-                Surface(
-                    modifier = Modifier.fillMaxSize(), color = Color(0xffF9A825)
                 ) {
-                    Row(
-                        modifier = Modifier.padding(start = 10.dp, end = 10.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+
+
+                    Surface(
+                        modifier = Modifier.fillMaxSize(), color = Color(0xffF9A825)
                     ) {
-
-
-                        Surface(
-                            modifier = Modifier.clickable(
-                                interactionSource = MutableInteractionSource(),
-                                indication = null,
-                            ) {
-                                selectindex.value = 0
-                                mainscreennav.navigate(route = mainScreen.Home.name){
-                                    anim {
-                                        enter = androidx.constraintlayout.widget.R.anim.abc_fade_in
-                                        exit = androidx.appcompat.R.anim.abc_fade_in
-                                        popEnter = androidx.transition.R.anim.abc_fade_in
-                                        popExit = androidx.transition.R.anim.abc_fade_in
-                                    }
-                                }
-
-
-                            },
-                            shape = CircleShape,
-                            color = Color(0xffF9A825),
-                            border = BorderStroke(
-                                color =
-                                if (selectindex.value == 0
-                                )
-                                    Color.White
-                                else
-                                    Color(
-                                        0xffF9A825
-                                    ), width = 2.dp
-                            )
+                        Row(
+                            modifier = Modifier.padding(start = 10.dp, end = 10.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
 
 
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(5.dp),
-                            ) {
-                                AnimatedVisibility(
-                                    visible = selectindex.value == 0
+                            Surface(
+                                modifier = Modifier.clickable(
+                                    interactionSource = MutableInteractionSource(),
+                                    indication = null,
                                 ) {
-                                    Row(
-                                        modifier = Modifier.padding(7.dp),
-                                        verticalAlignment = Alignment.CenterVertically
+                                    selectindex.value = 0
+
+
+                                },
+                                shape = CircleShape,
+                                color = Color(0xffF9A825),
+                                border = BorderStroke(
+                                    color =
+                                    if (selectindex.value == 0
+                                    )
+                                        Color.White
+                                    else
+                                        Color(
+                                            0xffF9A825
+                                        ), width = 2.dp
+                                )
+                            ) {
+
+
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(5.dp),
+                                ) {
+                                    AnimatedVisibility(
+                                        visible = selectindex.value == 0
                                     ) {
+                                        Row(
+                                            modifier = Modifier.padding(7.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+
+
+                                            Image(
+                                                painter = painterResource(id = R.drawable.home),
+                                                contentDescription = "",
+                                                modifier = Modifier
+                                                    .size(30.dp)
+                                                    .padding(4.dp),
+                                            )
+
+                                            Text(
+                                                text = "Home", color = Color.White,
+                                                fontFamily = ralewayfamilt,
+                                            )
+                                        }
+                                    }
+
+
+                                    AnimatedVisibility(visible = selectindex.value != 0) {
 
 
                                         Image(
@@ -175,71 +185,64 @@ fun MainScreen() {
                                                 .padding(4.dp),
                                         )
 
-                                        Text(
-                                            text = "Home", color = Color.White,
-                                            fontFamily = ralewayfamilt,
-                                        )
                                     }
                                 }
 
 
-                                AnimatedVisibility(visible = selectindex.value != 0) {
-
-
-                                    Image(
-                                        painter = painterResource(id = R.drawable.home),
-                                        contentDescription = "",
-                                        modifier = Modifier
-                                            .size(30.dp)
-                                            .padding(4.dp),
-                                    )
-
-                                }
                             }
 
 
-                        }
+                            Surface(
+                                modifier = Modifier.clickable(
+                                    interactionSource = MutableInteractionSource(),
+                                    indication = null,
+                                ) {
+                                    selectindex.value = 1
 
-
-                        Surface(
-                            modifier = Modifier.clickable(
-                                interactionSource = MutableInteractionSource(),
-                                indication = null,
+                                },
+                                shape = CircleShape,
+                                color = Color(0xffF9A825),
+                                border = BorderStroke(
+                                    color =
+                                    if (selectindex.value == 1)
+                                        Color.White
+                                    else
+                                        Color(
+                                            0xffF9A825
+                                        ), width = 2.dp
+                                )
                             ) {
-                                selectindex.value = 1
-                                mainscreennav.navigate(route = mainScreen.Attendance.name){
-                                    anim {
-                                        enter = androidx.constraintlayout.widget.R.anim.abc_fade_in
-                                        exit = androidx.appcompat.R.anim.abc_fade_in
-                                        popEnter = androidx.transition.R.anim.abc_fade_in
-                                        popExit = androidx.transition.R.anim.abc_fade_in
+
+
+                                Row(
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(5.dp)
+                                ) {
+                                    AnimatedVisibility(visible = selectindex.value == 1) {
+                                        Row(
+                                            modifier = Modifier.padding(7.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+
+
+                                            Image(
+                                                painter = painterResource(id = R.drawable.people),
+                                                contentDescription = "",
+                                                modifier = Modifier
+                                                    .size(30.dp)
+                                                    .padding(4.dp),
+                                            )
+
+                                            Text(
+                                                text = "Attendance", color = Color.White,
+                                                fontFamily = ralewayfamilt
+                                            )
+                                        }
                                     }
-                                }
-                            },
-                            shape = CircleShape,
-                            color = Color(0xffF9A825),
-                            border = BorderStroke(
-                                color =
-                                if (selectindex.value == 1)
-                                    Color.White
-                                else
-                                    Color(
-                                        0xffF9A825
-                                    ), width = 2.dp
-                            )
-                        ) {
 
 
-                            Row(
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(5.dp)
-                            ) {
-                                AnimatedVisibility(visible = selectindex.value == 1) {
-                                    Row(
-                                        modifier = Modifier.padding(7.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
+                                    AnimatedVisibility(visible = selectindex.value != 1) {
 
 
                                         Image(
@@ -250,73 +253,67 @@ fun MainScreen() {
                                                 .padding(4.dp),
                                         )
 
-                                        Text(
-                                            text = "Attendance", color = Color.White,
-                                            fontFamily = ralewayfamilt
-                                        )
                                     }
                                 }
 
 
-                                AnimatedVisibility(visible = selectindex.value != 1) {
-
-
-                                    Image(
-                                        painter = painterResource(id = R.drawable.people),
-                                        contentDescription = "",
-                                        modifier = Modifier
-                                            .size(30.dp)
-                                            .padding(4.dp),
-                                    )
-
-                                }
                             }
 
 
-                        }
 
+                            Surface(
+                                modifier = Modifier.clickable(
+                                    interactionSource = MutableInteractionSource(),
+                                    indication = null,
+                                ) {
+                                    selectindex.value = 2
 
-
-                        Surface(
-                            modifier = Modifier.clickable(
-                                interactionSource = MutableInteractionSource(),
-                                indication = null,
+                                },
+                                shape = CircleShape,
+                                color = Color(0xffF9A825),
+                                border = BorderStroke(
+                                    color =
+                                    if (selectindex.value == 2)
+                                        Color.White
+                                    else
+                                        Color(
+                                            0xffF9A825
+                                        ), width = 2.dp
+                                )
                             ) {
-                                selectindex.value = 2
-                                mainscreennav.navigate(route = mainScreen.Dashboard.name){
-                                    anim {
-                                        enter = androidx.constraintlayout.widget.R.anim.abc_fade_in
-                                        exit = androidx.appcompat.R.anim.abc_fade_in
-                                        popEnter = androidx.transition.R.anim.abc_fade_in
-                                        popExit = androidx.transition.R.anim.abc_fade_in
+
+
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    modifier = Modifier.padding(5.dp)
+                                ) {
+                                    AnimatedVisibility(visible = selectindex.value == 2) {
+                                        Row(
+                                            modifier = Modifier.padding(7.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+
+
+                                            Image(
+                                                painter = painterResource(id = R.drawable.appicon),
+                                                contentDescription = "",
+                                                modifier = Modifier
+                                                    .size(30.dp)
+                                                    .padding(4.dp),
+                                            )
+
+                                            Text(
+                                                text = "Dashboard", color = Color.White,
+
+                                                fontFamily = ralewayfamilt
+                                            )
+                                        }
                                     }
-                                }
-                            },
-                            shape = CircleShape,
-                            color = Color(0xffF9A825),
-                            border = BorderStroke(
-                                color =
-                                if (selectindex.value == 2)
-                                    Color.White
-                                else
-                                    Color(
-                                        0xffF9A825
-                                    ), width = 2.dp
-                            )
-                        ) {
 
 
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                modifier = Modifier.padding(5.dp)
-                            ) {
-                                AnimatedVisibility(visible = selectindex.value == 2) {
-                                    Row(
-                                        modifier = Modifier.padding(7.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
+                                    AnimatedVisibility(visible = selectindex.value != 2) {
 
 
                                         Image(
@@ -327,73 +324,66 @@ fun MainScreen() {
                                                 .padding(4.dp),
                                         )
 
-                                        Text(
-                                            text = "Dashboard", color = Color.White,
-
-                                            fontFamily = ralewayfamilt
-                                        )
                                     }
                                 }
 
 
-                                AnimatedVisibility(visible = selectindex.value != 2) {
-
-
-                                    Image(
-                                        painter = painterResource(id = R.drawable.appicon),
-                                        contentDescription = "",
-                                        modifier = Modifier
-                                            .size(30.dp)
-                                            .padding(4.dp),
-                                    )
-
-                                }
                             }
 
 
-                        }
+                            Surface(
+                                modifier = Modifier.clickable(
+                                    interactionSource = MutableInteractionSource(),
+                                    indication = null,
+                                ) {
+                                    selectindex.value = 3
 
 
-                        Surface(
-                            modifier = Modifier.clickable(
-                                interactionSource = MutableInteractionSource(),
-                                indication = null,
+                                },
+                                shape = CircleShape,
+                                color = Color(0xffF9A825),
+                                border = BorderStroke(
+                                    color =
+                                    if (selectindex.value == 3)
+                                        Color.White
+                                    else
+                                        Color(
+                                            0xffF9A825
+                                        ), width = 2.dp
+                                )
                             ) {
-                                selectindex.value = 3
-                                mainscreennav.navigate(route = mainScreen.Events.name) {
-                                    anim {
-                                        enter = 0
-                                        exit = 0
-                                        popEnter = 0
-                                        popExit = 0
+
+
+                                Row(
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(5.dp)
+                                ) {
+                                    AnimatedVisibility(visible = selectindex.value == 3) {
+                                        Row(
+                                            modifier = Modifier.padding(7.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+
+
+                                            Image(
+                                                painter = painterResource(id = R.drawable.calender),
+                                                contentDescription = "",
+                                                modifier = Modifier
+                                                    .size(30.dp)
+                                                    .padding(4.dp),
+                                            )
+
+                                            Text(
+                                                text = "Events", color = Color.White,
+
+                                                fontFamily = ralewayfamilt
+                                            )
+                                        }
                                     }
-                                }
-
-                            },
-                            shape = CircleShape,
-                            color = Color(0xffF9A825),
-                            border = BorderStroke(
-                                color =
-                                if (selectindex.value == 3)
-                                    Color.White
-                                else
-                                    Color(
-                                        0xffF9A825
-                                    ), width = 2.dp
-                            )
-                        ) {
 
 
-                            Row(
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(5.dp)
-                            ) {
-                                AnimatedVisibility(visible = selectindex.value == 3) {
-                                    Row(
-                                        modifier = Modifier.padding(7.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
+                                    AnimatedVisibility(visible = selectindex.value != 3) {
 
 
                                         Image(
@@ -404,78 +394,71 @@ fun MainScreen() {
                                                 .padding(4.dp),
                                         )
 
-                                        Text(
-                                            text = "Events", color = Color.White,
-
-                                            fontFamily = ralewayfamilt
-                                        )
                                     }
                                 }
 
 
-                                AnimatedVisibility(visible = selectindex.value != 3) {
-
-
-                                    Image(
-                                        painter = painterResource(id = R.drawable.calender),
-                                        contentDescription = "",
-                                        modifier = Modifier
-                                            .size(30.dp)
-                                            .padding(4.dp),
-                                    )
-
-                                }
                             }
 
+                            Surface(
+                                modifier = Modifier.clickable(
+                                    interactionSource = MutableInteractionSource(),
+                                    indication = null,
 
-                        }
+                                    onClick = {
+                                        selectindex.value = 4
 
-                        Surface(
-                            modifier = Modifier.clickable(
-                                interactionSource = MutableInteractionSource(),
-                                indication = null,
 
-                                onClick = {
-                                    selectindex.value = 4
-                                    mainscreennav.navigate(route = mainScreen.Account.name){
-                                        anim {
-                                            enter = 0
-                                            exit = 0
-                                            popEnter = 0
-                                            popExit = 0
+                                    }
+
+                                ),
+                                shape = CircleShape,
+                                color = Color(0xffF9A825),
+                                border = BorderStroke(
+                                    color =
+                                    if (selectindex.value == 4)
+                                        Color.White
+                                    else
+                                        Color(
+                                            0xffF9A825
+                                        ), width = 2.dp
+                                )
+                            ) {
+
+
+                                Row(
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(5.dp)
+                                ) {
+                                    AnimatedVisibility(
+                                        visible = selectindex.value == 4
+                                    ) {
+                                        Row(
+                                            modifier = Modifier.padding(7.dp),
+                                            horizontalArrangement = Arrangement.Center,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+
+
+                                            Image(
+                                                painter = painterResource(id = R.drawable.account),
+                                                contentDescription = "",
+                                                modifier = Modifier
+                                                    .size(30.dp)
+                                                    .padding(4.dp),
+                                            )
+
+                                            Text(
+                                                text = "Account", color = Color.White,
+
+                                                fontFamily = ralewayfamilt
+                                            )
                                         }
                                     }
 
-                                }
 
-                            ),
-                            shape = CircleShape,
-                            color = Color(0xffF9A825),
-                            border = BorderStroke(
-                                color =
-                                if (selectindex.value == 4)
-                                    Color.White
-                                else
-                                    Color(
-                                        0xffF9A825
-                                    ), width = 2.dp
-                            )
-                        ) {
-
-
-                            Row(
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(5.dp)
-                            ) {
-                                AnimatedVisibility(
-                                    visible = selectindex.value == 4
-                                ) {
-                                    Row(
-                                        modifier = Modifier.padding(7.dp),
-                                        horizontalArrangement = Arrangement.Center,
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
+                                    AnimatedVisibility(visible = selectindex.value != 4) {
 
 
                                         Image(
@@ -486,27 +469,10 @@ fun MainScreen() {
                                                 .padding(4.dp),
                                         )
 
-                                        Text(
-                                            text = "Account", color = Color.White,
-
-                                            fontFamily = ralewayfamilt
-                                        )
                                     }
                                 }
 
 
-                                AnimatedVisibility(visible = selectindex.value != 4) {
-
-
-                                    Image(
-                                        painter = painterResource(id = R.drawable.account),
-                                        contentDescription = "",
-                                        modifier = Modifier
-                                            .size(30.dp)
-                                            .padding(4.dp),
-                                    )
-
-                                }
                             }
 
 
@@ -519,16 +485,44 @@ fun MainScreen() {
                 }
 
 
-            }
-
-
         }
 
     ) {
         Surface(modifier = Modifier.padding(it)) {
 
 
-            if (!showmessagetopbar.value)
+            if (!showmessagetopbar.value) {
+                if (selectindex.value == 0) {
+                    homeScreen(selectindex = selectindex, mainscreennav = mainscreennav)
+                }
+                if (selectindex.value == 1) {
+                    AttendanceScreen(
+                        selectindex = selectindex,
+                        mainscreennav = mainscreennav,
+                        AttendanceScreenViewmodel = AttendanceScreenViewmodel,
+                        selectedItemInAttendance = selectedItemInAttendance
+                    )
+
+                }
+
+                if (selectindex.value == 2) {
+                    dashboard(selectindex = selectindex, mainscreennav = mainscreennav)
+
+                }
+                if (selectindex.value == 3) {
+                    eventscreen(selectindex = selectindex, mainscreennav = mainscreennav)
+
+                }
+                if (selectindex.value == 4) {
+                    accountScreen(x = x, selectindex = selectindex, mainscreennav = mainscreennav)
+
+                }
+
+            } else {
+                chatScreen()
+            }
+
+            /*
                 NavHost(
                     navController = mainscreennav,
                     startDestination = mainScreen.Attendance.name
@@ -558,9 +552,8 @@ fun MainScreen() {
                     }
 
                 }
-            else
-                chatScreen()
 
+                */
 
         }
     }

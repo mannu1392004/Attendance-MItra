@@ -105,6 +105,7 @@ class HomeScreenViewModel : ViewModel() {
 
             }, failure = {
                 error(it)
+                Log.d("error in feedback",it)
 
 
             }, hashMap = data

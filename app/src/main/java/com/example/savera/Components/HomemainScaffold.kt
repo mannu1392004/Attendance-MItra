@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -287,22 +288,26 @@ val gmail = FirebaseAuth.getInstance().currentUser?.email?.split("@")?.get(0)
                 Row {
 
                     Image(painter = painterResource(id = R.drawable.img), contentDescription = "",
-                  modifier = Modifier.clickable {
+                  modifier = Modifier
+                      .size(40.dp)
+                      .clickable {
                       val intent = Intent(Intent.ACTION_VIEW,Uri.parse("https://www.facebook.com/saveradcrust"))
                       openUrlLauncher.launch(intent)
                   }  )
-                    Spacer(modifier = Modifier.width(10.dp))
+                    Spacer(modifier = Modifier.width(20.dp))
                     Image(painter = painterResource(id = R.drawable.img_1), contentDescription = ""
-                    , modifier = Modifier.clickable {
+                    , modifier = Modifier.size(40.dp)
+                        .clickable {
 
                             val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/saveraschool/"))
                             openUrlLauncher.launch(intent)
 
                         }
                     )
-                    Spacer(modifier = Modifier.width(10.dp))
+                    Spacer(modifier = Modifier.width(20.dp))
                     Image(painter = painterResource(id = R.drawable.img_9), contentDescription = "",
-                        modifier = Modifier.clickable {
+                        modifier = Modifier.size(40.dp)
+                            .clickable {
                             val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/@SaveraSchool"))
                             openUrlLauncher.launch(intent)
                         })
