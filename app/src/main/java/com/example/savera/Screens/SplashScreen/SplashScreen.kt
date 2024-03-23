@@ -35,8 +35,6 @@ import kotlinx.coroutines.delay
 @SuppressLint("SuspiciousIndentation")
 @Composable
 fun SplashScreen(navController: NavHostController) {
-val auth:FirebaseAuth = Firebase.auth
-
 
     val animationchange = remember {
         mutableStateOf(true)
@@ -66,7 +64,7 @@ targetValue = 6f,
 
 
         if (!FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty()&& FirebaseAuth.getInstance().currentUser?.isEmailVerified == true)
-            navController.navigate(Screens.HomeScreen.name)
+            navController.navigate(Screens.NewuserCheck.name)
 
         else
 

@@ -10,13 +10,12 @@ import android.widget.Toast
 import androidx.compose.runtime.Composable
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import java.lang.Exception
 
 fun uploadImageToFirebase(context: Context, imageUri: Uri, onSuccess:(String)->Unit,
-exception:(String)->Unit, eventname:String) {
+exception:(String)->Unit, eventname:String,mainfoldername:String) {
     val storage = Firebase.storage
     val storageRef = storage.reference
-    val imagesRef = storageRef.child("events/$eventname/${imageUri.lastPathSegment}")
+    val imagesRef = storageRef.child("$mainfoldername/$eventname/${imageUri.lastPathSegment}")
     val uploadTask = imagesRef.putFile(imageUri)
 
     uploadTask.addOnSuccessListener {

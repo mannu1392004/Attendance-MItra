@@ -13,6 +13,7 @@ import com.example.savera.Screens.LoginScreen.LoginScreen
 import com.example.savera.Screens.MainScreen.MainScreen
 import com.example.savera.Screens.SplashScreen.SplashScreen
 
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Navigation() {
@@ -27,8 +28,8 @@ fun Navigation() {
             LoginScreen(navController)
         }
 
-        composable(route = Screens.HomeScreen.name) {
-MainScreen()
+        composable(route = Screens.NewuserCheck.name) {
+           MainScreen()
         }
 
         val loadingroute = Screens.LoadingScreen.name

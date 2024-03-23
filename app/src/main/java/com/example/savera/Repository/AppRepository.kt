@@ -1,18 +1,28 @@
 package com.example.savera.Repository
 
+import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.example.savera.Model.events_Data
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.tasks.await
 
 object AppRepository {
 
 
-    private val firestore = FirebaseFirestore.getInstance()
+
 
     // Function to fetch a list of documents within a collection
     fun fetchDocuments(collectionName: String, onSuccess: (List<String>) -> Unit, onFailure: (Exception) -> Unit) {
+         val firestore = FirebaseFirestore.getInstance()
+
         val collectionRef = firestore.collection(collectionName)
         collectionRef.get()
             .addOnSuccessListener { querySnapshot ->
@@ -30,7 +40,11 @@ object AppRepository {
     }
 
     // Function to fetch a list of subcollections within a document
-    fun GetStudentList(documentPath: String,collectionName: String ,onSuccess: (List<String>) -> Unit, onFailure: (Exception) -> Unit) {
+    fun GetStudentList(documentPath: String,collectionName: String
+                       ,onSuccess: (List<String>) -> Unit,
+                       onFailure: (Exception) -> Unit) {
+        val firestore = FirebaseFirestore.getInstance()
+
         firestore
             .collection(collectionName)
             .document(documentPath)
@@ -50,8 +64,11 @@ object AppRepository {
     }
 
     // function to add the data to attendance
-    fun adddata(collectionName: String,documentPath: String,studentName:String,date:String,
+    fun adddata(collectionName: String,documentPath: String
+                ,studentName:String,date:String,
                 data:Any,error:(String)->Unit){
+        val firestore = FirebaseFirestore.getInstance()
+
         firestore.collection(collectionName)
             .document(documentPath)
             .collection("Students")
@@ -68,8 +85,11 @@ object AppRepository {
     }
 
     // function to add the feed back
-    fun addfeedback(collectionName: String,documentPath: String,hashMap: HashMap<String,String>,successfull:()->Unit,
+    fun addfeedback(collectionName: String,documentPath: String
+                    ,hashMap: HashMap<String,String>
+                    ,successfull:()->Unit,
                     failure:(String)->Unit) {
+        val firestore = FirebaseFirestore.getInstance()
 
         firestore.collection(collectionName).get().addOnSuccessListener { documentSnapshot ->
             val documentList = mutableListOf<String>()
@@ -119,16 +139,108 @@ object AppRepository {
                   list: HashMap<String,String>
                   ,successfull:()->Unit,
                   failure:(String)->Unit
-                  ){
+                  ) {
+        val firestore = FirebaseFirestore.getInstance()
+
         firestore.collection(collectionName)
             .document(documentPath)
             .set(list)
             .addOnSuccessListener {
                 successfull()
             }
-            .addOnFailureListener{
+            .addOnFailureListener {
                 failure(it.localizedMessage)
             }
+    }
+
+ // getting events from firebase
+    fun getEvents(): MutableStateFlow<List<events_Data>> {
+        var eventsState:MutableStateFlow<List<events_Data>> = MutableStateFlow(emptyList())
+
+     val firestore = FirebaseFirestore.getInstance()
+
+     firestore.collection("Events")
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    // Handle any exceptions
+                    return@addSnapshotListener
+                }
+
+                val events = mutableListOf<events_Data>()
+
+                snapshot?.documents?.forEach { documents ->
+                    val event = events_Data(
+                        date = documents.getString("Date") ?: "",
+                        description = documents.getString("Description") ?: "",
+                        eventName = documents.getString("Event Name") ?: "",
+                        location = documents.getString("Location") ?: "",
+                        time = documents.getString("Time") ?: "",
+                        createdBy = documents.getString("created by") ?: "",
+                        imageUrl = documents.getString("imageurl") ?: ""
+                    )
+
+                    events.add(event)
+                }
+
+                eventsState.value = events
+            }
+
+
+        return eventsState
+    }
+
+    // newUser check code
+    suspend fun checkYearInformation(
+        currentUser: String,
+        exist: () -> Unit,
+        notexist: () -> Unit,
+    ) {
+        val firestore = FirebaseFirestore.getInstance()
+
+        if (currentUser != null) {
+                val userDocRef = firestore.collection("teachers").document(currentUser)
+                val documentSnapshot = userDocRef.get().await()
+                if (documentSnapshot.exists()) {
+                    exist()
+                } else {
+                    notexist()
+                }
+            }
+        }
+
+   // new user add code
+    fun addnewuser(documentPath: String,data: Any,successfull: () -> Unit,
+                   failure: (String) -> Unit){
+       val firestore = FirebaseFirestore.getInstance()
+       firestore.collection("teachers")
+           .document(documentPath)
+           .set(data)
+           .addOnSuccessListener {
+               successfull()
+           }
+           .addOnFailureListener{
+               failure(it.localizedMessage)
+           }
+
+    }
+
+// Add new Student
+    fun addNewStudent(name: String,className: String,data: Any,successfull: () -> Unit,
+                      error: (String) -> Unit){
+        val firestore = FirebaseFirestore.getInstance()
+    firestore.collection("Classes")
+        .document(className)
+        .collection("Students")
+        .document(name)
+        .set(data)
+        .addOnSuccessListener {
+            successfull()
+        }
+        .addOnFailureListener{
+            error(it.localizedMessage)
+        }
+    }
+
 
 
     }
@@ -138,8 +250,3 @@ object AppRepository {
 
 
 
-
-
-
-
-}
