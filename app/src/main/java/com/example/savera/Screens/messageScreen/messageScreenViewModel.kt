@@ -1,38 +1,54 @@
 package com.example.savera.Screens.messageScreen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
-class messageScreenViewModel : ViewModel()
-{
-   //val userName = "Savera User"
-   private val _userName = MutableLiveData<String>()
+
+class messageScreenViewModel : ViewModel() {
+
+    private val _userName = MutableLiveData<String>()
     val userName: LiveData<String> = _userName
 
-    private val _year = MutableLiveData<Int>()
-    val year: LiveData<Int> = _year
+    private val _showLoadMoreButton = MutableStateFlow<Boolean>(true)
+    val showLoadMoreButton: StateFlow<Boolean> = _showLoadMoreButton
+
+    init {
+        _userName.value =
+            FirebaseAuth.getInstance().currentUser?.email?.split("@")?.get(0) ?: "Anonymous"
+    }
 
 
+    private val _messagesStateFlow = MutableStateFlow<List<Message>>(emptyList())
+    val messagesStateFlow: StateFlow<List<Message>> = _messagesStateFlow
 
-    private val database = FirebaseDatabase.getInstance().reference.child("chats")
-    var chatroom: String by mutableStateOf("") // Initially empty
-    var messages: List<Message> by mutableStateOf(emptyList())
+
+    private val database =
+        FirebaseDatabase.getInstance("https://savera-504a2-default-rtdb.asia-southeast1.firebasedatabase.app").reference.child(
+            "chats"
+        )
+
+    private val pageSize = 20
+    private var totalMessageCount = 0
+
+    private var lastLoadedMessageKey: String? = null
+
 
     private val listener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
-            val newMessages = snapshot.children.map { it.getValue(Message::class.java) ?: Message("", "") }
-            messages = newMessages
+            val newMessages =
+                snapshot.children.map { it.getValue(Message::class.java) ?: Message("", "") }
+                _messagesStateFlow.value = newMessages
         }
 
         override fun onCancelled(error: DatabaseError) {
@@ -40,50 +56,122 @@ class messageScreenViewModel : ViewModel()
         }
     }
 
-    fun initChatroom(selectedYear: Int) {
-        when (selectedYear) {
-            in 1..2 -> chatroom = "year1_year2"
-            in 2..3 -> chatroom = "year2_year3"
-            in 3..4 -> chatroom = "year3_year4"
-            else -> chatroom = "savera_official"
+    //     var messages = mutableListOf<Message>()  // List to hold chat messages
+    var chatroom = ""
+
+    fun initChatroom(selectedGroup: String) {
+        // Assign chatroom based on selectedGroup
+        chatroom = when (selectedGroup) {
+            "firstandsecond" -> "year1_year2"
+            "secondandthird" -> "year2_year3"
+            "thirdandfour" -> "year3_year4"
+            "official" -> "savera_official"
+            "first" -> "first"
+            "second" -> "second"
+            "third" -> "third"
+            "fourth" -> "fourth"
+            else -> "error" //throw some error instead of this
         }
-        database.child(chatroom).addValueEventListener(listener)
+        //database.child(chatroom).addValueEventListener(listener)
+        // Log.d("lakshay", "initChatroom:$chatroom ")
+        loadInitialMessages()
     }
 
     fun sendMessage(messageText: String) {
-        //re-implement this again with livedata datatype
+        val newMessage = Message(messageText, userName.value!!)
+        Log.d("lakshay", "sendMessage: $newMessage ")
+        database.child(chatroom).push().setValue(newMessage)
+            .addOnSuccessListener {
+                _messagesStateFlow.value = listOf(newMessage) + _messagesStateFlow.value
 
-//        val newMessage = Message(messageText, userName)
-//        database.child(chatroom).push().setValue(newMessage)
+            }
+            .addOnFailureListener { exception ->
+                // Handle failure
+                Log.e("MessageScreenViewModel", "Error sending message: $exception")
+            }
     }
 
     override fun onCleared() {
         super.onCleared()
         database.child(chatroom).removeEventListener(listener)
     }
-
-    suspend fun fetchUserData() {
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        val firestore = FirebaseFirestore.getInstance()
-
-        val userId = currentUser?.email?.split("@")?.get(0) ?: return
-
-        val userDocRef = firestore.collection("teachers").document(userId)
-
-        val documentSnapshot = userDocRef.get().await()
-        if (documentSnapshot.exists()) {
-            val data = documentSnapshot.data
-            val name = data?.get("name") as? String ?: ""
-            val year = data?.get("year") as? Int ?: 0
-            _userName.postValue(name)
-            _year.postValue(year)
-        } else {
-            // case when document does not exist
+    fun onResume() {
+        viewModelScope.launch {
+            countTotalMessages()
         }
-
     }
+    fun countTotalMessages() {
+        database.child(chatroom)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    totalMessageCount =
+                        snapshot.childrenCount.toInt() // Get total count of messages
+                    if(totalMessageCount <= 20){
+                        _showLoadMoreButton.value = false
+                    }else if(totalMessageCount > 20){
+                        _showLoadMoreButton.value = true
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+    }
+
+
+    fun loadInitialMessages() {
+        countTotalMessages()
+        database.child(chatroom)
+            .orderByKey()
+            .limitToLast(pageSize)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val newMessages = snapshot.children.reversed().map {
+                        it.getValue(Message::class.java) ?: Message("", "")
+                    }
+                    _messagesStateFlow.value = newMessages
+                    lastLoadedMessageKey = snapshot.children.firstOrNull()?.key
+
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    // Handle error
+                }
+            })
+    }
+
+
+    fun loadMoreMessages() {
+        lastLoadedMessageKey?.let { lastKey ->
+            database.child(chatroom)
+                .orderByKey()
+                .endBefore(lastKey)
+                .limitToLast(pageSize)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val newMessages = snapshot.children.reversed().map {
+                            it.getValue(Message::class.java) ?: Message("", "")
+                        }
+                        _messagesStateFlow.value += newMessages
+                        lastLoadedMessageKey = snapshot.children.firstOrNull()?.key
+
+                        if(_messagesStateFlow.value.size >= totalMessageCount){
+                            _showLoadMoreButton.value = false
+                        }
+                    }
+
+
+                    override fun onCancelled(error: DatabaseError) {
+                        // Handle error
+                    }
+                })
+        }
+    }
+
+
 }
 
-
-
-data class Message(val text: String, val senderName: String)
+data class Message(val text: String, val senderName: String) {
+    constructor() : this("", "")
+}

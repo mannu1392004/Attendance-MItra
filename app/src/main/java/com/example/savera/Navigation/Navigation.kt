@@ -28,7 +28,7 @@ fun Navigation() {
         }
 
         composable(route = Screens.HomeScreen.name) {
-MainScreen()
+            MainScreen()
         }
 
         val loadingroute = Screens.LoadingScreen.name
