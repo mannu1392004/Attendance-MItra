@@ -6,10 +6,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -131,30 +134,43 @@ if (!show.value)
 
 
                 Spacer(modifier = Modifier.height(screenWidth / 7))
+Row(modifier = Modifier.fillMaxWidth(),
+    horizontalArrangement = Arrangement.Center) {
 
-                Text(
-                    text = "Please wait" + loaddot.value,
-                    fontFamily = ralewayfamilt,
-                    fontSize = 4.5.em
-                )
 
+    Text(
+        text = "Please wait" + loaddot.value,
+        fontFamily = ralewayfamilt,
+        fontSize = 4.5.em,
+        style = MaterialTheme.typography.bodyMedium
+    )
+}
                 Spacer(modifier = Modifier.height(screenWidth / 7))
+                Row(modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center) {
+                    Text(
+                        text = "DO YOU KNOW?",
+                        fontFamily = lightrale,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
 
-                Text(
-                    text = "DO YOU KNOW?",
-                    fontFamily = lightrale
-                )
-
-                Text(
-                    text = "About 9 million children are out of school",
-                    fontFamily = lightrale
-                )
-
-                Text(
-                    text = "and not getting education.",
-                    fontFamily = lightrale
-                )
-
+                Row(modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center) {
+                    Text(
+                        text = "About 9 million children are out of school",
+                        fontFamily = lightrale,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+                Row(modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center) {
+                    Text(
+                        text = "and not getting education.",
+                        fontFamily = lightrale,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
 
             }
 

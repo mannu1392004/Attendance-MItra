@@ -75,7 +75,7 @@ import java.time.format.DateTimeFormatter
 @SuppressLint("SuspiciousIndentation")
 @Composable
 fun eventscreen(
-    selectindex: MutableIntState, mainscreennav: NavHostController,
+    selectindex: MutableIntState,
     eventScreenViewmodel: eventScreenViewmodel = viewModel()
 ) {
     BackHandler {

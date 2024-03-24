@@ -2,6 +2,7 @@ package com.example.savera.Screens.attendanceScreen
 
 import android.util.Log
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.savera.Repository.AppRepository
@@ -10,7 +11,7 @@ import kotlinx.coroutines.launch
 
 class AttendanceScreenViewmodel:ViewModel() {
 
-    val studentSelectionMap = mutableMapOf<String, MutableState<Int>>()
+
 
     // getting student list
     val Student_List :MutableStateFlow<List<String>> = MutableStateFlow(emptyList())
@@ -51,6 +52,9 @@ class AttendanceScreenViewmodel:ViewModel() {
             }
         )
     }
+
+
+
     fun attendancemarked(collectionName: String,documentPath: String,studentName:String,date:String,
                          data:Any,error:(String)->Unit){
         viewModelScope.launch {
@@ -69,7 +73,45 @@ class AttendanceScreenViewmodel:ViewModel() {
 
     }
 
+// adding present  to class
 
+    fun addPresent(classname: String,hashMap: HashMap<String,String>,
+                   successful:()->Unit,
+                   error: (String) -> Unit
+                   ) {
+        viewModelScope.launch {
+            AppRepository.addfeedback(
+                collectionName = "Classes",
+                documentPath = classname,
+                hashMap = hashMap,
+                failure = {
+                    error(it)
+                },
+                successfull = {
+                    successful()
+                }
+            )
+        }
+    }
 
+// checking attendance taken or not
+    fun checkAttendance(classname: String,
+                        date: String,
+                        taken:()->Unit,
+                        nottaken:()->Unit) {
+    viewModelScope.launch {
+        AppRepository.checkAttendanceTakenOrNot(
+            className = classname,
+            date = date,
+            taken = {
+                    taken()
+            },
+            nottaken = {
+nottaken()
+            }
+        )
+    }
+
+}
 
 }

@@ -8,6 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,7 +17,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Close
@@ -70,15 +73,23 @@ fun dashboardMainScreen(dashboardViewmodel: dashboardViewmodel= viewModel()) {
 
     // color to be change
     Surface(
-        modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.surfaceVariant
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+           ,
+        color = MaterialTheme.colorScheme.surfaceVariant
     ) {
         Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 40.dp, bottom = 40.dp),
+            verticalArrangement = Arrangement.spacedBy(40.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
 
@@ -108,25 +119,15 @@ fun dashboardMainScreen(dashboardViewmodel: dashboardViewmodel= viewModel()) {
             }
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth()
+                    .horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 BoxesCreated(
-                    image = R.drawable.creategroups,
-                    title = "Create Groups",
+                    image = R.drawable.clipboard,
+                    title = "Syllabus",
                     modifier = Modifier.size(150.dp)
                 )
-                BoxesCreated(
-                    image = R.drawable.removeaccess,
-                    title = "Remove access",
-                    modifier = Modifier.size(150.dp)
-                )
-            }
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
 
 
                 BoxesCreated(
@@ -134,13 +135,59 @@ fun dashboardMainScreen(dashboardViewmodel: dashboardViewmodel= viewModel()) {
                             "Attendance", modifier = Modifier.size(150.dp)
                 )
 
+
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+
+
+
                 BoxesCreated(
                     image = R.drawable.makeadmin,
                     title = "Make Admin",
                     modifier = Modifier.size(150.dp)
                 )
 
+                BoxesCreated(
+                    image = R.drawable.removeaccess,
+                    title = "Remove access",
+                    modifier = Modifier.size(150.dp)
+                )
+
+
             }
+
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+
+
+
+                BoxesCreated(
+                    image = R.drawable.list,
+                    title = "Add Syllabus",
+                    modifier = Modifier.size(150.dp)
+                )
+
+                BoxesCreated(
+                    image = R.drawable.delete,
+                    title = "Del. Student",
+                    modifier = Modifier.size(150.dp)
+                )
+
+
+            }
+
+
+
+
+
 
         }
 
@@ -418,7 +465,7 @@ fun BoxesCreated(image: Int, title: String, modifier: Modifier) {
             .background(color = Color.Transparent, shape = RoundedCornerShape(20.dp)),
         color = Color(0xffF9A825),
         shape = RoundedCornerShape(20.dp),
-        shadowElevation = 20.dp
+       shadowElevation = 5.dp
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
@@ -431,7 +478,8 @@ fun BoxesCreated(image: Int, title: String, modifier: Modifier) {
 
             Image(
                 painter = painterResource(id = image),
-                contentDescription = ""
+                contentDescription = "",
+                modifier = Modifier.size(65.dp)
             )
 
             Text(
