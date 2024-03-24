@@ -170,6 +170,38 @@ fun groupChatsScreen(messagebar: NavHostController) {
 
 
         }
+        Card(modifier = Modifier
+            .fillMaxWidth()
+            .shadow(elevation = 20.dp)
+            .clickable {
+                messagebar.navigate(route = "chatscreen/first")
+
+            }) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Surface(modifier = Modifier.size(60.dp),
+                    color = Color.Transparent){
+                    Image(
+                        painter = painterResource(id = R.drawable.savera_logo1_removebg_preview),
+                        contentDescription = "",
+                    )
+                }
+                Column {
+                    Text(text = "Savera 1st year",
+                        fontFamily = ralewayfamilt,
+                        style= MaterialTheme.typography.headlineSmall)
+
+                    Text(text = "Free Volunteers come to Savera ASAP!")
+                }
+            }
+
+
+        }
 
 
 
