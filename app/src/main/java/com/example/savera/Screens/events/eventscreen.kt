@@ -1,10 +1,12 @@
 package com.example.savera.Screens.events
 
+import android.annotation.SuppressLint
 import android.net.Uri
+import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,15 +20,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DatePicker
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -34,10 +41,10 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,26 +54,40 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.window.Dialog
-import androidx.constraintlayout.widget.Placeholder
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import coil.compose.rememberImagePainter
+import com.example.savera.Model.events_Data
 import com.example.savera.R
+import com.example.savera.ui.theme.ralewaybold
 import com.example.savera.ui.theme.ralewayfamilt
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
+@SuppressLint("SuspiciousIndentation")
 @Composable
-fun eventscreen(selectindex: MutableIntState, mainscreennav: NavHostController) {
+fun eventscreen(
+    selectindex: MutableIntState, mainscreennav: NavHostController,
+    eventScreenViewmodel: eventScreenViewmodel = viewModel()
+) {
     BackHandler {
         selectindex.value = 2
     }
     val showDialogue = remember {
-        mutableStateOf(true)
+        mutableStateOf(false)
     }
 
+  val events = eventScreenViewmodel.events.collectAsState()
+    
+    
 
     Scaffold(
         modifier = Modifier.background(color = MaterialTheme.colorScheme.surfaceVariant),
@@ -91,13 +112,90 @@ fun eventscreen(selectindex: MutableIntState, mainscreennav: NavHostController) 
                 .padding(it)
                 .fillMaxSize(), color = MaterialTheme.colorScheme.surfaceVariant
         ) {
-            emptylist()
+
+            LazyColumn {
+                items(events.value){
+                    eventsmaker(it)
+                }
+
+
+
+            }
+
+
+
+            
+
+
+
 if (showDialogue.value)
             alertdialogue(showDialogue)
         }
     }
 
 
+}
+@Composable
+fun eventsmaker(it: events_Data) {
+Column(modifier = Modifier
+    .fillMaxWidth()
+    .padding(20.dp)) {
+    Text(
+        text = it.eventName,
+        fontFamily = ralewaybold,
+        style = MaterialTheme.typography.headlineSmall
+    )
+
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .size(200.dp)
+            .border(width = 3.dp, color = Color(0xffFB5607), shape = RoundedCornerShape(10.dp)),
+        shape = RoundedCornerShape(10.dp)
+    ) {
+        Image(
+            painter = rememberImagePainter(data = it.imageUrl), contentDescription = "",
+            modifier = Modifier,
+            contentScale = ContentScale.FillWidth
+        )
+    }
+Spacer(modifier = Modifier.height(10.dp))
+    Row(modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween) {
+Row(verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.Center) {
+  Icon(painter = painterResource(id = R.drawable.calender), contentDescription ="",
+      tint = Color(0xffFB5607))
+    Text(text = it.date,
+        fontFamily = ralewaybold,
+        modifier = Modifier.padding(6.dp))
+
+
+}
+        Row(verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center) {
+            Icon(painter = painterResource(id = R.drawable.claenderrrr), contentDescription ="",
+                tint = Color(0xffFB5607),
+                modifier = Modifier.size(18.dp))
+            Text(text = it.time,
+                fontFamily = ralewaybold,
+                modifier = Modifier.padding(6.dp))
+        }
+
+    }
+    Row(modifier = Modifier.padding(top = 20.dp),
+        ) {
+        Icon(painter = painterResource(id = R.drawable.docum), contentDescription ="" ,
+            tint = Color(0xffFB5607),
+            modifier = Modifier.size(18.dp))
+        Spacer(modifier = Modifier.width(6.dp))
+        Text(text = it.description,
+            fontFamily = ralewayfamilt)
+
+
+    }
+}
+    HorizontalDivider()
 }
 
 
@@ -139,6 +237,8 @@ fun textoutput(
 
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
+@SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun alertdialogue(
@@ -255,55 +355,55 @@ buttonCreation(title = "Upload img", modifier = Modifier.clickable {
 })
 
                     buttonCreation(title = "Create", modifier = Modifier.clickable {
-loading.value = 1
-                        
-                        
-                        imageUri?.let {
-                            uploadImageToFirebase(
-                                context = context,
-                                imageUri = it,
-                                eventname = eventname.value,
-                                onSuccess = {
+
+                        val date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                         val localTime = LocalTime.now().format(DateTimeFormatter.ofPattern( "HH:mm:ss"))
+                        if (imageUri!= null) {
+                            loading.value = 1
+                            imageUri?.let {
+                                uploadImageToFirebase(
+                                    context = context,
+                                    imageUri = it,
+                                    eventname = eventname.value,
+                                    onSuccess = {
 
 
-                                 eventScreenViewmodel.addeventsDetail(
-                                     collection = "Events",
-                                     document =  eventname.value,
-                                     data =
-                                         hashMapOf(
-                                             "Event Name" to "${eventname.value}"
-                                             ,"Date" to "${dates.value}",
-                                            "Time" to "${time.value}"
-                                         ,"Location" to "${location.value}",
-                                             "Description" to "${description.value}",
-                                             "imageurl" to "$it",
-                                             "created by" to ""
-                                         ),
-                                     onsuccess = {
-                                       loading.value = 2          
-                                                 
-                                     },
-                                     failure = {
-                                       loading.value = 3  
-                                         
-                                     }
+                                        eventScreenViewmodel.addeventsDetail(
+                                            collection = "Events",
+                                            document = "$date $localTime",
+                                            data =
+                                            hashMapOf(
+                                                "Event Name" to eventname.value,
+                                                "Date" to "${dates.value}",
+                                                "Time" to "${time.value}",
+                                                "Location" to "${location.value}",
+                                                "Description" to "${description.value}",
+                                                "imageurl" to "$it",
+                                                "created by" to ""
+                                            ),
+                                            onsuccess = {
+                                                loading.value = 2
+
+                                            },
+                                            failure = {
+                                                loading.value = 3
+
+                                            }
 
 
-
-                                 )
-
+                                        )
 
 
+                                    },
+                                    exception = {
 
-                                },
-                                exception = {
 
+                                    },
+                                    mainfoldername = "events"
+                                )
+                            }
 
-                                }
-                            )
                         }
-
-
 
 
                     })

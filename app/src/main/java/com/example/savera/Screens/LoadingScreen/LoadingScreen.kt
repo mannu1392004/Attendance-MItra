@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.example.savera.Components.alertdialogue
 import com.example.savera.Navigation.Screens
 import com.example.savera.R
@@ -56,7 +55,7 @@ fun loadingScreen(
                 loginScreenViewmodel.signIn(
                     email = email,
                     password = password, home = {
-                        navController.navigate(Screens.HomeScreen.name)
+                        navController.navigate(Screens.NewuserCheck.name)
                     },
                     anyelse = {
                         show.value = true

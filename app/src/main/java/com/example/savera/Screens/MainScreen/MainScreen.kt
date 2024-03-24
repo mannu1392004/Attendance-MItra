@@ -76,7 +76,7 @@ fun MainScreen() {
     val activity = LocalContext.current as? Activity
 
     val selectindex = remember {
-        mutableIntStateOf(3)
+        mutableIntStateOf(2)
     }
     val showmessagetopbar = remember {
         mutableStateOf(false)
