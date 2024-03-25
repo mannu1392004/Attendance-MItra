@@ -68,7 +68,6 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun homeScreen(
     selectindex: MutableIntState,
-    mainscreennav: NavHostController,
     homeScreenViewModel: HomeScreenViewModel = viewModel(),
 ) {
 
@@ -99,7 +98,6 @@ fun homeScreen(
 
     BackHandler {
         selectindex.value = 2
-        mainscreennav.navigate(route = mainScreen.Dashboard.name)
     }
 
     homeui(youtubestate, homeScreenViewModel)
@@ -427,7 +425,8 @@ Column(verticalArrangement = Arrangement.Center,
 
 
 @Composable
-fun inputValue(name: MutableState<String>,placeholder:String,keyboard:String) {
+fun inputValue(name: MutableState<String>,placeholder:String,keyboard:String,
+               modifier: Modifier =Modifier) {
 TextField(value = name.value, onValueChange = {
     name.value = it
 }
@@ -443,7 +442,7 @@ maxLines = 1
     )
 ,
     label = { Text(text = placeholder)}
-
+, modifier = modifier
 )
 
 }

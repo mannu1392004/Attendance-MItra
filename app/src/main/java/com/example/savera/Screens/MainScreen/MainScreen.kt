@@ -25,11 +25,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,23 +37,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.example.savera.Components.ChatScreenTopBar
 import com.example.savera.Components.TopAppBar
-import com.example.savera.Navigation.mainScreenNavigation.mainScreen
 import com.example.savera.R
 import com.example.savera.Screens.ChatsScreen.chatScreen
 import com.example.savera.Screens.account.accountScreen
 import com.example.savera.Screens.attendanceScreen.AttendanceScreen
-import com.example.savera.Screens.attendanceScreen.AttendanceScreenViewmodel
 import com.example.savera.Screens.dashboard.dashboard
 import com.example.savera.Screens.events.eventscreen
 import com.example.savera.Screens.homeScreen.homeScreen
 import com.example.savera.ui.theme.ralewayfamilt
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -63,20 +57,14 @@ import com.example.savera.ui.theme.ralewayfamilt
 @Composable
 fun MainScreen() {
 
-    var selectedItemInAttendance = remember { mutableStateOf("") }
-
-
-    val AttendanceScreenViewmodel: AttendanceScreenViewmodel = viewModel()
-
-
-    val x = rememberSaveable { mutableStateOf(0) }
-
-    val mainscreennav = rememberNavController()
+val notShowTop = remember {
+    mutableStateOf(false)
+}
 
     val activity = LocalContext.current as? Activity
 
     val selectindex = remember {
-        mutableIntStateOf(2)
+        mutableIntStateOf(4)
     }
     val showmessagetopbar = remember {
         mutableStateOf(false)
@@ -94,12 +82,14 @@ fun MainScreen() {
             if (showmessagetopbar.value)
                 ChatScreenTopBar(showmessagetopbar)
             else
+                if (!notShowTop.value)
                 TopAppBar(title = "", showmessagetopbar)
         },
 
 
         bottomBar = {
             if (!showmessagetopbar.value)
+
                 NavigationBar(
 
                     modifier = Modifier
@@ -126,6 +116,7 @@ fun MainScreen() {
                                     interactionSource = MutableInteractionSource(),
                                     indication = null,
                                 ) {
+
                                     selectindex.value = 0
 
 
@@ -197,6 +188,7 @@ fun MainScreen() {
                                     interactionSource = MutableInteractionSource(),
                                     indication = null,
                                 ) {
+
                                     selectindex.value = 1
 
                                 },
@@ -266,6 +258,7 @@ fun MainScreen() {
                                     interactionSource = MutableInteractionSource(),
                                     indication = null,
                                 ) {
+
                                     selectindex.value = 2
 
                                 },
@@ -336,6 +329,7 @@ fun MainScreen() {
                                     interactionSource = MutableInteractionSource(),
                                     indication = null,
                                 ) {
+
                                     selectindex.value = 3
 
 
@@ -459,8 +453,6 @@ fun MainScreen() {
 
 
                                     AnimatedVisibility(visible = selectindex.value != 4) {
-
-
                                         Image(
                                             painter = painterResource(id = R.drawable.account),
                                             contentDescription = "",
@@ -493,68 +485,44 @@ fun MainScreen() {
 
             if (!showmessagetopbar.value) {
                 if (selectindex.value == 0) {
-                    homeScreen(selectindex = selectindex, mainscreennav = mainscreennav)
+    notShowTop.value  = false
+                    homeScreen(selectindex = selectindex)
                 }
                 if (selectindex.value == 1) {
-                    AttendanceScreen(
-                        selectindex = selectindex,
-                        mainscreennav = mainscreennav,
-                        AttendanceScreenViewmodel = AttendanceScreenViewmodel,
-                        selectedItemInAttendance = selectedItemInAttendance
+
+                        notShowTop.value  = false
+
+
+                    AttendanceScreen(selectindex,
                     )
 
                 }
 
                 if (selectindex.value == 2) {
-                    dashboard(selectindex = selectindex, mainscreennav = mainscreennav)
+
+                        notShowTop.value  = false
+
+                    dashboard(selectindex = selectindex)
 
                 }
                 if (selectindex.value == 3) {
-                    eventscreen(selectindex = selectindex, mainscreennav = mainscreennav)
+
+                        notShowTop.value  = false
+
+                    eventscreen(selectindex = selectindex)
 
                 }
                 if (selectindex.value == 4) {
-                    accountScreen(x = x, selectindex = selectindex, mainscreennav = mainscreennav)
 
+
+
+                    accountScreen(selectindex = selectindex)
+                    notShowTop.value  = true
                 }
 
             } else {
                 chatScreen()
             }
-
-            /*
-                NavHost(
-                    navController = mainscreennav,
-                    startDestination = mainScreen.Attendance.name
-                ) {
-
-                    composable(route = mainScreen.Home.name) {
-
-                        homeScreen(selectindex, mainscreennav)
-
-                    }
-
-                    composable(route = mainScreen.Attendance.name) {
-                        AttendanceScreen(selectindex, mainscreennav,AttendanceScreenViewmodel,selectedItemInAttendance)
-                    }
-
-                    composable(route = mainScreen.Dashboard.name) {
-                        dashboard(selectindex, mainscreennav)
-                    }
-
-                    composable(route = mainScreen.Events.name) {
-                        eventscreen(selectindex, mainscreennav)
-                    }
-
-                    composable(route = mainScreen.Account.name) {
-
-                        accountScreen(x, selectindex, mainscreennav)
-                    }
-
-                }
-
-                */
-
         }
     }
 }

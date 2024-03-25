@@ -297,6 +297,7 @@ fun textout(
     title: String,
     modifier: Modifier,
     fontStyle: androidx.compose.ui.text.TextStyle,
+    color: Color = Color.Black
 
     ) {
     Text(
@@ -304,7 +305,7 @@ fun textout(
         modifier = modifier,
         style = fontStyle,
         fontFamily = ralewayfamilt,
-        color = Color.Black
+        color = color
     )
 
 

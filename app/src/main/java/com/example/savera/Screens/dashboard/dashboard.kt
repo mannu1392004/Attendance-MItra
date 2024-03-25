@@ -37,7 +37,7 @@ import com.example.savera.ui.theme.ralewaybold
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
-fun dashboard(selectindex: MutableIntState, mainscreennav: NavHostController) {
+fun dashboard(selectindex: MutableIntState) {
   val activity = LocalContext.current as? Activity  ?: return
     BackHandler {
        moveAppToBackground(activity)

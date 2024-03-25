@@ -1,16 +1,8 @@
 package com.example.savera.Repository
 
-import android.annotation.SuppressLint
 import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.savera.Model.events_Data
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.tasks.await
 
@@ -85,6 +77,7 @@ object AppRepository {
     }
 
     // function to add the feed back
+    // also add  present Student
     fun addfeedback(collectionName: String,documentPath: String
                     ,hashMap: HashMap<String,String>
                     ,successfull:()->Unit,
@@ -96,9 +89,6 @@ object AppRepository {
             for (document in documentSnapshot.documents) {
                 documentList.add(document.id)
             }
-
-
-
 
             if (documentList.contains(documentPath))
                 firestore.collection(collectionName)
@@ -198,8 +188,9 @@ object AppRepository {
         val firestore = FirebaseFirestore.getInstance()
 
         if (currentUser != null) {
-                val userDocRef = firestore.collection("teachers").document(currentUser)
-                val documentSnapshot = userDocRef.get().await()
+                val userDocRef = firestore.collection("teachers")
+                    .document(currentUser)
+            val documentSnapshot = userDocRef.get().await()
                 if (documentSnapshot.exists()) {
                     exist()
                 } else {
@@ -207,6 +198,8 @@ object AppRepository {
                 }
             }
         }
+
+
 
    // new user add code
     fun addnewuser(documentPath: String,data: Any,successfull: () -> Unit,
@@ -241,9 +234,39 @@ object AppRepository {
         }
     }
 
+    //check if attendance taken or not
+    suspend fun checkAttendanceTakenOrNot(
+        className: String,
+        date: String,
+        taken: () -> Unit,
+        nottaken: () -> Unit,
+    ) {
+        val firestore = FirebaseFirestore.getInstance()
+
+Log.d("wfbkjfcewfllewmfkjrhfwefklhwjklqwewr",date)
+            val userDocRef = firestore.collection("Classes")
+                .document(className)
+            val documentSnapshot = userDocRef.get().await()
+          if (documentSnapshot.contains(date)){
+              taken()
+          }
+        else{
+            nottaken()
+        }
+
+        }
+//  user information
+
+
+
+
 
 
     }
+
+
+
+
 
 
 

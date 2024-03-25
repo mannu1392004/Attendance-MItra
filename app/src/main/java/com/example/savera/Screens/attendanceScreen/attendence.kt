@@ -2,8 +2,15 @@ package com.example.savera.Screens.attendanceScreen
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
+import android.view.animation.OvershootInterpolator
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.Animatable
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.repeatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,39 +39,54 @@ import androidx.compose.material3.RadioButtonColors
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.savera.Navigation.mainScreenNavigation.mainScreen
 import com.example.savera.R
+import com.example.savera.Screens.homeScreen.animation
+import com.example.savera.Screens.homeScreen.button
+import com.example.savera.Screens.homeScreen.textout
 import com.example.savera.ui.theme.lightrale
 import com.example.savera.ui.theme.ralewaybold
 import com.example.savera.ui.theme.ralewayfamilt
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
 
-@SuppressLint("UnrememberedMutableState")
+@SuppressLint("UnrememberedMutableState", "CoroutineCreationDuringComposition")
 @RequiresApi(Build.VERSION_CODES.O)
 
 @Composable
 fun AttendanceScreen(
-    selectindex: MutableIntState,
-    mainscreennav: NavHostController,
-    AttendanceScreenViewmodel: AttendanceScreenViewmodel,
-    selectedItemInAttendance: MutableState<String>,
+    selectindex:MutableState<Int>,
+    AttendanceScreenViewmodel: AttendanceScreenViewmodel = viewModel(),
 
     ) {
+
+    var selectedItemInAttendance = remember { mutableStateOf("") }
+
+    val studentSelectionMap = mutableStateMapOf<String, MutableState<Int>>()
+
     val currentDate = remember { LocalDate.now() }
     val formattedDate = remember(currentDate) {
         currentDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
@@ -76,13 +98,19 @@ fun AttendanceScreen(
     }
     val list = AttendanceScreenViewmodel.list.collectAsState()
 
-    val Student_List = AttendanceScreenViewmodel.Student_List.collectAsState()
+    
 
-
+    val studentSubmit = remember {
+        mutableStateOf(false)
+    }
+    
+    val AttendanceTaken = remember {
+        mutableStateOf(false)
+    }
+    
 
     BackHandler {
         selectindex.value = 2
-        mainscreennav.navigate(route = mainScreen.Dashboard.name)
     }
 
     val currentDayOfWeek = remember {
@@ -92,13 +120,13 @@ fun AttendanceScreen(
         )
     }
 
-
+    val studentList = AttendanceScreenViewmodel.Student_List.collectAsState()
 
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.surfaceVariant
     ) {
-
+       
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -164,8 +192,6 @@ fun AttendanceScreen(
                                     tint = Color.White,
                                 )
                         }
-
-
                         if (!list.value.isNullOrEmpty())
                             DropdownMenu(
                                 expanded = dropdownmenu.value,
@@ -178,11 +204,20 @@ fun AttendanceScreen(
                                         Text(
                                             text = it, fontFamily = lightrale
                                         )
-                                    }, onClick = {
-                                        selectedItemInAttendance.value = it
-                                        AttendanceScreenViewmodel.fetchstudentslist(it)
-                                        dropdownmenu.value = false
+                                    },
 
+                                        onClick = {
+
+                                        selectedItemInAttendance.value = it
+                                            AttendanceScreenViewmodel.fetchstudentslist(it)
+                                            dropdownmenu.value = false
+                                        AttendanceScreenViewmodel.checkAttendance(date =formattedDate,
+                                            nottaken = {
+                                                       AttendanceTaken.value = false},
+                                            taken = {
+                                               AttendanceTaken.value = true     
+                                            },
+                                            classname = it)
 
                                     }
 
@@ -202,7 +237,8 @@ fun AttendanceScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            if (Student_List.value.isNotEmpty() && !selectedItemInAttendance.value.isNullOrEmpty())
+            if (studentList.value.isNotEmpty() && !selectedItemInAttendance.value.isNullOrEmpty())
+                if (!AttendanceTaken.value)
                 LazyColumn(
                     modifier = Modifier
                         .background(
@@ -229,11 +265,10 @@ fun AttendanceScreen(
                                     bottomEnd = 25.dp,
                                 ), color = Color(0xffD9D9D9).copy(alpha = 0.4f)
                             ) {
-                                Text(
-                                    text = "Name",
-                                    modifier = Modifier.padding(10.dp),
-                                    color = Color.White,
-                                    fontFamily = ralewaybold
+                                textout(
+                                    title = "Name", modifier = Modifier.padding(10.dp),
+                                    fontStyle = MaterialTheme.typography.bodyMedium,
+                                    color = Color.White
                                 )
                             }
                             Surface(
@@ -244,11 +279,11 @@ fun AttendanceScreen(
                                 ),
                                 color = Color(0xffD9D9D9).copy(alpha = 0.4f)
                             ) {
-                                Text(
-                                    text = "Mark(Present/Absent)",
+                                textout(
+                                    title = "Mark(Present/Absent)",
                                     modifier = Modifier.padding(10.dp),
-                                    color = Color.White,
-                                    fontFamily = ralewaybold
+                                    fontStyle = MaterialTheme.typography.bodyMedium,
+                                    color = Color.White
                                 )
                             }
 
@@ -257,30 +292,77 @@ fun AttendanceScreen(
 
                         Spacer(modifier = Modifier.height(10.dp))
                     }
-
-
-                    items(Student_List.value) {
-                        var Selection = AttendanceScreenViewmodel.studentSelectionMap.getOrPut(it) {
-                            mutableStateOf(0)
+item {
+                    LaunchedEffect(studentList.value) {
+                        studentSelectionMap.keys.forEach { key ->
+                            studentSelectionMap.remove(key)
                         }
-                        studentname(
-                            it,
-                            Selection,
-                            AttendanceScreenViewmodel,
-                            formattedDate,
-                            selectedItemInAttendance.value,
-                            currentDayOfWeek
-                        )
+
                     }
+                    }
+    items(studentList.value) {
+
+
+        val Selection = studentSelectionMap.getOrPut(it) {
+            mutableStateOf(0)
+        }
+
+
+        studentname(
+            it,
+            Selection,
+            AttendanceScreenViewmodel,
+            formattedDate,
+            selectedItemInAttendance.value,
+            currentDayOfWeek
+        )
+    }
+
+
+                item {
+
+                    Row(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically) {
+
+
+                        button(text = "Submit"){
+                            studentSubmit.value = true
+                            
+                        }
+                       
+                        
+                        
+                    }
+
                 }
 
 
-            if (!selectedItemInAttendance.value.isNullOrEmpty() && Student_List.value.isNullOrEmpty()) {
+                }
 
-                CircularProgressIndicator()
+            
+            
+            if (studentSubmit.value){
+                ShowDialogue(
+                    studentSubmit,
+                    studentSelectionMap,
+                    AttendanceScreenViewmodel,
+                    selectedItemInAttendance
+                    )
             }
 
-
+            if (!selectedItemInAttendance.value.isNullOrEmpty() && studentList.value.isNullOrEmpty()&&!AttendanceTaken.value) {
+                CircularProgressIndicator()
+            }
+            if (AttendanceTaken.value){
+                attendanceTaken()
+            }
+            
+            
+            
+            
             if (selectedItemInAttendance.value.isNullOrEmpty()) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
@@ -298,6 +380,232 @@ fun AttendanceScreen(
 
 
 }
+
+@SuppressLint("UnrememberedMutableState")
+@Composable
+fun attendanceTaken() {
+    Column(modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally) {
+        val x = remember {
+            androidx.compose.animation.core.Animatable(0.5f)
+        }
+       LaunchedEffect(Unit) {
+           x.animateTo(
+               targetValue = 1f,
+               animationSpec = infiniteRepeatable(
+                   animation = tween(durationMillis = 1000),
+                   repeatMode = RepeatMode.Reverse
+               )
+           )
+       }
+
+        Image(painter = painterResource(id = R.drawable.checklist), contentDescription ="",
+            modifier = Modifier.scale(x.value))
+
+
+        textout(title = "Attendance Taken", modifier = Modifier, fontStyle = MaterialTheme.typography.titleMedium)
+
+
+
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@SuppressLint("CoroutineCreationDuringComposition")
+@Composable
+fun ShowDialogue(
+
+
+    studentSubmit: MutableState<Boolean>,
+    studentSelectionMap: SnapshotStateMap<String, MutableState<Int>>,
+    AttendanceScreenViewmodel: AttendanceScreenViewmodel,
+    selectedItemInAttendance: MutableState<String>,
+
+    ) {
+    Dialog(onDismissRequest = { /*TODO*/ }) {
+
+        val Studentleft = remember {
+        mutableStateOf(false)
+    }
+        var error = remember {
+            mutableStateOf("")
+        }
+
+        val state = remember {
+            mutableStateOf(0)
+        }
+
+
+
+
+        val present = remember {
+            mutableStateOf(0)
+        }
+
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            color = Color.White
+        ) {
+
+            LaunchedEffect(Unit) {
+                for (x in studentSelectionMap.values) {
+                    if (x.value == 1) {
+                        present.value++
+                    }
+                    if (x.value == 0) {
+                        Studentleft.value = true
+                    }
+                }
+            }
+
+
+
+            if (state.value == 0) {
+                if (Studentleft.value) {
+                    Column(
+                        modifier = Modifier.padding(10.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+
+                        textout(
+                            title =
+                            "Looks like we're missing a few brain cells in the counting department! Should we send out a search party for the lost students?",
+                            modifier = Modifier,
+                            fontStyle = MaterialTheme.typography.bodyMedium
+                        )
+
+                        button(text = "Recount") {
+                            studentSubmit.value = false
+                        }
+
+                    }
+
+                } else {
+                    Column(
+                        modifier = Modifier.padding(bottom = 10.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+
+
+                        textout(
+                            title = "Submit",
+                            modifier = Modifier,
+                            fontStyle = MaterialTheme.typography.titleLarge,
+                            color = Color.White
+                        )
+
+                        textout(
+                            title = "Total Student Present- ${present.value}", modifier = Modifier,
+                            fontStyle = MaterialTheme.typography.bodyLarge,
+
+                            )
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+
+                            button(text = "Yes") {
+                                state.value = 1
+                                val date =
+                                    LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                                AttendanceScreenViewmodel.addPresent(
+                                    classname = selectedItemInAttendance.value,
+                                    successful = {
+                                        state.value = 3
+                                        selectedItemInAttendance.value = ""
+                                    },
+                                    error = {
+                                        state.value = 2
+                                        error.value = it
+                                    },
+                                    hashMap = hashMapOf(
+                                        date to present.value.toString()
+                                    )
+                                )
+
+
+                            }
+
+                            button(text = "No") {
+                                studentSubmit.value = false
+                            }
+                        }
+
+
+                    }
+                }
+            }
+
+
+        }
+
+        if (state.value == 1) {
+            val showerror = remember {
+                mutableStateOf(false)
+            }
+
+
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CircularProgressIndicator(
+                    color = Color(0xffF9A825)
+                )
+                LaunchedEffect(Unit) {
+                    delay(5000)
+                    showerror.value = true
+
+                }
+                if (showerror.value)
+                    textout(
+                        title = "Check Your Internet",
+                        modifier = Modifier,
+                        fontStyle = MaterialTheme.typography.titleLarge
+                    )
+
+            }
+        }
+
+            if (state.value == 2){
+                Surface {
+                    Column(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        textout(title = error.value, modifier = Modifier, fontStyle =MaterialTheme.typography.bodyLarge )
+                        button(text = "Ok") {
+                            studentSubmit.value = false
+                        }
+                    }
+                }
+
+
+            }
+
+
+
+            if (state.value==3){
+                animation(newUser =studentSubmit , Boolean = false, state =state )
+            }
+
+
+
+        }
+
+    }
+
+
+
+
+
 
 @Composable
 fun studentname(
@@ -322,19 +630,14 @@ fun studentname(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .horizontalScroll(rememberScrollState())
+
                 .padding(start = 20.dp, top = 10.dp, bottom = 10.dp, end = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = it, modifier = Modifier
-                    .padding(4.dp)
-                    .weight(1f),
-                fontFamily = ralewaybold,
-                color = Color.White
-            )
-
+           textout(title = it, modifier = Modifier.weight(1f),
+               fontStyle =MaterialTheme.typography.bodyLarge,
+               color = Color.White)
 
 
 
@@ -342,8 +645,15 @@ fun studentname(
                 modifier = Modifier.weight(1f),
                 color = Color.Transparent
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "Present", fontFamily = ralewayfamilt, color = Color.White)
+                Row(verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.horizontalScroll(rememberScrollState())) {
+
+
+                  textout(title = "Present", modifier = Modifier,
+                      fontStyle =MaterialTheme.typography.bodyMedium,
+                      color = Color.White)
+
+
                     RadioButton(
                         selected = (Selection.value == 1), onClick = {
                             Selection.value = 1
@@ -365,6 +675,7 @@ fun studentname(
                             unselectedColor = Color(0xff008133),
                             disabledUnselectedColor = Color(0xff008133)
                         )
+                    , modifier = Modifier.weight(1f)
                     )
                 }
             }
@@ -375,8 +686,12 @@ fun studentname(
             Surface(
                 modifier = Modifier.weight(1f), color = Color.Transparent
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "Absent", fontFamily = ralewayfamilt, color = Color.White)
+                Row(verticalAlignment = Alignment.CenterVertically,
+                   ) {
+
+                    textout(title = "Absent", modifier = Modifier, fontStyle =MaterialTheme.typography.bodyMedium,
+                        color = Color.White)
+
                     RadioButton(
                         selected = Selection.value == 2, onClick = {
                             Selection.value = 2
