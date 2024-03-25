@@ -2,14 +2,10 @@ package com.example.savera.Screens.attendanceScreen
 
 import android.annotation.SuppressLint
 import android.os.Build
-import android.util.Log
-import android.view.animation.OvershootInterpolator
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.repeatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -40,7 +36,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateMapOf
@@ -56,8 +51,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import com.example.savera.Navigation.mainScreenNavigation.mainScreen
 import com.example.savera.R
 import com.example.savera.Screens.homeScreen.animation
 import com.example.savera.Screens.homeScreen.button
@@ -65,9 +58,7 @@ import com.example.savera.Screens.homeScreen.textout
 import com.example.savera.ui.theme.lightrale
 import com.example.savera.ui.theme.ralewaybold
 import com.example.savera.ui.theme.ralewayfamilt
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
@@ -635,7 +626,8 @@ fun studentname(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-           textout(title = it, modifier = Modifier.weight(1f),
+           textout(
+               title = it, modifier = Modifier.weight(1f),
                fontStyle =MaterialTheme.typography.bodyLarge,
                color = Color.White)
 
@@ -649,7 +641,8 @@ fun studentname(
                     modifier = Modifier.horizontalScroll(rememberScrollState())) {
 
 
-                  textout(title = "Present", modifier = Modifier,
+                  textout(
+                      title = "Present", modifier = Modifier,
                       fontStyle =MaterialTheme.typography.bodyMedium,
                       color = Color.White)
 
@@ -689,7 +682,8 @@ fun studentname(
                 Row(verticalAlignment = Alignment.CenterVertically,
                    ) {
 
-                    textout(title = "Absent", modifier = Modifier, fontStyle =MaterialTheme.typography.bodyMedium,
+                    textout(
+                        title = "Absent", modifier = Modifier, fontStyle =MaterialTheme.typography.bodyMedium,
                         color = Color.White)
 
                     RadioButton(

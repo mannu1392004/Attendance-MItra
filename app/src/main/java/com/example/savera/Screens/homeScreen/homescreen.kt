@@ -52,8 +52,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import com.example.savera.Navigation.mainScreenNavigation.mainScreen
 import com.example.savera.R
 import com.example.savera.Screens.events.loadBitmap
 import com.example.savera.Screens.events.uploadImageToFirebase
@@ -284,50 +282,52 @@ fun newUserUi(
                 loading.value=1
 
                 imageUri?.let { it ->
-                    uploadImageToFirebase(
-                        context = context,
-                        eventname = name.value,
-                        imageUri = it,
-                        mainfoldername = "Profile Pictures",
-                        exception = {error1->
+                    if (email != null) {
+                        uploadImageToFirebase(
+                            context = context,
+                            eventname = email,
+                            imageUri = it,
+                            mainfoldername = "Profile Pictures",
+                            exception = {error1->
 
-                                    loading.value =2
-                                   error.value =error1
+                                loading.value =2
+                                error.value =error1
 
 
+                            },
+                            onSuccess = {
 
-                        },
-                        onSuccess = {
+                                val date =  LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-YY"))
 
-                       val date =  LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-YY"))
-
-                            if (email != null) {
-                                homeScreenViewModel.addnewuser(
-                                    documentPath = email,
-                                    data = hashMapOf(
-                                        "Admin" to "False",
-                                        "Attendance" to "0",
-                                        "Date of Join" to date,
-                                        "Name" to name.value,
-                                        "Phone" to phone.value,
-                                        "ProfilePic" to it,
-                                        "Year" to year.value
-                                    ),
-                                    error = {error2->
+                                if (email != null) {
+                                    homeScreenViewModel.addnewuser(
+                                        documentPath = email,
+                                        data = hashMapOf(
+                                            "Admin" to "False",
+                                            "Attendance" to "0",
+                                            "Date of Join" to date,
+                                            "Name" to name.value,
+                                            "Phone" to phone.value,
+                                            "ProfilePic" to it,
+                                            "Year" to year.value,
+                                            "Gender" to gender.value
+                                        ),
+                                        error = {error2->
                                             loading.value = 2
-                                        error.value  =error2
+                                            error.value  =error2
 
-                                    },
-                                    successfull = {
-                                        loading.value=3
-                                    }
-                                )
+                                        },
+                                        successfull = {
+                                            loading.value=3
+                                        }
+                                    )
+                                }
+
                             }
-
-                        }
 
 
                         )
+                    }
                 }
 
 

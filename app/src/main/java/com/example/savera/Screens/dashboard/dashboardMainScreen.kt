@@ -434,7 +434,8 @@ fun AdduserDialogue(showAddUserDialogue: MutableState<Boolean>) {
                 textout(title = "Add User", modifier = Modifier, fontStyle =MaterialTheme.typography.titleLarge )
 
 
-              textout(title = "Due to security reasons, users should only" +
+              textout(
+                  title = "Due to security reasons, users should only" +
                       " be added via the website." +
                       "\n" +
                       "\nWe apologize for any inconvenience this may" +

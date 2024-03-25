@@ -29,7 +29,7 @@ fun Navigation() {
         }
 
         composable(route = Screens.NewuserCheck.name) {
-           MainScreen()
+           MainScreen(navController)
         }
 
         val loadingroute = Screens.LoadingScreen.name

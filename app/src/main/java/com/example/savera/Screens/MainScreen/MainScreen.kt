@@ -25,7 +25,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,27 +34,24 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.savera.Components.ChatScreenTopBar
 import com.example.savera.Components.TopAppBar
 import com.example.savera.R
 import com.example.savera.Screens.ChatsScreen.chatScreen
-import com.example.savera.Screens.account.accountScreen
+import com.example.savera.Screens.account.attendanceScreenNav
 import com.example.savera.Screens.attendanceScreen.AttendanceScreen
 import com.example.savera.Screens.dashboard.dashboard
 import com.example.savera.Screens.events.eventscreen
 import com.example.savera.Screens.homeScreen.homeScreen
 import com.example.savera.ui.theme.ralewayfamilt
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("SuspiciousIndentation", "UnrememberedMutableInteractionSource")
-@Preview
 @Composable
-fun MainScreen() {
+fun MainScreen(navController: NavHostController) {
 
 val notShowTop = remember {
     mutableStateOf(false)
@@ -64,7 +60,7 @@ val notShowTop = remember {
     val activity = LocalContext.current as? Activity
 
     val selectindex = remember {
-        mutableIntStateOf(4)
+        mutableIntStateOf(0)
     }
     val showmessagetopbar = remember {
         mutableStateOf(false)
@@ -160,6 +156,7 @@ val notShowTop = remember {
                                             Text(
                                                 text = "Home", color = Color.White,
                                                 fontFamily = ralewayfamilt,
+                                                 style =  MaterialTheme.typography.titleMedium
                                             )
                                         }
                                     }
@@ -228,7 +225,8 @@ val notShowTop = remember {
 
                                             Text(
                                                 text = "Attendance", color = Color.White,
-                                                fontFamily = ralewayfamilt
+                                                fontFamily = ralewayfamilt,
+                                                 style =  MaterialTheme.typography.titleMedium
                                             )
                                         }
                                     }
@@ -300,7 +298,8 @@ val notShowTop = remember {
                                             Text(
                                                 text = "Dashboard", color = Color.White,
 
-                                                fontFamily = ralewayfamilt
+                                                fontFamily = ralewayfamilt,
+                                                style =  MaterialTheme.typography.titleMedium
                                             )
                                         }
                                     }
@@ -371,7 +370,8 @@ val notShowTop = remember {
                                             Text(
                                                 text = "Events", color = Color.White,
 
-                                                fontFamily = ralewayfamilt
+                                                fontFamily = ralewayfamilt,
+                                                 style =  MaterialTheme.typography.titleMedium
                                             )
                                         }
                                     }
@@ -447,6 +447,8 @@ val notShowTop = remember {
                                                 text = "Account", color = Color.White,
 
                                                 fontFamily = ralewayfamilt
+                                           , style =  MaterialTheme.typography.titleMedium
+
                                             )
                                         }
                                     }
@@ -513,10 +515,7 @@ val notShowTop = remember {
 
                 }
                 if (selectindex.value == 4) {
-
-
-
-                    accountScreen(selectindex = selectindex)
+                    attendanceScreenNav(selectindex,navController)
                     notShowTop.value  = true
                 }
 

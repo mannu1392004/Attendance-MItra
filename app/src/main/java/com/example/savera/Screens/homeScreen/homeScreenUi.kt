@@ -48,6 +48,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.savera.R
@@ -190,13 +191,13 @@ fun homeui(youtubestate: MutableState<Float>, homeScreenViewModel: HomeScreenVie
 
 
                 button(text = "Submit") {
-                    val gmail = FirebaseAuth.getInstance().currentUser?.email?.split("@")?.get(0)
+                    val gmail = FirebaseAuth.getInstance().currentUser?.email
 
                     val localDate =
                         LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
 
                     val localTime =
-                        LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss a"))
+                        LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"))
 
                     homeScreenViewModel.addFeedback(collectionName = "Feedback",
                         documentPath = gmail.toString(),
@@ -296,15 +297,16 @@ fun homeui(youtubestate: MutableState<Float>, homeScreenViewModel: HomeScreenVie
 fun textout(
     title: String,
     modifier: Modifier,
-    fontStyle: androidx.compose.ui.text.TextStyle,
-    color: Color = Color.Black
+    fontStyle: TextStyle,
+    color: Color = Color.Black,
+    fontFamily: androidx.compose.ui.text.font.FontFamily = ralewayfamilt
 
     ) {
     Text(
         text = title,
         modifier = modifier,
         style = fontStyle,
-        fontFamily = ralewayfamilt,
+        fontFamily = fontFamily,
         color = color
     )
 
