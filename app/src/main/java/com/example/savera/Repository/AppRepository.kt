@@ -1,6 +1,7 @@
 package com.example.savera.Repository
 
 import android.util.Log
+import com.example.savera.Model.UserInformation
 import com.example.savera.Model.events_Data
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,11 +10,13 @@ import kotlinx.coroutines.tasks.await
 object AppRepository {
 
 
-
-
     // Function to fetch a list of documents within a collection
-    fun fetchDocuments(collectionName: String, onSuccess: (List<String>) -> Unit, onFailure: (Exception) -> Unit) {
-         val firestore = FirebaseFirestore.getInstance()
+    fun fetchDocuments(
+        collectionName: String,
+        onSuccess: (List<String>) -> Unit,
+        onFailure: (Exception) -> Unit,
+    ) {
+        val firestore = FirebaseFirestore.getInstance()
 
         val collectionRef = firestore.collection(collectionName)
         collectionRef.get()
@@ -32,9 +35,11 @@ object AppRepository {
     }
 
     // Function to fetch a list of subcollections within a document
-    fun GetStudentList(documentPath: String,collectionName: String
-                       ,onSuccess: (List<String>) -> Unit,
-                       onFailure: (Exception) -> Unit) {
+    fun GetStudentList(
+        documentPath: String, collectionName: String,
+        onSuccess: (List<String>) -> Unit,
+        onFailure: (Exception) -> Unit,
+    ) {
         val firestore = FirebaseFirestore.getInstance()
 
         firestore
@@ -56,9 +61,11 @@ object AppRepository {
     }
 
     // function to add the data to attendance
-    fun adddata(collectionName: String,documentPath: String
-                ,studentName:String,date:String,
-                data:Any,error:(String)->Unit){
+    fun adddata(
+        collectionName: String, documentPath: String,
+        studentName: String, date: String,
+        data: Any, error: (String) -> Unit,
+    ) {
         val firestore = FirebaseFirestore.getInstance()
 
         firestore.collection(collectionName)
@@ -71,17 +78,19 @@ object AppRepository {
             .addOnSuccessListener {
 
             }
-            .addOnFailureListener{
+            .addOnFailureListener {
                 error(it.localizedMessage)
             }
     }
 
     // function to add the feed back
     // also add  present Student
-    fun addfeedback(collectionName: String,documentPath: String
-                    ,hashMap: HashMap<String,String>
-                    ,successfull:()->Unit,
-                    failure:(String)->Unit) {
+    fun addfeedback(
+        collectionName: String, documentPath: String,
+        hashMap: HashMap<String, String>,
+        successfull: () -> Unit,
+        failure: (String) -> Unit,
+    ) {
         val firestore = FirebaseFirestore.getInstance()
 
         firestore.collection(collectionName).get().addOnSuccessListener { documentSnapshot ->
@@ -117,19 +126,18 @@ object AppRepository {
         }
 
 
-        }
-
-
+    }
 
 
 // add events details
 
-    fun addevents(collectionName: String,
-                  documentPath: String,
-                  list: HashMap<String,String>
-                  ,successfull:()->Unit,
-                  failure:(String)->Unit
-                  ) {
+    fun addevents(
+        collectionName: String,
+        documentPath: String,
+        list: HashMap<String, String>,
+        successfull: () -> Unit,
+        failure: (String) -> Unit,
+    ) {
         val firestore = FirebaseFirestore.getInstance()
 
         firestore.collection(collectionName)
@@ -143,13 +151,13 @@ object AppRepository {
             }
     }
 
- // getting events from firebase
+    // getting events from firebase
     fun getEvents(): MutableStateFlow<List<events_Data>> {
-        var eventsState:MutableStateFlow<List<events_Data>> = MutableStateFlow(emptyList())
+        var eventsState: MutableStateFlow<List<events_Data>> = MutableStateFlow(emptyList())
 
-     val firestore = FirebaseFirestore.getInstance()
+        val firestore = FirebaseFirestore.getInstance()
 
-     firestore.collection("Events")
+        firestore.collection("Events")
             .addSnapshotListener { snapshot, exception ->
                 if (exception != null) {
                     // Handle any exceptions
@@ -188,50 +196,53 @@ object AppRepository {
         val firestore = FirebaseFirestore.getInstance()
 
         if (currentUser != null) {
-                val userDocRef = firestore.collection("teachers")
-                    .document(currentUser)
+            val userDocRef = firestore.collection("teachers")
+                .document(currentUser)
             val documentSnapshot = userDocRef.get().await()
-                if (documentSnapshot.exists()) {
-                    exist()
-                } else {
-                    notexist()
-                }
+            if (documentSnapshot.exists()) {
+                exist()
+            } else {
+                notexist()
             }
         }
+    }
 
 
-
-   // new user add code
-    fun addnewuser(documentPath: String,data: Any,successfull: () -> Unit,
-                   failure: (String) -> Unit){
-       val firestore = FirebaseFirestore.getInstance()
-       firestore.collection("teachers")
-           .document(documentPath)
-           .set(data)
-           .addOnSuccessListener {
-               successfull()
-           }
-           .addOnFailureListener{
-               failure(it.localizedMessage)
-           }
+    // new user add code
+    fun addnewuser(
+        documentPath: String, data: Any, successfull: () -> Unit,
+        failure: (String) -> Unit,
+    ) {
+        val firestore = FirebaseFirestore.getInstance()
+        firestore.collection("teachers")
+            .document(documentPath)
+            .set(data)
+            .addOnSuccessListener {
+                successfull()
+            }
+            .addOnFailureListener {
+                failure(it.localizedMessage)
+            }
 
     }
 
-// Add new Student
-    fun addNewStudent(name: String,className: String,data: Any,successfull: () -> Unit,
-                      error: (String) -> Unit){
+    // Add new Student
+    fun addNewStudent(
+        name: String, className: String, data: Any, successfull: () -> Unit,
+        error: (String) -> Unit,
+    ) {
         val firestore = FirebaseFirestore.getInstance()
-    firestore.collection("Classes")
-        .document(className)
-        .collection("Students")
-        .document(name)
-        .set(data)
-        .addOnSuccessListener {
-            successfull()
-        }
-        .addOnFailureListener{
-            error(it.localizedMessage)
-        }
+        firestore.collection("Classes")
+            .document(className)
+            .collection("Students")
+            .document(name)
+            .set(data)
+            .addOnSuccessListener {
+                successfull()
+            }
+            .addOnFailureListener {
+                error(it.localizedMessage)
+            }
     }
 
     //check if attendance taken or not
@@ -243,33 +254,63 @@ object AppRepository {
     ) {
         val firestore = FirebaseFirestore.getInstance()
 
-Log.d("wfbkjfcewfllewmfkjrhfwefklhwjklqwewr",date)
-            val userDocRef = firestore.collection("Classes")
-                .document(className)
-            val documentSnapshot = userDocRef.get().await()
-          if (documentSnapshot.contains(date)){
-              taken()
-          }
-        else{
+        Log.d("wfbkjfcewfllewmfkjrhfwefklhwjklqwewr", date)
+        val userDocRef = firestore.collection("Classes")
+            .document(className)
+        val documentSnapshot = userDocRef.get().await()
+        if (documentSnapshot.contains(date)) {
+            taken()
+        } else {
             nottaken()
         }
 
-        }
-//  user information
+    }
+//  user information take
+
+    fun userInformat(email: String,
+                     onSuccess: (UserInformation) -> Unit,
+                     onFailure: (String) -> Unit) {
+        val firestore = FirebaseFirestore.getInstance()
 
 
+        firestore.collection("teachers")
+            .document(email)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()){
+                val data = UserInformation(
+                    attendance = document.getString("Attendance") ?: "",
+                    name = document.getString("Name") ?: "",
+                    phone = document.getString("Phone") ?: "",
+                    profilePic = document.getString("ProfilePic") ?: "",
+                    year = document.getString("Year") ?: "",
+                    gender = document.getString("Gender")?:""
+                )
+               onSuccess(data)}
+            }
+            .addOnFailureListener {
+                it.localizedMessage?.let { it1 -> onFailure(it1) }
+            }
 
+    }
 
-
+    fun updadeteachersData(documentPath: String, successfull: () -> Unit,
+                           failure: (String) -> Unit,
+                           data: HashMap<String,Any>){
+        val firestore = FirebaseFirestore.getInstance()
+        firestore.collection("teachers")
+            .document(documentPath)
+            .update(data)
+            .addOnSuccessListener {
+                successfull()
+            }
+            .addOnFailureListener {
+                failure(it.localizedMessage)
+            }
 
     }
 
 
 
 
-
-
-
-
-
-
+}

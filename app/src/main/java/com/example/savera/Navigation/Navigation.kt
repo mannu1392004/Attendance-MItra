@@ -28,14 +28,9 @@ fun Navigation() {
             LoginScreen(navController)
         }
 
-        
-         composable(route = Screens.HomeScreen.name) {
-            MainScreen()
-         }
-         
-         composable(route = Screens.NewuserCheck.name) {
-           MainScreen()
-         }
+        composable(route = Screens.NewuserCheck.name) {
+           MainScreen(navController)
+        }
 
         val loadingroute = Screens.LoadingScreen.name
         composable(route = "$loadingroute/{email}/{password}",

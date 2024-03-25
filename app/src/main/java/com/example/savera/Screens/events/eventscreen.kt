@@ -454,7 +454,8 @@ fun input(
     value: MutableState<String>,
     singleLine:Boolean,
     placeholder: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    need:Boolean=true
 ) {
 
     OutlinedTextField(value = value.value, onValueChange = { value.value = it },
@@ -464,10 +465,12 @@ fun input(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(3.dp)
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.eventname), contentDescription = "",
-                tint = Color.Gray
-            )
+           if (need) {
+               Icon(
+                   painter = painterResource(id = R.drawable.eventname), contentDescription = "",
+                   tint = Color.Gray
+               )
+           }
             Text(text = placeholder, color = Color.Gray)
         }
 
@@ -484,6 +487,9 @@ fun input(
 
     )
 }
+
+
+
 
 @Composable
 fun buttonCreation(title: String, modifier: Modifier){
