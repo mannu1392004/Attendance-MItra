@@ -7,8 +7,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -29,11 +32,12 @@ fun groupChatsScreen(messagebar: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(
                 start = 20.dp,
-                end = 20.dp
+                end = 20.dp, top = 20.dp, bottom = 20.dp
             ),
-        verticalArrangement = Arrangement.spacedBy(20.dp)
+        verticalArrangement = Arrangement.spacedBy(25.dp)
     ) {
 
 
@@ -41,7 +45,7 @@ fun groupChatsScreen(messagebar: NavHostController) {
             .fillMaxWidth()
             .shadow(elevation = 20.dp)
             .clickable {
-
+                messagebar.navigate(route = "chatscreen/official")
             }
         ) {
             Row(
@@ -51,10 +55,7 @@ fun groupChatsScreen(messagebar: NavHostController) {
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Surface(modifier = Modifier.size(60.dp)
-                    .clickable {
-                               messagebar.navigate(route = "chatscreen/official")
-                    },
+                Surface(modifier = Modifier.size(60.dp),
                     color = Color.Transparent){
                     Image(
                         painter = painterResource(id = R.drawable.savera_logo1_removebg_preview),
@@ -160,6 +161,140 @@ fun groupChatsScreen(messagebar: NavHostController) {
                 }
                 Column {
                     Text(text = "Savera 1st and 2nd year",
+                        fontFamily = ralewayfamilt,
+                        style= MaterialTheme.typography.headlineSmall)
+
+                    Text(text = "Free Volunteers come to Savera ASAP!")
+                }
+            }
+
+
+        }
+        Card(modifier = Modifier
+            .fillMaxWidth()
+            .shadow(elevation = 20.dp)
+            .clickable {
+                messagebar.navigate(route = "chatscreen/first")
+
+            }) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Surface(modifier = Modifier.size(60.dp),
+                    color = Color.Transparent){
+                    Image(
+                        painter = painterResource(id = R.drawable.savera_logo1_removebg_preview),
+                        contentDescription = "",
+                    )
+                }
+                Column {
+                    Text(text = "Savera 1st year",
+                        fontFamily = ralewayfamilt,
+                        style= MaterialTheme.typography.headlineSmall)
+
+                    Text(text = "Free Volunteers come to Savera ASAP!")
+                }
+            }
+
+
+        }
+
+
+
+        Card(modifier = Modifier
+            .fillMaxWidth()
+            .shadow(elevation = 20.dp)
+            .clickable {
+                messagebar.navigate(route = "chatscreen/second")
+
+            }) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Surface(modifier = Modifier.size(60.dp),
+                    color = Color.Transparent){
+                    Image(
+                        painter = painterResource(id = R.drawable.savera_logo1_removebg_preview),
+                        contentDescription = "",
+                    )
+                }
+                Column {
+                    Text(text = "Savera 2nd year",
+                        fontFamily = ralewayfamilt,
+                        style= MaterialTheme.typography.headlineSmall)
+
+                    Text(text = "Free Volunteers come to Savera ASAP!")
+                }
+            }
+
+
+        }
+
+        Card(modifier = Modifier
+            .fillMaxWidth()
+            .shadow(elevation = 20.dp)
+            .clickable {
+                messagebar.navigate(route = "chatscreen/third")
+
+            }) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Surface(modifier = Modifier.size(60.dp),
+                    color = Color.Transparent){
+                    Image(
+                        painter = painterResource(id = R.drawable.savera_logo1_removebg_preview),
+                        contentDescription = "",
+                    )
+                }
+                Column {
+                    Text(text = "Savera 3rd year",
+                        fontFamily = ralewayfamilt,
+                        style= MaterialTheme.typography.headlineSmall)
+
+                    Text(text = "Free Volunteers come to Savera ASAP!")
+                }
+            }
+
+
+        }
+
+
+        Card(modifier = Modifier
+            .fillMaxWidth()
+            .shadow(elevation = 20.dp)
+            .clickable {
+                messagebar.navigate(route = "chatscreen/fourth")
+
+            }) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Surface(modifier = Modifier.size(60.dp),
+                    color = Color.Transparent){
+                    Image(
+                        painter = painterResource(id = R.drawable.savera_logo1_removebg_preview),
+                        contentDescription = "",
+                    )
+                }
+                Column {
+                    Text(text = "Savera 4th year",
                         fontFamily = ralewayfamilt,
                         style= MaterialTheme.typography.headlineSmall)
 
