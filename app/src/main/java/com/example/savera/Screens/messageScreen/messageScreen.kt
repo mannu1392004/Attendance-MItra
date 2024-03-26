@@ -10,10 +10,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -47,7 +49,7 @@ fun ChatScreen(
 
 
     val messageText = remember { mutableStateOf(TextFieldValue("")) }
-    val currUserName = remember { viewModel.userName }
+//    val currUserName = remember { viewModel.userName }
     val showLoadMoreButton by viewModel.showLoadMoreButton.collectAsState()
 
     val m = viewModel.messagesStateFlow.collectAsState(emptyList()).value
@@ -61,10 +63,12 @@ fun ChatScreen(
         viewModel.onResume()
     }
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(horizontal = 1.dp, vertical = 10.dp)) {
-        LazyColumn( reverseLayout = true,modifier = Modifier.weight(1f)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 1.dp, vertical = 10.dp)
+    ) {
+        LazyColumn(reverseLayout = true, modifier = Modifier.weight(1f)) {
 
             items(m) { message ->
                 MessageBubble(message = message, viewModel = viewModel)
@@ -72,7 +76,11 @@ fun ChatScreen(
             item {
                 if (m.isNotEmpty()) {
                     if (showLoadMoreButton) {
-                        Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically){
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
                             LoadMoreButton {
                                 viewModel.loadMoreMessages()
                             }
@@ -114,7 +122,7 @@ fun ChatScreen(
                     //add something TOAST like message
                 }
             }, modifier = Modifier.padding(5.dp)) {
-                Icon(Icons.Filled.Send, contentDescription = "Send message")
+                Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Send message")
             }
         }
     }
@@ -148,7 +156,8 @@ fun MessageBubble(message: Message, viewModel: messageScreenViewModel) {
         }
         Surface(
             modifier = Modifier
-                .padding(top = if (!isSender) 4.dp else 0.dp),
+                .padding(top = if (!isSender) 4.dp else 0.dp)
+                .widthIn(max = 270.dp),
             color = background, shape = RoundedCornerShape(8.dp),
             contentColor = if (isSender) Color.White else Color.Black
         ) {
@@ -169,7 +178,10 @@ fun LoadMoreButton(onClick: () -> Unit) {
 
     Button(
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(containerColor =Color(0xffF9A825)  , contentColor = textColor), // Set background color to yellow
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color(0xffF9A825),
+            contentColor = textColor
+        ), // Set background color to yellow
         modifier = Modifier
             .width(120.dp),
 
