@@ -52,8 +52,8 @@ tint = Color.White
                 )
             }
         },
-     modifier = Modifier.clip(RoundedCornerShape(bottomStart =  20.dp, bottomEnd = 20.dp))
-         ,
+
+
 
         )
 }

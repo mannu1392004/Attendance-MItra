@@ -1,4 +1,4 @@
-package com.example.savera.Screens.dashboard
+package com.example.savera.Screens.dashboard.mainScreen
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -42,8 +42,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.savera.R
+import com.example.savera.Screens.dashboard.viewmodel.dashboardViewmodal
 import com.example.savera.Screens.homeScreen.animation
 import com.example.savera.Screens.homeScreen.button
 import com.example.savera.Screens.homeScreen.inputValue
@@ -53,7 +54,7 @@ import com.example.savera.ui.theme.ralewaybold
 import kotlinx.coroutines.delay
 
 @Composable
-fun dashboardMainScreen(dashboardViewmodel: dashboardViewmodel= viewModel()) {
+fun dashboardMainScreen(navigation: NavHostController, dashboardViewmodel: dashboardViewmodal) {
     val showAddUserDialogue = remember {
         mutableStateOf(false)
     }
@@ -215,7 +216,7 @@ fun dashboardMainScreen(dashboardViewmodel: dashboardViewmodel= viewModel()) {
 @Composable
 fun AddStudents(
     showAddStudentDialogue: MutableState<Boolean>,
-    dashboardViewmodel: dashboardViewmodel
+    dashboardViewmodel: dashboardViewmodal
 ) {
 
 val phoneno =  remember {

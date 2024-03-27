@@ -4,54 +4,64 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
-import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.savera.Navigation.mainScreenNavigation.mainScreen
-import com.example.savera.R
-import com.example.savera.ui.theme.ralewaybold
+import com.example.savera.Screens.dashboard.mainScreen.dashboardMainScreen
+import com.example.savera.Screens.dashboard.syllabus.syllabus
+import com.example.savera.Screens.dashboard.syllabusDetail.syllabusDetail
+import com.example.savera.Screens.dashboard.viewmodel.dashboardViewmodal
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
-fun dashboard(selectindex: MutableIntState) {
+fun dashboard(selectindex: MutableIntState, notShowTop: MutableState<Boolean>) {
   val activity = LocalContext.current as? Activity  ?: return
     BackHandler {
        moveAppToBackground(activity)
     }
-
-
     val navigation = rememberNavController()
 
+    val dashboardViewmodel: dashboardViewmodal = viewModel()
+
+    // loading resources so that animation can be seen
+
+
+
+
+
+
+
+
+
+    val selected = remember {
+        mutableStateOf("")
+    }
 
     NavHost(navController = navigation, startDestination = DashboardScreen.MainScreen.name){
 
         composable(route=DashboardScreen.MainScreen.name){
-            dashboardMainScreen()
+
+            dashboardMainScreen(navigation,dashboardViewmodel)
         }
+
+        composable(route = DashboardScreen.Syllabus.name){
+          notShowTop.value = true
+
+            syllabus(dashboardViewmodel)
+        }
+
+composable(route = DashboardScreen.SyllabusDetail.name){
+syllabusDetail(selected,dashboardViewmodel)
+}
+
+
 
     }
 

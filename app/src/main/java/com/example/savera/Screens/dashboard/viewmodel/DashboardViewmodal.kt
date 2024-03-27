@@ -1,12 +1,13 @@
-package com.example.savera.Screens.dashboard
+package com.example.savera.Screens.dashboard.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.savera.Model.syllabusshower
 import com.example.savera.Repository.AppRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-class dashboardViewmodel:ViewModel() {
+class dashboardViewmodal:ViewModel() {
     val classList:MutableStateFlow<List<String>> = MutableStateFlow(emptyList())
     init {
         viewModelScope.launch {
@@ -36,6 +37,19 @@ classList.value = it
             )
         }
     }
+// fetch Syllabus
+
+    fun fetchSyllabus(success: (List<syllabusshower>) -> Unit) {
+        viewModelScope.launch {
+            AppRepository.fetchSyllabus(
+                className = "Class 1",
+                successfull = {
+                    success(it)
+                }
+            )
+        }
+    }
+
 
 
 }

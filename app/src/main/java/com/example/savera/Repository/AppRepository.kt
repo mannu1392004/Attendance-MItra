@@ -1,9 +1,13 @@
 package com.example.savera.Repository
 
+import android.annotation.SuppressLint
 import android.util.Log
 import com.example.savera.Model.UserInformation
 import com.example.savera.Model.events_Data
+import com.example.savera.Model.syllabusshower
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.tasks.await
 
@@ -168,6 +172,7 @@ object AppRepository {
 
                 snapshot?.documents?.forEach { documents ->
                     val event = events_Data(
+                        document = documents.id,
                         date = documents.getString("Date") ?: "",
                         description = documents.getString("Description") ?: "",
                         eventName = documents.getString("Event Name") ?: "",
@@ -311,6 +316,66 @@ object AppRepository {
     }
 
 
+    // deleting document
+    fun deleteEvent(documentPath: String,fileUrl:String,
+                    success:()->Unit,
+                    failure: (String) -> Unit
+                    ){
+        val firestore = FirebaseFirestore.getInstance()
+
+        val storageref =Firebase.storage.getReferenceFromUrl(fileUrl)
+
+        storageref.delete().addOnSuccessListener {
+            firestore.collection("Events")
+                .document(documentPath).delete().addOnSuccessListener {
+                    success()
+                }
+                .addOnFailureListener {
+                    failure(it.localizedMessage)
+                }
+        }
+    }
+// fetching syllabus
+
+    @SuppressLint("SuspiciousIndentation")
+    fun fetchSyllabus(className: String,
+                      successfull: (List<syllabusshower>) -> Unit) {
+
+        val firestore = FirebaseFirestore.getInstance()
+
+        firestore.collection("syllabus")
+            .document(className)
+            .collection("Syllabus")
+            .get()
+            .addOnSuccessListener {
+                val data  = mutableListOf<syllabusshower>()
+
+                for (subjects in it){
 
 
-}
+                val previous = subjects.getString("previous")
+                val status = subjects.getBoolean("completed")
+                    val percentage =  subjects.getLong("percentage")
+                    data.add(
+                        syllabusshower(
+                            syllabus = subjects.id,
+                            previous = previous,
+                            status = status?:false,
+                            percentage = percentage
+                        )
+                    )
+                }
+
+                successfull(data)
+
+
+            }
+
+
+
+
+
+
+            }
+
+    }

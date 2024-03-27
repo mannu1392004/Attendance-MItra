@@ -41,6 +41,7 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.savera.Model.UserInformation
 import com.example.savera.Navigation.Screens
+import com.example.savera.Navigation.mainScreenNavigation.mainScreen
 import com.example.savera.R
 import com.example.savera.Screens.account.Viewmodel.AccountScreenViewmodel
 import com.example.savera.Screens.account.screens.accountscreens
@@ -78,6 +79,11 @@ fun accountScreen(
     val error = remember {
         mutableStateOf("")
     }
+
+    val showLogout = remember {
+        mutableStateOf(false)
+    }
+
 
     LaunchedEffect(Unit) {
         delay(200)
@@ -161,8 +167,8 @@ fun accountScreen(
                             color = Color(0xffFF0000), shape = RoundedCornerShape(10.dp)
                         )
                     ) {
-                        FirebaseAuth.getInstance().signOut()
-navController.navigate(Screens.LoginScreen.name)
+
+                        showLogout.value=true
 
                     }
                 }
@@ -198,6 +204,10 @@ navController.navigate(Screens.LoginScreen.name)
 
             }
 
+            if (showLogout.value){
+                showLogoutDialogue(navController,showLogout)
+            }
+
 
         }
 
@@ -214,6 +224,58 @@ navController.navigate(Screens.LoginScreen.name)
             }
         }
     }
+
+}
+
+@Composable
+fun showLogoutDialogue(navController: NavHostController, showLogout: MutableState<Boolean>) {
+    Dialog(onDismissRequest = { /*TODO*/ }) {
+
+        Surface(modifier = Modifier.fillMaxWidth(),
+            color = Color(0xffE7E7E7),
+            shape = RoundedCornerShape(20.dp)
+        ){
+           Column(verticalArrangement = Arrangement.Center,
+               modifier = Modifier.padding(20.dp)) {
+
+               textout(title = "Logout Confirmation",
+                   modifier =Modifier , fontStyle =MaterialTheme.typography.titleMedium )
+
+               textout(title = "Are you sure you want to log out?",
+                   modifier =Modifier , fontStyle =MaterialTheme.typography.titleSmall,
+                   fontFamily = lightrale)
+
+               Row(modifier = Modifier
+                   .fillMaxWidth()
+                   .padding(top = 15.dp), horizontalArrangement = Arrangement.SpaceEvenly
+
+                   ) {
+
+                   button(text = "Yes",
+                       ) {
+                       showLogout.value = false
+
+                       FirebaseAuth.getInstance().signOut()
+
+                       navController.navigate(Screens.LoginScreen.name)
+
+
+                   }
+
+                   button(text = "No ") {
+                       showLogout.value = false
+                   }
+
+               }
+
+           }
+
+        }
+
+    }
+    
+
+
 
 }
 
@@ -341,7 +403,7 @@ fun surfaceCreator(
     ) {
         Row(
             modifier = Modifier
-                .clickable {onClick() }
+                .clickable { onClick() }
                 .fillMaxWidth()
                 .padding(start = 20.dp),
             verticalAlignment = Alignment.CenterVertically

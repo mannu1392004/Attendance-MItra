@@ -49,6 +49,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.savera.R
@@ -307,7 +308,8 @@ fun textout(
         modifier = modifier,
         style = fontStyle,
         fontFamily = fontFamily,
-        color = color
+        color = color,
+        overflow = TextOverflow.Visible
     )
 
 

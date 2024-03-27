@@ -18,19 +18,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -60,7 +59,7 @@ val notShowTop = remember {
     val activity = LocalContext.current as? Activity
 
     val selectindex = remember {
-        mutableIntStateOf(0)
+        mutableIntStateOf(2)
     }
     val showmessagetopbar = remember {
         mutableStateOf(false)
@@ -92,7 +91,7 @@ val notShowTop = remember {
                         .height(70.dp)
 
                         .background(color = Color.Transparent)
-                        .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+
 
                 ) {
 
@@ -502,16 +501,14 @@ val notShowTop = remember {
 
                 if (selectindex.value == 2) {
 
-                        notShowTop.value  = false
 
-                    dashboard(selectindex = selectindex)
+
+                    dashboard(selectindex = selectindex,notShowTop)
 
                 }
                 if (selectindex.value == 3) {
-
-                        notShowTop.value  = false
-
                     eventscreen(selectindex = selectindex)
+                    notShowTop.value  = false
 
                 }
                 if (selectindex.value == 4) {

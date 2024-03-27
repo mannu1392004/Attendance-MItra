@@ -64,7 +64,9 @@ import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
 
-@SuppressLint("UnrememberedMutableState", "CoroutineCreationDuringComposition")
+@SuppressLint("UnrememberedMutableState", "CoroutineCreationDuringComposition",
+    "SuspiciousIndentation"
+)
 @RequiresApi(Build.VERSION_CODES.O)
 
 @Composable
@@ -112,6 +114,17 @@ fun AttendanceScreen(
     }
 
     val studentList = AttendanceScreenViewmodel.Student_List.collectAsState()
+
+    LaunchedEffect(studentList.value) {
+        studentSelectionMap.keys.forEach { key ->
+
+
+            studentSelectionMap.remove(key)
+
+        }
+
+    }
+
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -206,7 +219,7 @@ fun AttendanceScreen(
                                             nottaken = {
                                                        AttendanceTaken.value = false},
                                             taken = {
-                                               AttendanceTaken.value = true     
+                                               AttendanceTaken.value = true
                                             },
                                             classname = it)
 
@@ -284,12 +297,7 @@ fun AttendanceScreen(
                         Spacer(modifier = Modifier.height(10.dp))
                     }
 item {
-                    LaunchedEffect(studentList.value) {
-                        studentSelectionMap.keys.forEach { key ->
-                            studentSelectionMap.remove(key)
-                        }
 
-                    }
                     }
     items(studentList.value) {
 
@@ -321,11 +329,11 @@ item {
 
                         button(text = "Submit"){
                             studentSubmit.value = true
-                            
+
                         }
-                       
-                        
-                        
+
+
+
                     }
 
                 }
@@ -333,7 +341,7 @@ item {
 
                 }
 
-            
+
             
             if (studentSubmit.value){
                 ShowDialogue(
