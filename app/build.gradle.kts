@@ -75,7 +75,7 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.48.1")
 
     // courotines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
+
     implementation("androidx.hilt:hilt-navigation-fragment:1.1.0")
 
     val nav_version = "2.7.7"
@@ -128,5 +128,9 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha06")
 
     implementation("com.google.firebase:firebase-database-ktx:20.3.1")
+
+
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
 
 }

@@ -5,6 +5,8 @@ import android.util.Log
 import com.example.savera.Model.UserInformation
 import com.example.savera.Model.events_Data
 import com.example.savera.Model.syllabusshower
+import com.example.savera.Model.ChapterList
+import com.example.savera.Model.topicList
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -272,9 +274,11 @@ object AppRepository {
     }
 //  user information take
 
-    fun userInformat(email: String,
-                     onSuccess: (UserInformation) -> Unit,
-                     onFailure: (String) -> Unit) {
+    fun userInformat(
+        email: String,
+        onSuccess: (UserInformation) -> Unit,
+        onFailure: (String) -> Unit,
+    ) {
         val firestore = FirebaseFirestore.getInstance()
 
 
@@ -282,16 +286,17 @@ object AppRepository {
             .document(email)
             .get()
             .addOnSuccessListener { document ->
-                if (document.exists()){
-                val data = UserInformation(
-                    attendance = document.getString("Attendance") ?: "",
-                    name = document.getString("Name") ?: "",
-                    phone = document.getString("Phone") ?: "",
-                    profilePic = document.getString("ProfilePic") ?: "",
-                    year = document.getString("Year") ?: "",
-                    gender = document.getString("Gender")?:""
-                )
-               onSuccess(data)}
+                if (document.exists()) {
+                    val data = UserInformation(
+                        attendance = document.getString("Attendance") ?: "",
+                        name = document.getString("Name") ?: "",
+                        phone = document.getString("Phone") ?: "",
+                        profilePic = document.getString("ProfilePic") ?: "",
+                        year = document.getString("Year") ?: "",
+                        gender = document.getString("Gender") ?: ""
+                    )
+                    onSuccess(data)
+                }
             }
             .addOnFailureListener {
                 it.localizedMessage?.let { it1 -> onFailure(it1) }
@@ -299,9 +304,11 @@ object AppRepository {
 
     }
 
-    fun updadeteachersData(documentPath: String, successfull: () -> Unit,
-                           failure: (String) -> Unit,
-                           data: HashMap<String,Any>){
+    fun updadeteachersData(
+        documentPath: String, successfull: () -> Unit,
+        failure: (String) -> Unit,
+        data: HashMap<String, Any>,
+    ) {
         val firestore = FirebaseFirestore.getInstance()
         firestore.collection("teachers")
             .document(documentPath)
@@ -317,13 +324,14 @@ object AppRepository {
 
 
     // deleting document
-    fun deleteEvent(documentPath: String,fileUrl:String,
-                    success:()->Unit,
-                    failure: (String) -> Unit
-                    ){
+    fun deleteEvent(
+        documentPath: String, fileUrl: String,
+        success: () -> Unit,
+        failure: (String) -> Unit,
+    ) {
         val firestore = FirebaseFirestore.getInstance()
 
-        val storageref =Firebase.storage.getReferenceFromUrl(fileUrl)
+        val storageref = Firebase.storage.getReferenceFromUrl(fileUrl)
 
         storageref.delete().addOnSuccessListener {
             firestore.collection("Events")
@@ -338,8 +346,10 @@ object AppRepository {
 // fetching syllabus
 
     @SuppressLint("SuspiciousIndentation")
-    fun fetchSyllabus(className: String,
-                      successfull: (List<syllabusshower>) -> Unit) {
+    fun fetchSyllabus(
+        className: String,
+        successfull: (List<syllabusshower>) -> Unit,
+    ) {
 
         val firestore = FirebaseFirestore.getInstance()
 
@@ -348,19 +358,19 @@ object AppRepository {
             .collection("Syllabus")
             .get()
             .addOnSuccessListener {
-                val data  = mutableListOf<syllabusshower>()
+                val data = mutableListOf<syllabusshower>()
 
-                for (subjects in it){
+                for (subjects in it) {
 
 
-                val previous = subjects.getString("previous")
-                val status = subjects.getBoolean("completed")
-                    val percentage =  subjects.getLong("percentage")
+                    val previous = subjects.getString("previous")
+                    val status = subjects.getBoolean("completed")
+                    val percentage = subjects.getLong("percentage")
                     data.add(
                         syllabusshower(
                             syllabus = subjects.id,
                             previous = previous,
-                            status = status?:false,
+                            status = status ?: false,
                             percentage = percentage
                         )
                     )
@@ -372,10 +382,108 @@ object AppRepository {
             }
 
 
+    }
+
+    // fetch the Chapters
+    fun fetchChapters(
+        classes: String, successfull: (List<ChapterList>) -> Unit,
+        subject: String,
+    ) {
+        val firestore = FirebaseFirestore.getInstance()
+
+        firestore.collection("syllabus")
+            .document(classes)
+            .collection("Syllabus")
+            .document(subject)
+            .collection("Chapters")
+            .get()
+            .addOnSuccessListener {
+                val document = mutableListOf<ChapterList>()
+                var x = 0
+                for (d in it) {
+                    x++
+                    val status = d.getBoolean("status")
+
+                    document.add(
+                        ChapterList(
+                            name = d.id,
+                            status = status ?: false,
+                            no = x
+                        )
+                    )
+                }
 
 
-
+                successfull(document)
 
             }
-
     }
+
+
+    // fetching the topics
+fun fetchTopics(classes: String,
+                subject: String,
+                chapter:String,
+                successfull: (List<topicList>) -> Unit){
+
+val firestore = FirebaseFirestore.getInstance()
+
+        firestore.collection("syllabus")
+            .document(classes)
+            .collection("Syllabus")
+            .document(subject)
+            .collection("Chapters")
+            .document(chapter)
+            .collection("Topics")
+            .get()
+            .addOnSuccessListener {
+                val list = mutableListOf<topicList>()
+
+                for (document in it){
+                    val status = document.getBoolean("done")
+                    list.add(
+                        topicList(
+                            name = document.id,
+                            status = status?:true
+                        )
+                    )
+
+                }
+
+                successfull(list)
+            }
+
+
+
+}
+
+
+// changing Status
+fun ChangeStatus(
+    classes: String,
+    subject: String,
+    chapter:String,
+    topic:String,
+    data:Any,
+){
+    val firestore = FirebaseFirestore.getInstance()
+
+    firestore.collection("syllabus")
+        .document(classes)
+        .collection("Syllabus")
+        .document(subject)
+        .collection("Chapters")
+        .document(chapter)
+        .collection("Topics")
+        .document(topic)
+        .set(
+           data
+        )
+
+
+}
+
+
+
+
+}

@@ -73,17 +73,6 @@ fun LoginScreen(navController: NavHostController,
 
 
 
-    val textgradient = Brush.linearGradient(
-        listOf(
-            Color(0xffFF5858),
-
-            Color(0xffFFFF45)
-        )
-    )
-
-    val loading = remember {
-        mutableStateOf(false)
-    }
 
     val showdialogue  = remember {
         mutableStateOf(false)

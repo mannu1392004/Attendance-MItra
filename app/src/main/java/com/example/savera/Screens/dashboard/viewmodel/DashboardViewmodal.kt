@@ -3,6 +3,8 @@ package com.example.savera.Screens.dashboard.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.savera.Model.syllabusshower
+import com.example.savera.Model.ChapterList
+import com.example.savera.Model.topicList
 import com.example.savera.Repository.AppRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -37,18 +39,64 @@ classList.value = it
             )
         }
     }
-// fetch Syllabus
+// fetch Subjects
 
-    fun fetchSyllabus(success: (List<syllabusshower>) -> Unit) {
+    fun fetchSyllabus(success: (List<syllabusshower>) -> Unit,className: String) {
         viewModelScope.launch {
             AppRepository.fetchSyllabus(
-                className = "Class 1",
+                className = className,
                 successfull = {
                     success(it)
                 }
             )
         }
     }
+
+
+    // fetching chapters
+    fun fetchChapters(classname: String, successful: (List<ChapterList>) -> Unit,
+                      subject:String) {
+        viewModelScope.launch {
+            AppRepository.fetchChapters(
+                classes = classname,
+                successfull = {
+                    successful(it)
+                },
+                subject = subject
+            )
+        }
+    }
+    // fetching topics
+    fun fetchTopics(className: String,
+                    subject: String,
+                    chapter:String,
+                    success: (List<topicList>) -> Unit){
+        AppRepository.fetchTopics(
+            classes =className,
+            subject = subject,
+            chapter = chapter,
+            successfull = {
+                success(it)
+            }
+        )
+
+
+    }
+// updating
+
+    fun update(
+        classes: String,
+        subject: String,
+        chapter:String,
+        topic:String,
+        data:Any,
+    ){
+        AppRepository.ChangeStatus(
+            classes = classes,
+            subject, chapter, topic, data
+        )
+    }
+
 
 
 

@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import com.example.savera.R
+import com.example.savera.Screens.dashboard.DashboardScreen
 import com.example.savera.Screens.dashboard.viewmodel.dashboardViewmodal
 import com.example.savera.Screens.homeScreen.animation
 import com.example.savera.Screens.homeScreen.button
@@ -128,6 +129,11 @@ fun dashboardMainScreen(navigation: NavHostController, dashboardViewmodel: dashb
                     image = R.drawable.clipboard,
                     title = "Syllabus",
                     modifier = Modifier.size(150.dp)
+                        .clickable {
+
+                            navigation.navigate(DashboardScreen.Syllabus.name)
+
+                        }
                 )
 
 

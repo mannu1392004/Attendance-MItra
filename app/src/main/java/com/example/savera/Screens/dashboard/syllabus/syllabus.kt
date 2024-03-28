@@ -1,8 +1,6 @@
 package com.example.savera.Screens.dashboard.syllabus
 
-import androidx.compose.animation.Animatable
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.infiniteRepeatable
+import android.util.Log
 import androidx.compose.animation.core.repeatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -22,8 +20,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -32,8 +28,8 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -44,10 +40,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.savera.Model.syllabusshower
 import com.example.savera.Screens.account.mainScreen.accountpic
+import com.example.savera.Screens.dashboard.DashboardScreen
 import com.example.savera.Screens.dashboard.viewmodel.dashboardViewmodal
-import com.example.savera.Screens.events.textoutput
 import com.example.savera.Screens.homeScreen.textout
 import com.example.savera.ui.theme.lightrale
 import com.example.savera.ui.theme.ralewaybold
@@ -55,7 +52,12 @@ import com.example.savera.ui.theme.ralewayfamilt
 import kotlinx.coroutines.delay
 
 @Composable
-fun syllabus(dashboardViewmodel: dashboardViewmodal) {
+fun syllabus(
+    dashboardViewmodel: dashboardViewmodal,
+    selectedclass: MutableState<String>,
+    navigation: NavHostController,
+    selected: MutableState<String>
+) {
     val classList = remember {
         mutableStateOf<List<String>>(
             listOf("Class 1","Class 2","Class 3","Class 4","Class 5","Class 6","Class 7"
@@ -66,19 +68,16 @@ fun syllabus(dashboardViewmodel: dashboardViewmodal) {
     val syllabuslist = remember {
         mutableStateOf<List<syllabusshower>?>(emptyList())
     }
-LaunchedEffect(Unit) {
-    dashboardViewmodel.fetchSyllabus { 
-        syllabuslist.value= it
-    }
-    
+
+LaunchedEffect(selectedclass.value) {
+    dashboardViewmodel.fetchSyllabus(className = selectedclass.value,
+        success = { syllabuslist.value= it})
 }
-    
-    
+
+
     
 
-val selectedclass = remember {
-    mutableStateOf("Select the Class")
-}
+
 
 
 
@@ -97,8 +96,21 @@ Column(verticalArrangement = Arrangement.Center,
 
     Spacer(modifier = Modifier.height(15.dp))
 
-    mainUi(syllabuslist)
+    classSelection(classList = classList, selectedclass =selectedclass )
 
+    Spacer(modifier = Modifier.height(15.dp))
+    if (selectedclass.value!="Select the Class") {
+        mainUi(syllabuslist, navigation, selected)
+    }
+    else{
+        Column(modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally) {
+            textout(title = "Select Any Class", modifier = Modifier, fontStyle =MaterialTheme.typography.titleMedium,
+                color = Color.Red)
+        }
+
+    }
 
 }
 
@@ -108,7 +120,12 @@ Column(verticalArrangement = Arrangement.Center,
 
 }
 @Composable
-fun mainUi(syllabuslist: MutableState<List<syllabusshower>?>) {
+fun mainUi(
+    syllabuslist: MutableState<List<syllabusshower>?>,
+    navigation: NavHostController,
+    selected: MutableState<String>,
+
+    ) {
 
 
 
@@ -143,13 +160,7 @@ fun mainUi(syllabuslist: MutableState<List<syllabusshower>?>) {
                     fontStyle = MaterialTheme.typography.bodyMedium,
                     color = Color.White
                 )
-                Spacer(modifier = Modifier.weight(0.3f))
-                textout(
-                    title = "%",
-                    modifier = Modifier,
-                    fontStyle = MaterialTheme.typography.bodyMedium,
-                    color = Color.White
-                )
+
                 Spacer(modifier = Modifier.weight(0.1f))
             }
 
@@ -159,7 +170,7 @@ fun mainUi(syllabuslist: MutableState<List<syllabusshower>?>) {
             CircularProgressIndicator(color = Color(0xffF9A825))
         }
         else{
-           listmaker(syllabuslist)
+           listmaker(syllabuslist,navigation,selected)
         }
 
         
@@ -168,12 +179,17 @@ fun mainUi(syllabuslist: MutableState<List<syllabusshower>?>) {
 }
 
 @Composable
-fun listmaker(syllabuslist: MutableState<List<syllabusshower>?>) {
+fun listmaker(
+    syllabuslist: MutableState<List<syllabusshower>?>,
+    navigation: NavHostController,
+    selected: MutableState<String>,
+
+    ) {
     LazyColumn {
 
 
         items(syllabuslist.value?: emptyList()){
-            surfacemakerforsyllabus(it)
+            surfacemakerforsyllabus(it,navigation,selected)
         }
 
     }
@@ -181,8 +197,16 @@ fun listmaker(syllabuslist: MutableState<List<syllabusshower>?>) {
 
 }
 @Composable
-fun surfacemakerforsyllabus(it: syllabusshower) {
+fun surfacemakerforsyllabus(
+    it: syllabusshower, navigation: NavHostController, selected: MutableState<String>,
+                            ) {
 Surface(modifier = Modifier
+    .clickable {
+        selected.value = it.syllabus
+        navigation.navigate(DashboardScreen.SyllabusDetail.name)
+
+
+    }
     .fillMaxWidth()
     .padding(top = 10.dp),
     color = Color(0xffF9A825),
@@ -216,11 +240,9 @@ textout(title = it.syllabus, modifier = Modifier, fontStyle =MaterialTheme.typog
     }
 
 
-    Spacer(modifier = Modifier.weight(0.3f))
-    textout(title = it.percentage.toString(), modifier = Modifier
-        , fontStyle =MaterialTheme.typography.titleMedium,
-        color = Color.White
-    )
+
+
+    
     Spacer(modifier = Modifier.weight(0.1f))
 
 
@@ -239,7 +261,7 @@ val dropdown = remember {
 
 
     Surface(modifier = Modifier,
-        color = Color(0xffFB5607),
+        color = Color(0xffF9A825),
         shape = RoundedCornerShape(10.dp)
         ) {
 
@@ -309,7 +331,6 @@ fun topbarSyllabus(classList: MutableState<List<String>>, selectedclass: Mutable
         .fillMaxWidth()
         .height(100.dp),
         color = Color(0xffF9A825),
-        shape = RoundedCornerShape( bottomStartPercent = 90, topStartPercent = 90)
     ) {
         val rotation = remember {
             androidx.compose.animation.core.Animatable(0f)
@@ -330,25 +351,7 @@ fun topbarSyllabus(classList: MutableState<List<String>>, selectedclass: Mutable
         }
 
         val helo = remember {
-            mutableStateOf("")
-        }
-        LaunchedEffect(Unit) {
-            while (true) {
-                delay(100)
-                helo.value += "H"
-                delay(500)
-                helo.value += "E"
-                delay(500)
-                helo.value += "L"
-                delay(500)
-                helo.value += "L"
-                delay(500)
-                helo.value += "O,"
-                delay(500)
-                helo.value = ""
-                delay(500)
-            }
-
+            mutableStateOf("Hell0,")
         }
 
 
