@@ -1,4 +1,4 @@
-package com.example.savera.Screens.dashboard.topicDetail
+package com.example.savera.Screens.dashboard.MainSyllabus.topicDetail
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

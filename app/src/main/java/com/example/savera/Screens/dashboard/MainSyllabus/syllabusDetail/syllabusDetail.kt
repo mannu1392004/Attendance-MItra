@@ -1,4 +1,4 @@
-package com.example.savera.Screens.dashboard.syllabusDetail
+package com.example.savera.Screens.dashboard.MainSyllabus.syllabusDetail
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.core.Animatable

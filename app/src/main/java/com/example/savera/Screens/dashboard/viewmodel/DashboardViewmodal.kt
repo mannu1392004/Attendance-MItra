@@ -4,8 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.savera.Model.syllabusshower
 import com.example.savera.Model.ChapterList
+import com.example.savera.Model.UserInformation
 import com.example.savera.Model.topicList
 import com.example.savera.Repository.AppRepository
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
@@ -95,6 +97,19 @@ classList.value = it
             classes = classes,
             subject, chapter, topic, data
         )
+    }
+
+    val email = FirebaseAuth.getInstance().currentUser?.email
+    fun fetchUserDetails(info: (UserInformation) -> Unit, failure: (String) -> Unit) {
+        if (email != null) {
+            AppRepository.userInformat(email = email,
+                onSuccess = {
+                    info(it)
+                },
+                onFailure = {
+                    failure(it)
+                })
+        }
     }
 
 

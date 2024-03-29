@@ -1,4 +1,4 @@
-package com.example.savera.Screens.dashboard.syllabus
+package com.example.savera.Screens.dashboard.MainSyllabus.syllabus
 
 import android.util.Log
 import androidx.compose.animation.core.repeatable

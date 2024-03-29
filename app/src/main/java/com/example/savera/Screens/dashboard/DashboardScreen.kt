@@ -4,5 +4,6 @@ enum class DashboardScreen {
     MainScreen,
    Syllabus,
     SyllabusDetail,
-    TopicDetails
+    TopicDetails,
+    VolunteersAttendance
 }

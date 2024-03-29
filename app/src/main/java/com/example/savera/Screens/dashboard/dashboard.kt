@@ -15,12 +15,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.savera.Model.ChapterList
-import com.example.savera.Model.topicList
+import com.example.savera.Model.UserInformation
 import com.example.savera.Screens.dashboard.mainScreen.dashboardMainScreen
-import com.example.savera.Screens.dashboard.syllabus.syllabus
-import com.example.savera.Screens.dashboard.syllabusDetail.syllabusDetail
-import com.example.savera.Screens.dashboard.topicDetail.topicDetail
+import com.example.savera.Screens.dashboard.MainSyllabus.syllabusMainScreen
+import com.example.savera.Screens.dashboard.VolunteerAttendance.volunteerAttandance
 import com.example.savera.Screens.dashboard.viewmodel.dashboardViewmodal
 
 @SuppressLint("SuspiciousIndentation")
@@ -32,70 +30,27 @@ fun dashboard(selectindex: MutableIntState, notShowTop: MutableState<Boolean>) {
     }
     val navigation = rememberNavController()
 
-
-    val selectedclass = remember {
-        mutableStateOf("Select the Class")
-    }
-
     val dashboardViewmodel: dashboardViewmodal = viewModel()
 
-// which subject is selected
-    val selected = remember {
-        mutableStateOf("")
 
+    val userInfo = remember {
+        mutableStateOf<UserInformation?>(null)
     }
+    LaunchedEffect(Unit) {
+        dashboardViewmodel.fetchUserDetails(
+            info = {
 
-// used for chapters
-    val data = remember {
-        mutableStateOf<List<ChapterList>>(emptyList())
-    }
+                   userInfo.value = it
 
+            },
+            failure = {
 
-    if (selected.value != "") {
-
-        LaunchedEffect(Unit) {
-            dashboardViewmodel.fetchChapters(
-                classname = selectedclass.value,
-               subject = selected.value,
-                successful = {
-                    data.value = it
-                }
-
-
-            )
-
-
-        }
-
-    }
-
-
-    // selection for chapters
-val chapterSelected = remember {
-    mutableStateOf("")
-}
-
-    val topicData = remember {
-        mutableStateOf<List<topicList>>(emptyList())
+            }
+        )
     }
 
 
 
-
-    if (chapterSelected.value!="")
-LaunchedEffect(chapterSelected.value) {
-
-dashboardViewmodel.fetchTopics(
-    subject = selected.value,
-    className = selectedclass.value,
-    chapter = chapterSelected.value,
-    success = {
-topicData.value  = it
-    }
-
-)
-
-}
 
 
 
@@ -107,19 +62,13 @@ topicData.value  = it
             dashboardMainScreen(navigation, dashboardViewmodel)
         }
 
-        composable(route = DashboardScreen.Syllabus.name){
-            notShowTop.value = true
+      composable(route = DashboardScreen.Syllabus.name){
+          syllabusMainScreen(notShowTop)
+      }
+composable(route = DashboardScreen.VolunteersAttendance.name){
+    volunteerAttandance(notShowTop,userInfo)
+}
 
-            syllabus(dashboardViewmodel, selectedclass,navigation,selected)
-        }
-
-        composable(route = DashboardScreen.SyllabusDetail.name) {
-            syllabusDetail(selected, dashboardViewmodel,data,chapterSelected,navigation)
-        }
-
-        composable(route = DashboardScreen.TopicDetails.name){
-            topicDetail(topicData,selected,selectedclass,dashboardViewmodel,chapterSelected)
-        }
 
     }
 
