@@ -46,9 +46,18 @@ class messageScreenViewModel : ViewModel() {
 
     private val listener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
-            val newMessages =
-                snapshot.children.map { it.getValue(Message::class.java) ?: Message("", "") }
-                _messagesStateFlow.value = newMessages
+//            val newMessages =
+//                snapshot.children.map { it.getValue(Message::class.java) ?: Message("", "") }
+//                _messagesStateFlow.value = newMessages
+//                _messagesStateFlow.value = newMessages + _messagesStateFlow.value
+
+            val lastMessageSnapshot = snapshot.children.lastOrNull()
+            val lastMessage = lastMessageSnapshot?.getValue(Message::class.java) ?: Message("", "")
+//            _messagesStateFlow.value = listOf (lastMessage) + _messagesStateFlow.value
+
+            if (_messagesStateFlow.value.isEmpty() || lastMessage != _messagesStateFlow.value[0]) {
+                _messagesStateFlow.value = listOf(lastMessage) + _messagesStateFlow.value
+            }
         }
 
         override fun onCancelled(error: DatabaseError) {
@@ -56,7 +65,6 @@ class messageScreenViewModel : ViewModel() {
         }
     }
 
-    //     var messages = mutableListOf<Message>()  // List to hold chat messages
     var chatroom = ""
 
     fun initChatroom(selectedGroup: String) {
@@ -72,7 +80,7 @@ class messageScreenViewModel : ViewModel() {
             "fourth" -> "fourth"
             else -> "error" //throw some error instead of this
         }
-        //database.child(chatroom).addValueEventListener(listener)
+        database.child(chatroom).addValueEventListener(listener)
         // Log.d("lakshay", "initChatroom:$chatroom ")
         loadInitialMessages()
     }
@@ -82,7 +90,7 @@ class messageScreenViewModel : ViewModel() {
         Log.d("lakshay", "sendMessage: $newMessage ")
         database.child(chatroom).push().setValue(newMessage)
             .addOnSuccessListener {
-                _messagesStateFlow.value = listOf(newMessage) + _messagesStateFlow.value
+//                _messagesStateFlow.value = listOf(newMessage) + _messagesStateFlow.value
 
             }
             .addOnFailureListener { exception ->
