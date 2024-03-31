@@ -1,6 +1,5 @@
 package com.example.savera.Screens.dashboard.MainSyllabus.syllabus
 
-import android.util.Log
 import androidx.compose.animation.core.repeatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -28,7 +27,6 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,6 +39,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.savera.Model.UserInformation
 import com.example.savera.Model.syllabusshower
 import com.example.savera.Screens.account.mainScreen.accountpic
 import com.example.savera.Screens.dashboard.DashboardScreen
@@ -49,14 +48,14 @@ import com.example.savera.Screens.homeScreen.textout
 import com.example.savera.ui.theme.lightrale
 import com.example.savera.ui.theme.ralewaybold
 import com.example.savera.ui.theme.ralewayfamilt
-import kotlinx.coroutines.delay
 
 @Composable
 fun syllabus(
     dashboardViewmodel: dashboardViewmodal,
     selectedclass: MutableState<String>,
     navigation: NavHostController,
-    selected: MutableState<String>
+    selected: MutableState<String>,
+    userInfo: MutableState<UserInformation?>
 ) {
     val classList = remember {
         mutableStateOf<List<String>>(
@@ -92,7 +91,7 @@ Column(verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally) {
 
 
-    topbarSyllabus(classList,selectedclass)
+    topbarSyllabus(classList,selectedclass,userInfo)
 
     Spacer(modifier = Modifier.height(15.dp))
 
@@ -326,7 +325,11 @@ val dropdown = remember {
 }
 
 @Composable
-fun topbarSyllabus(classList: MutableState<List<String>>, selectedclass: MutableState<String>) {
+fun topbarSyllabus(
+    classList: MutableState<List<String>>,
+    selectedclass: MutableState<String>,
+    userInfo: MutableState<UserInformation?>
+) {
     Surface(modifier = Modifier
         .fillMaxWidth()
         .height(100.dp),
@@ -374,12 +377,14 @@ fun topbarSyllabus(classList: MutableState<List<String>>, selectedclass: Mutable
                      color = Color.White
                  )
 
-                 textout(
-                     title = "Mannu", modifier = Modifier,
-                     fontStyle = MaterialTheme.typography.titleSmall,
-                     fontFamily = ralewayfamilt,
-                     color = Color.White
-                 )
+                 userInfo.value?.let {
+                     textout(
+                         title = it.name, modifier = Modifier,
+                         fontStyle = MaterialTheme.typography.titleSmall,
+                         fontFamily = ralewayfamilt,
+                         color = Color.White
+                     )
+                 }
 
 
 
@@ -388,8 +393,9 @@ fun topbarSyllabus(classList: MutableState<List<String>>, selectedclass: Mutable
 
              }
              Spacer(modifier = Modifier.width(10.dp))
+         userInfo.value?.let {
              accountpic(
-                 profilePic = "https://firebasestorage.googleapis.com/v0/b/savera-504a2.appspot.com/o/Profile%20Pictures%2Fmannu1392004%40gmail.com%2F1000143376?alt=media&token=29d92201-21dd-44ca-b26f-cfcb908ee9fa",
+                 profilePic = it.profilePic,
                  modifier = Modifier
                      .size(60.dp)
                      .padding(2.dp)
@@ -397,6 +403,7 @@ fun topbarSyllabus(classList: MutableState<List<String>>, selectedclass: Mutable
 
                      .border(width = 1.dp, color = Color(0xfff707070), shape = CircleShape)
              )
+         }
 
 
          }

@@ -2,7 +2,22 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="DemoScreen">
+        <State />
+      </entry>
+      <entry key="PreviewSliderButton">
+        <State />
+      </entry>
+      <entry key="SwipeButtonSample">
+        <State />
+      </entry>
       <entry key="app">
+        <State />
+      </entry>
+      <entry key="prev">
+        <State />
+      </entry>
+      <entry key="test">
         <State />
       </entry>
     </value>
