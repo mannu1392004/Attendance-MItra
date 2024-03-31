@@ -7,8 +7,10 @@ import com.example.savera.Model.events_Data
 import com.example.savera.Model.syllabusshower
 import com.example.savera.Model.ChapterList
 import com.example.savera.Model.topicList
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.tasks.await
@@ -195,10 +197,28 @@ object AppRepository {
     }
 
     // newUser check code
+//    suspend fun checkYearInformation(
+//        currentUser: String,
+//        exist: () -> Unit,
+//        notexist: () -> Unit,
+//    ) {
+//        val firestore = FirebaseFirestore.getInstance()
+//
+//        if (currentUser != null) {
+//            val userDocRef = firestore.collection("teachers")
+//                .document(currentUser)
+//            val documentSnapshot = userDocRef.get().await()
+//            if (documentSnapshot.exists()) {
+//                exist()
+//            } else {
+//                notexist()
+//            }
+//        }
+//    }
     suspend fun checkYearInformation(
         currentUser: String,
-        exist: () -> Unit,
-        notexist: () -> Unit,
+        informationExists: () -> Unit,
+        informationMissing: () -> Unit,
     ) {
         val firestore = FirebaseFirestore.getInstance()
 
@@ -206,32 +226,117 @@ object AppRepository {
             val userDocRef = firestore.collection("teachers")
                 .document(currentUser)
             val documentSnapshot = userDocRef.get().await()
+
             if (documentSnapshot.exists()) {
-                exist()
+                // Check for the "name" field specifically
+                val name = documentSnapshot.getString("Name")
+                if (name != null) {
+                    informationExists()
+                } else {
+                    informationMissing()
+                }
             } else {
-                notexist()
+                informationMissing()  // Document doesn't exist at all
             }
         }
     }
 
 
+
     // new user add code
     fun addnewuser(
-        documentPath: String, data: Any, successfull: () -> Unit,
+        documentPath: String, newData: Map<String, Any>, successfull: () -> Unit,
         failure: (String) -> Unit,
     ) {
         val firestore = FirebaseFirestore.getInstance()
         firestore.collection("teachers")
             .document(documentPath)
-            .set(data)
+            .update(newData)
             .addOnSuccessListener {
                 successfull()
             }
             .addOnFailureListener {
                 failure(it.localizedMessage)
             }
+        subscribeToGroups()
+
 
     }
+    fun subscribeToGroups(){
+        Log.d("lakshay", "subscribeToGroups: Its working")
+        val auth: FirebaseAuth = FirebaseAuth.getInstance()
+        val db: FirebaseFirestore = FirebaseFirestore.getInstance()
+
+        val currentUser = auth.currentUser
+        currentUser?.let { user ->
+            val userEmail = user.email
+            if (userEmail != null) {
+                db.collection("teachers")
+                    .document(userEmail)
+                    .get()
+                    .addOnSuccessListener { document ->
+                        if (document != null) {
+                            val year = document.getString("Year")
+                            year?.let { userYear ->
+                                subscribeToFCMTopics(userYear)
+                                Log.d("lakshay", "subscribeToGroups: Its working2 $userYear")
+
+                            }
+                        } else {
+                            Log.d("lakshay", "No such document")
+                        }
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.d("lakshay", "get failed with ", exception)
+                    }
+            }
+        }
+
+    }
+    private fun subscribeToFCMTopics(year: String) {
+        when (year.toIntOrNull()) {
+            1 -> {
+                subscribeToTopic("1st_Year")
+                subscribeToTopic("1st_2nd_Year")
+                subscribeToTopic("official")
+
+            }
+            2 -> {
+                subscribeToTopic("2nd_Year")
+                subscribeToTopic("1st_2nd_Year")
+                subscribeToTopic("2nd_3rd_Year")
+                subscribeToTopic("official")
+            }
+            3 -> {
+                subscribeToTopic("3rd_Year")
+                subscribeToTopic("2nd_3rd_Year")
+                subscribeToTopic("official")
+                subscribeToTopic("3rd_4th_Year")
+
+            }
+            4 -> {
+                subscribeToTopic("4th_Year")
+                subscribeToTopic("3rd_4th_Year")
+                subscribeToTopic("official")
+
+            }
+            else -> {
+            }
+        }
+    }
+    private fun subscribeToTopic(topic: String) {
+        FirebaseMessaging.getInstance().subscribeToTopic(topic)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d("lakshay", "Subscribed to $topic topic")
+                } else {
+                    Log.e("lakshay", "Failed to subscribe to $topic topic", task.exception)
+                }
+            }
+    }
+
+
+
 
     // Add new Student
     fun addNewStudent(

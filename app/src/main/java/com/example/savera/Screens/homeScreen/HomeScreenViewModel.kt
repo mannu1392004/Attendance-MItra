@@ -46,10 +46,10 @@ class HomeScreenViewModel : ViewModel() {
     fun checking(email:String,exists:()->Unit,notexists:()->Unit){
         viewModelScope.launch {
             AppRepository.checkYearInformation(currentUser = email,
-                exist = {
+                informationExists = {
                       exists()
                 },
-                notexist = {
+                informationMissing = {
                    notexists()
                 })
         }
@@ -65,7 +65,7 @@ successfull:()->Unit,
         viewModelScope.launch {
             AppRepository.addnewuser(
                 documentPath = documentPath,
-                data = data,
+                newData = data,
                 successfull = {
                        successfull()
                 },

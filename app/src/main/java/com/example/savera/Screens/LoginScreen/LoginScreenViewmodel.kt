@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.launch
 
 class LoginScreenViewmodel : ViewModel() {
@@ -34,6 +36,39 @@ class LoginScreenViewmodel : ViewModel() {
                         val user = auth.currentUser
                         if (user != null) {
                             if (user.isEmailVerified) {
+
+                                FirebaseMessaging.getInstance().token
+                                    .addOnSuccessListener { token ->
+                                        // Token retrieved successfully, store it in Firestore or handle as needed
+
+                                        Log.d("FCM Token", "Token: $token")
+                                        val user = FirebaseAuth.getInstance().currentUser
+                                        val email = user?.email ?: return@addOnSuccessListener // Handle null email
+
+                                        val db = FirebaseFirestore.getInstance()
+                                        val teachersRef = db.collection("teachers")
+                                        val docRef = teachersRef.document(email)
+
+                                        // Create a map for the data to be saved
+                                        val data = hashMapOf("Token" to token)
+
+                                        // Save the token to Firestore
+                                        docRef.set(data)
+                                            .addOnSuccessListener {
+                                                // Token saved successfully
+                                                Log.d("Firestore", "Token saved to database")
+
+                                                //technically after saving the token, we should navigate to the home screen
+                                            }
+                                            .addOnFailureListener { exception ->
+                                                // Handle failure to save to Firestore
+                                                Log.w("Firestore", "Error saving token", exception)
+                                            }
+                                    }
+                                    .addOnFailureListener { exception ->
+                                        // Handle failure to retrieve FCM token
+                                        Log.e("FCM Token", "Error getting token", exception)
+                                    }
                                 home()
                             } else {
                                 user.sendEmailVerification().addOnCompleteListener() { task ->

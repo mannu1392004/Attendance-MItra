@@ -1,22 +1,26 @@
 package com.example.savera.Screens.messageScreen
 
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -37,7 +41,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import coil.compose.rememberAsyncImagePainter
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 @Composable
@@ -49,7 +59,7 @@ fun ChatScreen(
 
 
     val messageText = remember { mutableStateOf(TextFieldValue("")) }
-//    val currUserName = remember { viewModel.userName }
+//   val currUserName = remember { viewModel.userName }
     val showLoadMoreButton by viewModel.showLoadMoreButton.collectAsState()
 
     val m = viewModel.messagesStateFlow.collectAsState(emptyList()).value
@@ -107,7 +117,7 @@ fun ChatScreen(
                     .weight(1f)
                     .padding(5.dp),
                 placeholder = { Text(text = "Type Your Message") },
-                maxLines = 1,
+                maxLines = 10,
                 shape = RoundedCornerShape(17.dp),
                 colors = TextFieldDefaults.colors(
                     unfocusedIndicatorColor = Color.Transparent,
@@ -132,45 +142,108 @@ fun ChatScreen(
 @Composable
 fun MessageBubble(message: Message, viewModel: messageScreenViewModel) {
     val currUserName = remember { viewModel.userName }
-
     val isSender = message.senderName == currUserName.value
-
     val background = if (isSender) Color(0xFFF8AC32) else Color(0xffF9A825)
-
     val alignment = if (isSender) Alignment.End else Alignment.Start
     val textColor = if (isSystemInDarkTheme()) Color.Black else Color.White
+    val dateFormat = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
+    val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+
+    var profilePicUrl by remember {
+        mutableStateOf<String?>(null)
+    }
+    LaunchedEffect(key1 = message.senderName) {
+        profilePicUrl = viewModel.getProfilePictureUrl(message.senderName)
+    }
 
 
-    Column(
+    Row(
         modifier = Modifier
             .padding(horizontal = 8.dp, vertical = 4.dp)
             .fillMaxWidth(),
-        horizontalAlignment = alignment
+        horizontalArrangement = if (isSender) Arrangement.End else Arrangement.Start,
+        verticalAlignment = if (isSender) Alignment.Top else Alignment.CenterVertically
     ) {
         if (!isSender) {
+            profilePicUrl?.let { url ->
+                Image(
+                    painter = rememberAsyncImagePainter(url),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clip(CircleShape)
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.width(8.dp))
+
+        Column(
+            horizontalAlignment = alignment,
+            modifier = Modifier.weight(1f)
+        ) {
+            if (!isSender) {
+                Text(
+                    text = message.senderName.substringBefore("@"),
+                    modifier = Modifier.padding(start = 3.dp),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.Gray
+                )
+            }
+
+            Surface(
+                modifier = Modifier
+                    .widthIn(max = 270.dp)
+                    .padding(top = if (!isSender) 4.dp else 0.dp),
+                color = background,
+                shape = RoundedCornerShape(
+                    topStart =  8.dp,
+                    topEnd = 8.dp,
+                    bottomEnd = 8.dp,
+                    bottomStart = 8.dp
+                ),
+                contentColor = if (isSender) Color.White else Color.Black
+            ) {
+                Box(
+                    modifier = Modifier.padding(5.dp)
+                ) {
+                    Text(
+                        text = message.text,
+                        modifier = Modifier.padding(8.dp),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = textColor
+                    )
+                }
+            }
+
             Text(
-                text = message.senderName,
+                text = "${dateFormat.format(Date(message.timestamp))} ${timeFormat.format(Date(message.timestamp))}",
+                modifier = Modifier
+                    .padding(
+                        start = if (isSender) 8.dp else 3.dp,
+                        end = if (isSender) 3.dp else 8.dp,
+                        bottom = 0.dp,
+                        top = 2.dp
+                    ),
                 style = MaterialTheme.typography.labelSmall,
                 color = Color.Gray
             )
         }
-        Surface(
-            modifier = Modifier
-                .padding(top = if (!isSender) 4.dp else 0.dp)
-                .widthIn(max = 270.dp),
-            color = background, shape = RoundedCornerShape(8.dp),
-            contentColor = if (isSender) Color.White else Color.Black
-        ) {
-            Text(
-                text = message.text,
-                modifier = Modifier.padding(8.dp),
-                style = MaterialTheme.typography.bodyMedium,
-                color = textColor
-            )
+
+        if (isSender) {
+        Spacer(modifier = Modifier.width(8.dp))
+            profilePicUrl?.let { url ->
+                Image(
+                    painter = rememberAsyncImagePainter(url),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clip(CircleShape)
+                )
+            }
         }
     }
 }
-
 
 @Composable
 fun LoadMoreButton(onClick: () -> Unit) {
