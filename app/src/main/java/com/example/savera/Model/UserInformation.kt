@@ -6,5 +6,6 @@ data class UserInformation(
     val phone:String,
     val profilePic:String,
     val year :String,
-    val gender:String
+    val gender:String,
+    val admin:String
 )

@@ -12,6 +12,7 @@ import com.example.savera.Screens.LoadingScreen.loadingScreen
 import com.example.savera.Screens.LoginScreen.LoginScreen
 import com.example.savera.Screens.MainScreen.MainScreen
 import com.example.savera.Screens.SplashScreen.SplashScreen
+import com.example.savera.Screens.dashboard.addSyllabus.addSyllabusScreens
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -32,7 +33,7 @@ fun Navigation() {
            MainScreen(navController)
         }
 
-        val loadingroute = Screens.LoadingScreen.name
+        val loadingroute = addSyllabusScreens.AddChapters
         composable(route = "$loadingroute/{email}/{password}",
             arguments = listOf(navArgument("email"){type  = NavType.StringType},
                 navArgument("password"){type = NavType.StringType}

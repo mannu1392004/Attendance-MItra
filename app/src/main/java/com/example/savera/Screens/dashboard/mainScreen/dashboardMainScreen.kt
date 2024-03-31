@@ -1,14 +1,13 @@
 package com.example.savera.Screens.dashboard.mainScreen
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.location.Location
 import android.net.Uri
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,17 +15,21 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -36,23 +39,24 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableDoubleState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.core.app.ActivityCompat
 import androidx.navigation.NavHostController
-import com.example.savera.Experiment.fusedLocationProviderClient
+import com.example.savera.Model.UserInformation
+import com.example.savera.Model.adminDetails
+import com.example.savera.Model.studentAttendanceData
 import com.example.savera.R
+import com.example.savera.Repository.AppRepository
+import com.example.savera.Screens.account.mainScreen.accountpic
 import com.example.savera.Screens.dashboard.DashboardScreen
 import com.example.savera.Screens.dashboard.viewmodel.dashboardViewmodal
 import com.example.savera.Screens.homeScreen.animation
@@ -61,11 +65,18 @@ import com.example.savera.Screens.homeScreen.inputValue
 import com.example.savera.Screens.homeScreen.textout
 import com.example.savera.ui.theme.lightrale
 import com.example.savera.ui.theme.ralewaybold
-import com.google.android.gms.location.LocationServices
+import com.example.savera.ui.theme.ralewayfamilt
 import kotlinx.coroutines.delay
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun dashboardMainScreen(navigation: NavHostController, dashboardViewmodel: dashboardViewmodal) {
+fun dashboardMainScreen(
+    navigation: NavHostController,
+    dashboardViewmodel: dashboardViewmodal,
+    userInfo: MutableState<UserInformation?>
+) {
     val showAddUserDialogue = remember {
         mutableStateOf(false)
     }
@@ -74,7 +85,7 @@ fun dashboardMainScreen(navigation: NavHostController, dashboardViewmodel: dashb
         mutableStateOf(false)
     }
 
-    val showRemoveAccess = remember {
+    val showSeeAttendance = remember {
         mutableStateOf(false)
     }
 
@@ -82,8 +93,13 @@ fun dashboardMainScreen(navigation: NavHostController, dashboardViewmodel: dashb
         mutableStateOf(false)
     }
 
+    val adminDetails = remember {
+        mutableStateOf(userInfo.value?.admin=="True")
+    }
 
-    val context = LocalContext.current
+    val showaccessEror = remember {
+        mutableStateOf(false)
+    }
 
     // color to be change
     Surface(
@@ -125,9 +141,15 @@ fun dashboardMainScreen(navigation: NavHostController, dashboardViewmodel: dashb
                     modifier = Modifier
                         .size(150.dp)
                         .clickable {
-                            showAddStudentDialogue.value = true
+                            if (adminDetails.value) {
+                                showAddStudentDialogue.value = true
+                            } else {
+                                showaccessEror.value = true
+                            }
+
                         }
                 )
+
 
             }
 
@@ -156,7 +178,7 @@ fun dashboardMainScreen(navigation: NavHostController, dashboardViewmodel: dashb
                             "Attendance", modifier = Modifier
                         .size(150.dp)
                         .clickable {
-                           navigation.navigate(DashboardScreen.VolunteersAttendance.name)
+                            navigation.navigate(DashboardScreen.VolunteersAttendance.name)
                         }
                 )
 
@@ -173,14 +195,32 @@ fun dashboardMainScreen(navigation: NavHostController, dashboardViewmodel: dashb
 
                 BoxesCreated(
                     image = R.drawable.makeadmin,
-                    title = "Make Admin",
-                    modifier = Modifier.size(150.dp)
+                    title = "Modify Admins",
+                    modifier = Modifier
+                        .size(150.dp)
+                        .clickable {
+                            if (adminDetails.value) {
+                                showMakeAdmin.value = true
+                            } else {
+                                showaccessEror.value = true
+                            }
+
+                        }
                 )
 
                 BoxesCreated(
                     image = R.drawable.removeaccess,
-                    title = "Remove access",
-                    modifier = Modifier.size(150.dp)
+                    title = "See\nAttendance",
+                    modifier = Modifier
+                        .size(150.dp)
+                        .clickable {
+                            if (adminDetails.value)
+                                showSeeAttendance.value = true
+                            else {
+                                showaccessEror.value = true
+                            }
+
+                        }
                 )
 
 
@@ -197,13 +237,31 @@ fun dashboardMainScreen(navigation: NavHostController, dashboardViewmodel: dashb
                 BoxesCreated(
                     image = R.drawable.list,
                     title = "Add Syllabus",
-                    modifier = Modifier.size(150.dp)
+                    modifier = Modifier
+                        .size(150.dp)
+                        .clickable {
+
+                            if (adminDetails.value)
+                                navigation.navigate(DashboardScreen.AddSyllabus.name)
+                            else {
+                                showaccessEror.value = true
+                            }
+                        }
                 )
 
                 BoxesCreated(
-                    image = R.drawable.delete,
-                    title = "Del. Student",
-                    modifier = Modifier.size(150.dp)
+                    image = R.drawable.customer_review,
+                    title = "See Feedbacks",
+                    modifier = Modifier
+                        .size(150.dp)
+                        .clickable {
+                            if (adminDetails.value)
+                                navigation.navigate(DashboardScreen.SeeFeedback.name)
+                            else {
+                                showaccessEror.value = true
+                            }
+
+                        }
                 )
 
 
@@ -221,15 +279,326 @@ fun dashboardMainScreen(navigation: NavHostController, dashboardViewmodel: dashb
             AddStudents(showAddStudentDialogue, dashboardViewmodel)
         }
 
-        if (showRemoveAccess.value) {
+        if (showSeeAttendance.value) {
+            showSeeAttendanceDialogue(showSeeAttendance,dashboardViewmodel)
+
         }
 
         if (showMakeAdmin.value) {
+            ShowMakeAdmindialogue(dashboardViewmodel,showMakeAdmin)
+        }
+
+        if (showaccessEror.value){
+            showaccessError(showaccessEror)
+
+        }
+
+
+    }
+
+}
+
+@Composable
+fun showaccessError(showaccessEror: MutableState<Boolean>) {
+
+    Dialog(onDismissRequest = { /*TODO*/ }) {
+
+
+    Surface(Modifier.fillMaxWidth(),
+        color = Color.White) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Spacer(modifier = Modifier.height(20.dp))
+            textout(
+                title = "Error",
+                modifier = Modifier,
+                fontStyle = MaterialTheme.typography.titleLarge,
+                color = Color.Red
+            )
+
+            Text(
+                text = "Authorized Access Only",
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center,
+                fontFamily = ralewayfamilt
+            )
+
+
+            button(text = "Ok") {
+                showaccessEror.value = false
+
+
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+
+
+        }
+
+
+    }
+    }
+
+
+
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun showSeeAttendanceDialogue(showSeeAttendance: MutableState<Boolean>,
+                              dashboardViewmodel: dashboardViewmodal) {
+val data = remember {
+    mutableStateOf<List<studentAttendanceData>>(emptyList())
+}
+
+val date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+
+
+    LaunchedEffect(Unit) {
+
+        dashboardViewmodel.fetchAttendance(
+            date = date
+        ){
+            data.value = it
+        }
+
+}
+
+
+
+    Dialog(onDismissRequest = { /*TODO*/ }) {
+
+
+        Surface(modifier = Modifier.fillMaxWidth(),
+            color = Color.White) {
+
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+
+                    textout(
+                        title = "Attendance", modifier = Modifier,
+                        fontStyle = MaterialTheme.typography.titleMedium
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Icon(imageVector = Icons.Filled.Close, contentDescription = "",
+                        modifier = Modifier.clickable {
+                            showSeeAttendance.value = false
+
+                        })
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = 20.dp, end = 20.dp,
+                        ),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    textout(
+                        title = "Classes", modifier = Modifier,
+                        fontStyle = MaterialTheme.typography.titleMedium
+                    )
+
+                    textout(
+                        title = "Status/Present", modifier = Modifier,
+                        fontStyle = MaterialTheme.typography.titleMedium
+                    )
+
+                }
+                if (data.value.isNotEmpty()){
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 10.dp)
+                            .height(400.dp)
+                    ) {
+
+                        items(data.value) { it ->
+                            attendanceMaker(it, date)
+                        }
+
+
+                    }
+            }
+                else{
+                    CircularProgressIndicator()
+                }
+
+
+
+
+            }
+
+        }
+
+
+    }
+
+}
+@Composable
+fun attendanceMaker(studentAttendanceData: studentAttendanceData, date: String) {
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .padding(start = 20.dp, end = 20.dp, top = 5.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+
+        Text(text = studentAttendanceData.className,
+            fontFamily = ralewayfamilt,
+            color = Color.Black,
+            style = MaterialTheme.typography.titleMedium
+            )
+
+
+
+
+
+if (studentAttendanceData.status) {
+    Text(
+        text = studentAttendanceData.value,
+        fontFamily = ralewayfamilt,
+        color = Color.Black,
+        style = MaterialTheme.typography.titleMedium
+    )
+}
+        else{
+    Text(
+        text = "Not Submitted",
+        fontFamily = ralewayfamilt,
+        color = Color.Red,
+        style = MaterialTheme.typography.titleMedium
+    )
+        }
+
+    }
+
+
+}
+
+@Composable
+fun ShowMakeAdmindialogue(
+    dashboardViewmodel: dashboardViewmodal,
+    showMakeAdmin: MutableState<Boolean>
+) {
+
+    val data = remember {
+        mutableStateOf<List<adminDetails?>>(emptyList())
+    }
+    LaunchedEffect(Unit) {
+       dashboardViewmodel.fetchAdmins {
+
+            data.value = it
+
+        }
+    }
+
+
+    Dialog(onDismissRequest = { /*TODO*/ }) {
+        Surface(modifier = Modifier.fillMaxWidth(),
+            color = Color.White) {
+            Column {
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                    horizontalArrangement = Arrangement.End) {
+                    
+                    textout(title = "Admin Control Unit", modifier = Modifier,
+                        fontStyle =MaterialTheme.typography.titleMedium )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Icon(imageVector = Icons.Filled.Close, contentDescription ="" ,
+                        modifier =Modifier.clickable {
+                            showMakeAdmin.value = false
+                        })
+                }
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = 20.dp, end = 20.dp,
+                    ),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                    textout(title = "Volunteers", modifier = Modifier,
+                        fontStyle = MaterialTheme.typography.titleMedium)
+
+                    textout(title = "Status", modifier = Modifier,
+                        fontStyle = MaterialTheme.typography.titleMedium)
+
+                }
+if (data.value.isNotEmpty()) {
+    adminMaker(data)
+}
+                else{
+                    CircularProgressIndicator()
+                }
+
+            }
+
+
+        }
+
+
+    }
+
+
+}
+@Composable
+fun adminMaker(data: MutableState<List<adminDetails?>>) {
+
+    LazyColumn(modifier = Modifier
+        .height(
+            350.dp
+        )
+        .padding(bottom = 10.dp)
+
+    ) {
+    items(data.value){
+
+val status = remember {
+    it?.let { it1 -> mutableStateOf(it1.admin) }
+}
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(5.dp),
+            verticalAlignment = Alignment.CenterVertically
+            ) {
+
+
+
+            if (it != null) {
+                accountpic(profilePic = it.image)
+                textout(title = it.name,
+                    modifier = Modifier, fontStyle =MaterialTheme.typography.bodyLarge )
+                Spacer(modifier = Modifier.weight(1f))
+                Checkbox(checked = status?.value=="True",
+                    onCheckedChange ={bollean->
+
+                       if ( status?.value == "True"){
+                           status.value = "False"
+                       }
+                        else{
+                           status?.value = "True"
+                        }
+
+
+                    status?.value?.let { it1 -> AppRepository.addAdmin(email =it.email , value = it1) }
+
+                } )
+            }
+
         }
 
 
 
     }
+
+}
 
 }
 
@@ -546,6 +915,8 @@ fun BoxesCreated(image: Int, title: String, modifier: Modifier) {
             Text(
                 text = title, color = Color.White,
                 fontFamily = ralewaybold,
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center
             )
         }
 

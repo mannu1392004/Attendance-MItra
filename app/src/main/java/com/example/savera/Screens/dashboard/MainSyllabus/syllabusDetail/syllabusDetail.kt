@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import androidx.navigation.NavHostController
 import com.example.savera.Model.ChapterList
+import com.example.savera.Model.UserInformation
 import com.example.savera.Screens.account.mainScreen.accountpic
 import com.example.savera.Screens.dashboard.DashboardScreen
 import com.example.savera.Screens.dashboard.viewmodel.dashboardViewmodal
@@ -52,6 +53,7 @@ fun syllabusDetail(
     Syllabus: MutableState<List<ChapterList>>,
     chapterSelected: MutableState<String>,
     navigation: NavHostController,
+    userInfo: MutableState<UserInformation?>,
 ) {
     val offset = remember {
         Animatable(0f)
@@ -95,15 +97,17 @@ fun syllabusDetail(
                             color = Color.White
                         )
 
-                        textout(
-                            title = "Mannu", modifier = Modifier,
-                            fontStyle = MaterialTheme.typography.titleLarge,
-                            color = Color.White
-                        )
+                        userInfo.value?.let {
+                            textout(
+                                title = it.name, modifier = Modifier,
+                                fontStyle = MaterialTheme.typography.titleLarge,
+                                color = Color.White
+                            )
+                        }
 
                     }
 
-                    accountpic(profilePic = "https://firebasestorage.googleapis.com/v0/b/savera-504a2.appspot.com/o/Profile%20Pictures%2Fmannu1392004%40gmail.com%2F1000143376?alt=media&token=29d92201-21dd-44ca-b26f-cfcb908ee9fa")
+                    userInfo.value?.let { accountpic(profilePic = it.profilePic) }
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -125,13 +129,7 @@ fun syllabusDetail(
 
                     Spacer(modifier = Modifier.weight(1f))
                     textout(
-                        title = "Completion: ",
-                        modifier = Modifier,
-                        fontStyle = MaterialTheme.typography.titleMedium,
-                        fontFamily = ralewaybold
-                    )
-                    textout(
-                        title = "10%",
+                        title = "Completion",
                         modifier = Modifier,
                         fontStyle = MaterialTheme.typography.titleMedium,
                         fontFamily = ralewaybold
@@ -164,6 +162,7 @@ fun syllabusDetail(
 
 }
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun chaptermaker(
     it: ChapterList,
