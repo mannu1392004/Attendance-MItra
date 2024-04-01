@@ -1,7 +1,9 @@
 package com.example.savera.Repository
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import com.example.savera.Model.UserInformation
 import com.example.savera.Model.events_Data
@@ -18,6 +20,8 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.tasks.await
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 object AppRepository {
 
@@ -599,7 +603,6 @@ firestore.collection("teachers")
             val image = document.getString("ProfilePic")?:""
             val Name = document.getString("Name")?:""
             val admin = document.getString("Admin")?:"False"
-
             list.add(
                 adminDetails(
                     name = Name,
@@ -853,6 +856,73 @@ val data = mutableListOf<feedBackType>()
 
 
     }
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun markAttendance(
+    email: String
+){
+    val date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+
+val firestore = FirebaseFirestore.getInstance()
+    firestore.collection("AttendanceVolunteers")
+        .document(date)
+        .collection("Attendance")
+        .document(email)
+        .set(
+            hashMapOf("present" to "yes")
+        ).addOnSuccessListener {
+
+
+            firestore.collection("teachers")
+                .document(email)
+                .get()
+                .addOnSuccessListener {
+                 var  x = it.getString("Attendance")?.toInt()!!
+
+                     x++
+
+                    firestore.collection("teachers")
+                        .document(email)
+                        .update(
+                            "Attendance",x.toString()
+                        )
+                }
+
+
+
+        }
+
+
+
+}
+
+fun fetchStatusforportal(success: (Boolean) -> Unit){
+
+    val firestore = FirebaseFirestore.getInstance()
+    firestore.collection("AttendanceVolunteers")
+        .document("portal")
+        .addSnapshotListener { value, error ->
+            val  x = value?.getBoolean("status")?:false
+success(x)
+
+        }
+
+
+}
+
+fun updatePortal(value: Boolean){
+
+    val firestore = FirebaseFirestore.getInstance()
+    firestore.collection("AttendanceVolunteers")
+        .document("portal")
+        .set(hashMapOf("status" to value))
+
+
+
+}
+
+
+
 
 
 }
