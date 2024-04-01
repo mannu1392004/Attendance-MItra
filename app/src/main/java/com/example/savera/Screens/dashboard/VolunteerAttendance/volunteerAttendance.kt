@@ -1,5 +1,6 @@
 package com.example.savera.Screens.dashboard.VolunteerAttendance
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
@@ -17,10 +18,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -39,13 +45,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.core.app.ActivityCompat
 import com.example.savera.Experiment.fusedLocationProviderClient
 import com.example.savera.Model.UserInformation
+import com.example.savera.Model.adminDetails
 import com.example.savera.Repository.AppRepository
 import com.example.savera.Screens.account.mainScreen.accountpic
 import com.example.savera.Screens.attendanceScreen.attendanceTaken
 import com.example.savera.Screens.dashboard.viewmodel.dashboardViewmodal
+import com.example.savera.Screens.homeScreen.button
 import com.example.savera.Screens.homeScreen.textout
 import com.example.savera.ui.theme.lightrale
 import com.example.savera.ui.theme.ralewayfamilt
@@ -142,7 +151,7 @@ val courotine = rememberCoroutineScope()
         )
 
         if (
-            distance.value<30f
+            distance.value<400f
         ) {
 
             result.value = true
@@ -156,11 +165,8 @@ val courotine = rememberCoroutineScope()
 
 
     Surface(modifier = Modifier.fillMaxSize()) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(10.dp)
-        ) {
-
+        Column {
+            Spacer(modifier = Modifier.height(20.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start,
@@ -205,7 +211,6 @@ val courotine = rememberCoroutineScope()
 
             }
 
-
             Spacer(modifier = Modifier.height(20.dp))
             // date timer
             Surface(
@@ -235,92 +240,297 @@ val courotine = rememberCoroutineScope()
             }
 
 
-if (attendancetaken.value!=null)
-if (!attendancetaken.value!!){
-Column(modifier = Modifier.fillMaxSize(),
-    verticalArrangement = Arrangement.Center,
-    horizontalAlignment = Alignment.CenterHorizontally) {
+        }
 
-            if (result.value != null) {
+        Column(verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .verticalScroll(
+                    rememberScrollState()
+                )
+                .padding(top = 10.dp)
 
-            // if
-                if (result.value!!) {
-
-                   SwipeableButton(dashboardViewmodel,email)
+        ) {
 
 
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(10.dp)
+            ) {
+
+                val porta = remember {
+                    mutableStateOf<Boolean?>(null)
                 }
 
-                    if (distance.value>100000f){
-                    Text(text = "Please on your location and internet",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontFamily = ralewayfamilt,
-                        color = Color.Red,
-                        textAlign = TextAlign.Center
-                        )
-
+                LaunchedEffect(Unit) {
+                    AppRepository.fetchStatusforportal {
+                        porta.value = it
                     }
-
-                    else{
-                    Text(text = "Distance from Savera: "+distance.value.toString()+"m",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontFamily = ralewayfamilt
-                        )}
-
-                    Spacer(modifier = Modifier.height(10.dp))
-                    Button(onClick = {
-                        var x = 0
+                }
 
 
-                        courotine.launch {
-                            while (!result.value!!) {
 
-                                checkPermsission(context, longitude, latitude)
-                                x++
-                                delay(2000)
+
+
+                if (attendancetaken.value != null && porta.value != null)
+                  if (porta.value!!){
+                    if (!attendancetaken.value!!) {
+                        Column(
+                            modifier = Modifier.padding(top = 40.dp),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+
+                            if (result.value != null) {
+
+                                // if
+                                if (result.value!!) {
+
+                                    SwipeableButton(dashboardViewmodel, email)
+
+
+                                }
+
+                                if (distance.value > 100000f) {
+                                    Text(
+                                        text = "Please on your location and internet",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontFamily = ralewayfamilt,
+                                        color = Color.Red,
+                                        textAlign = TextAlign.Center
+                                    )
+
+                                } else {
+                                    Text(
+                                        text = "Distance from Savera: " + distance.value.toString() + "m",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontFamily = ralewayfamilt
+                                    )
+                                }
+
+                                Spacer(modifier = Modifier.height(10.dp))
+                                Button(
+                                    onClick = {
+                                        var x = 0
+
+
+                                        courotine.launch {
+                                            while (!result.value!!) {
+
+                                                checkPermsission(context, longitude, latitude)
+                                                x++
+                                                delay(2000)
+
+                                            }
+                                        }
+                                    },
+                                    colors = ButtonColors(
+                                        contentColor = Color.White,
+                                        containerColor = Color(0xffF9A825),
+                                        disabledContainerColor = Color(0xffF9A825),
+                                        disabledContentColor = Color.White
+                                    )
+                                ) {
+                                    Text(text = "Refresh")
+                                }
+
+                                Spacer(modifier = Modifier.height(10.dp))
+                                Text(
+                                    text = "Note-\n"
+                                            + "You must with in the radius of 30m in order to mark the attendance\n",
+                                    color = Color.Red,
+                                    textAlign = TextAlign.Center,
+                                    fontFamily = ralewayfamilt,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+
 
                             }
+
+                            if (attendancetaken.value == null) {
+                                loadingDialogue()
+                            }
+
                         }
-                    },
-                        colors = ButtonColors(
-                            contentColor = Color.White,
-                            containerColor = Color(0xffF9A825),
-                            disabledContainerColor = Color(0xffF9A825),
-                            disabledContentColor = Color.White
-                        )
-                    ) {
-                        Text(text = "Refresh")
+                    } else {
+                        attendanceTaken()
                     }
-
-                    Spacer(modifier = Modifier.height(10.dp))
-                    Text(text = "Note-\n"
-                    +"You must with in the radius of 30m in order to mark the attendance\n",
-                        color = Color.Red,
-                        textAlign = TextAlign.Center,
-                        fontFamily = ralewayfamilt,
-                        style = MaterialTheme.typography.bodyMedium
-                        )
-
-
-
+            }
+                else{
+                    textout(title = "Portal is Closed", modifier = Modifier,
+                        fontStyle =MaterialTheme.typography.titleMedium ,
+                        color = Color.Red)
+                }
 
             }
+if (userInfo.value?.admin=="True") {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ) {
 
-            if (attendancetaken.value==null) {
-              loadingDialogue()
-            }
 
+        val (isComplete, setIsComplete) = remember {
+            mutableStateOf(false)
         }
+        val onoroff = remember {
+            mutableStateOf(false)
+        }
+        LaunchedEffect(Unit) {
+            AppRepository.fetchStatusforportal {
+                onoroff.value = it
+            }
+        }
+
+
+
+        if (!onoroff.value) {
+            SwipeButton(
+                text = "Turn on Portal", isComplete = isComplete,
+                backgroundColor = Color(0xFF0E970E)
+            ) {
+
+
+                onoroff.value = !onoroff.value
+                AppRepository.updatePortal(onoroff.value)
+            }
+        } else {
+
+            val (isComplete1, setIsComplete3) = remember {
+                mutableStateOf(false)
+            }
+
+            SwipeButton(
+                text = "Turn off Portal", isComplete = isComplete1,
+                backgroundColor = Color.Red
+            ) {
+
+
+                onoroff.value = !onoroff.value
+                AppRepository.updatePortal(onoroff.value)
+            }
+        }
+
+
+    }
+
+    val showStudents = remember {
+        mutableStateOf(false)
+    }
+    button(text = "See Volunteers List") {
+        showStudents.value = true
+
+
+    }
+
+
+    if (showStudents.value) {
+
+
+        showUsersList(showStudents, dashboardViewmodel)
+
+    }
+
 }
-            else{
-                    attendanceTaken()
-            }
+
 
         }
+
+
+
     }
     
     
 }
+@RequiresApi(Build.VERSION_CODES.O)
+@SuppressLint("SuspiciousIndentation")
+@Composable
+fun showUsersList(value: MutableState<Boolean>, dashboardViewmodel: dashboardViewmodal) {
+Dialog(onDismissRequest = { value.value = !value.value }) {
+    val data = remember {
+        mutableStateOf<List<adminDetails?>>(emptyList())
+    }
+    LaunchedEffect(Unit) {
+        dashboardViewmodel.fetchAdmins {
+            data.value =  it
+
+        }
+
+    }
+
+
+    Surface(modifier = Modifier.fillMaxWidth(),
+        color = Color.White) {
+        Column (horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(top = 20.dp)){
+            textout(title = "Volunteers", modifier = Modifier, fontStyle =MaterialTheme.typography.titleMedium )
+
+
+
+
+
+
+         LazyColumn() {
+
+
+             items(data.value){
+
+                 val status = remember {
+                     mutableStateOf(false) }
+
+
+LaunchedEffect(Unit) {
+    AppRepository.fetchStatusforportal {
+        status.value = it
+    }
+}
+
+
+
+
+
+                 Row(modifier = Modifier
+                     .fillMaxWidth()
+                     .padding(5.dp),
+                     verticalAlignment = Alignment.CenterVertically
+                 ) {
+
+                     if (it != null) {
+                         accountpic(profilePic = it.image)
+                         textout(title = it.name,
+                             modifier = Modifier, fontStyle =MaterialTheme.typography.bodyLarge )
+                         Spacer(modifier = Modifier.weight(1f))
+                         Checkbox(checked = status.value,
+                             onCheckedChange ={bollean->
+
+                               status.value = !status.value
+
+
+                                 status.value.let { it1 ->
+
+                                     AppRepository.markAttendance(it.email)
+
+                                 }
+
+                             } )
+                     }
+
+                 }
+             }
+
+         }
+
+
+
+        }
+    }
+
+
+}
+
+
+}
+
 @Composable
 fun loadingDialogue() {
     Column(modifier = Modifier.fillMaxSize(),
