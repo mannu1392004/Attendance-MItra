@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.savera.R
@@ -63,7 +64,7 @@ Column(
 
         },
         image = R.drawable.alok,
-        batch = "2022"
+        batch = "2022-2026"
     )
 
     Spacer(modifier = Modifier.height(20.dp))
@@ -79,7 +80,7 @@ Column(
             openUrlLauncher.launch(intent)
         },
         image = R.drawable.mannu,
-        batch = "2022"
+        batch = "2022-2026"
     )
 
     Spacer(modifier = Modifier.height(20.dp))
@@ -94,8 +95,8 @@ Column(
             )
             openUrlLauncher.launch(intent)
         },
-        image = R.drawable.laskshyasir,
-        batch = "2021"
+        image = R.drawable.lakshay,
+        batch = "2021-2025"
     )
 
 
@@ -130,7 +131,7 @@ Column(verticalArrangement = Arrangement.Center,
     textout(title = name, modifier = Modifier
         , fontStyle =MaterialTheme.typography.titleMedium)
     textout(title = batch, modifier = Modifier,
-        fontStyle = MaterialTheme.typography.bodyMedium)
+        fontStyle = MaterialTheme.typography.bodyMedium, fontFamily = FontFamily.Serif)
 
     textout(title = post, modifier = Modifier, fontStyle =MaterialTheme.typography.bodyMedium,
         fontFamily = lightrale)

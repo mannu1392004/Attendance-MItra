@@ -1,8 +1,11 @@
 package com.example.savera.Screens.homeScreen
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.provider.Settings
 import android.view.animation.OvershootInterpolator
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -25,6 +28,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -36,6 +40,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -48,10 +53,15 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.savera.Model.NeededPermission
+import com.example.savera.Model.getNeededPermission
 import com.example.savera.R
 import com.example.savera.Screens.events.loadBitmap
 import com.example.savera.Screens.events.uploadImageToFirebase
@@ -69,7 +79,37 @@ fun homeScreen(
     homeScreenViewModel: HomeScreenViewModel = viewModel(),
 ) {
 
+    val activity = LocalContext.current as Activity
 
+    val permissionDialog = remember {
+        mutableStateListOf<NeededPermission>()
+    }
+
+    val multiplePermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions(),
+        onResult = { permissions ->
+            permissions.entries.forEach { entry ->
+                if (!entry.value)
+                    permissionDialog.add(getNeededPermission(entry.key))
+            }
+        }
+    )
+
+    permissionDialog.forEach { permission ->
+        PermissionAlertDialog(
+            neededPermission = permission,
+            onDismiss = { permissionDialog.remove(permission) },
+            onOkClick = {
+                permissionDialog.remove(permission)
+                multiplePermissionLauncher.launch(arrayOf(permission.permission))
+            },
+            onGoToAppSettingsClick = {
+                permissionDialog.remove(permission)
+                activity.goToAppSetting()
+            },
+            isPermissionDeclined = !activity.shouldShowRequestPermissionRationale(permission.permission)
+        )
+    }
 
     val youtubestate = remember {
         mutableStateOf(0f)
@@ -90,6 +130,11 @@ fun homeScreen(
                 }
             )
         }
+        multiplePermissionLauncher.launch(
+            arrayOf(
+                NeededPermission.POST_NOTIFICATION.permission)
+        )
+
     }
 
 
@@ -107,7 +152,13 @@ fun homeScreen(
     }
 
 }
-
+fun Activity.goToAppSetting() {
+    val i = Intent(
+        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+        Uri.fromParts("package", packageName, null)
+    )
+    startActivity(i)
+}
 
 
 @SuppressLint("SuspiciousIndentation")
@@ -445,4 +496,48 @@ maxLines = 1
 , modifier = modifier
 )
 
+}
+@Composable
+fun PermissionAlertDialog(
+    neededPermission: NeededPermission,
+    isPermissionDeclined: Boolean,
+    onDismiss: () -> Unit,
+    onOkClick: () -> Unit,
+    onGoToAppSettingsClick: () -> Unit,
+) {
+
+    Dialog(onDismissRequest = onDismiss) {
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = neededPermission.title,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(16.dp)
+            )
+            Text(
+                text = neededPermission.permissionTextProvider(isPermissionDeclined),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            )
+            Button(
+                onClick = {
+                    if (isPermissionDeclined)
+                        onGoToAppSettingsClick()
+                    else
+                        onOkClick()
+                    onDismiss()
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = if (isPermissionDeclined) "Go to app setting" else "OK",
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        }
+    }
 }

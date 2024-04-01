@@ -101,7 +101,6 @@ val notShowTop = remember {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceVariant,
         modifier = Modifier, topBar = {
-
             if (showmessagetopbar.value)
                 ChatScreenTopBar(showmessagetopbar)
             else
