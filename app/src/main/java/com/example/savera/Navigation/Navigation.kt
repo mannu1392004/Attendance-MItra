@@ -33,7 +33,7 @@ fun Navigation() {
            MainScreen(navController)
         }
 
-        val loadingroute = addSyllabusScreens.AddChapters
+        val loadingroute = Screens.LoadingScreen.name
         composable(route = "$loadingroute/{email}/{password}",
             arguments = listOf(navArgument("email"){type  = NavType.StringType},
                 navArgument("password"){type = NavType.StringType}

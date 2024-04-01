@@ -128,7 +128,7 @@ fun AttendanceScreen(
 
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.surfaceVariant
+        color = Color.White
     ) {
        
         Column(

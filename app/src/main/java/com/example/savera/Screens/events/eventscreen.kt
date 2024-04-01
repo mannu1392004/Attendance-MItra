@@ -109,13 +109,13 @@ val deleteDialogue =   remember {
     mutableStateOf(false)
 }
     Scaffold(
-        modifier = Modifier.background(color = MaterialTheme.colorScheme.surfaceVariant),
+        modifier = Modifier.background(color = Color.White),
         floatingActionButton = {
           if (userInfo.value?.admin=="True")
             FloatingActionButton(
                 onClick = { showDialogue.value = !showDialogue.value },
                 modifier = Modifier.background(
-                    color = MaterialTheme.colorScheme.surfaceVariant
+                    color = Color.White
                 ), containerColor = Color(0xffFB5607)
             ) {
                 Icon(
@@ -130,7 +130,7 @@ val deleteDialogue =   remember {
         Surface(
             modifier = Modifier
                 .padding(it)
-                .fillMaxSize(), color = MaterialTheme.colorScheme.surfaceVariant
+                .fillMaxSize(), color = Color.White
         ) {
 if (events.value.isEmpty()){
     Column(modifier = Modifier.fillMaxSize(),
@@ -651,7 +651,7 @@ fun input(
         singleLine = singleLine
 , colors = OutlinedTextFieldDefaults.colors(
     focusedBorderColor = Color.Transparent,
-    unfocusedBorderColor = Color.Transparent
+    unfocusedBorderColor = Color.Transparent, focusedTextColor = Color.Black, unfocusedTextColor = Color.Black
 
 ),
         modifier = modifier.border(width = 2.dp, color = Color(0xffF57F17), shape = RoundedCornerShape(10.dp))

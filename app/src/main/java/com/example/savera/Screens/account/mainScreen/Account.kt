@@ -103,7 +103,7 @@ fun accountScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState()).background(Color.White)
         ) {
             Column {
                 topview()
@@ -181,7 +181,7 @@ fun accountScreen(
                 accountpic(data.value!!.profilePic)
 
 
-                Column {
+                Column(modifier = Modifier.padding(start = 9.dp)) {
                     textout(
                         title = data.value!!.name,
                         modifier = Modifier,
@@ -193,7 +193,7 @@ fun accountScreen(
                             text = email,
                             fontFamily = lightrale,
                             style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier.padding(bottom = 7.dp)
+                            modifier = Modifier.padding(bottom = 7.dp), color = Color.Black
                         )
                     }
 

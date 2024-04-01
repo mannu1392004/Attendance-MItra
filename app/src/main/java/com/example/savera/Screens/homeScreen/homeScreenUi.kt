@@ -74,553 +74,574 @@ fun homeui(youtubestate: MutableState<Float>, homeScreenViewModel: HomeScreenVie
     val openUrlLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { }
-val list = remember {
-    mutableStateOf<List<nameAndAtt>>(emptyList())
-}
-
-
-LaunchedEffect(Unit) {
-    AppRepository.calculateTop3 {
-        list.value = it
+    val list = remember {
+        mutableStateOf<List<nameAndAtt>>(emptyList())
     }
 
 
-}
+    LaunchedEffect(Unit) {
+        AppRepository.calculateTop3 {
+            list.value = it
+        }
 
+
+    }
 
 
     val feedback = remember {
         mutableStateOf("")
     }
-
-    Column(
-        modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .fillMaxSize()
-            .padding(20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Surface(
+        color = Color.White,
+        modifier = Modifier.fillMaxSize()
     ) {
-
-
-        // documentry
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = Color(0xffEEEEEE),
-            shape = RoundedCornerShape(20.dp),
-            shadowElevation = 10.dp
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .fillMaxSize()
+                .padding(20.dp)
+                .background(Color.White),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Column(modifier = Modifier) {
-                textout(
-                    title = "Documentary",
-                    modifier = Modifier.padding(10.dp),
-                    fontStyle = MaterialTheme.typography.headlineSmall
-                )
-
-                LazyYouTubePlayer(youtubestate)
-
-            }
 
 
-        }
+            // documentry
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = Color(0xffEEEEEE),
+                shape = RoundedCornerShape(20.dp),
+                shadowElevation = 10.dp
+            ) {
+                Column(modifier = Modifier) {
+                    textout(
+                        title = "Documentary",
+                        modifier = Modifier.padding(10.dp),
+                        fontStyle = MaterialTheme.typography.headlineSmall
+                    )
 
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = Color(0xffEEEEEE),
-            shape = RoundedCornerShape(20.dp),
-            shadowElevation = 10.dp
-        ) {
-            Column(modifier = Modifier.padding(17.dp)) {
-                textout(
-                    title = "About Savera",
-                    modifier = Modifier,
-                    fontStyle = MaterialTheme.typography.headlineSmall
-                )
-                Spacer(modifier = Modifier.height(7.dp))
-
-                textout(
-                    title = "Savera School is an evening school in DCRUST Murthal run by Student volunteers to educate the underprivileged section of the society.\n",
-                    modifier = Modifier,
-                    fontStyle = MaterialTheme.typography.bodyLarge
-                )
-                button(text = "More Info") {
+                    LazyYouTubePlayer(youtubestate)
 
                 }
 
+
             }
 
+            Spacer(modifier = Modifier.height(20.dp))
 
-        }
-
-
-
-
-
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-
-
-        // ranking
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = Color(0xffEEEEEE),
-            shape = RoundedCornerShape(20.dp),
-            shadowElevation = 10.dp
-        ) {
-
-            LaunchedEffect(list.value) {
-                list.value = list.value.sortedByDescending { it.attendance }
-            }
-
-            Column(modifier = Modifier.padding(17.dp)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = Color(0xffEEEEEE),
+                shape = RoundedCornerShape(20.dp),
+                shadowElevation = 10.dp
+            ) {
+                Column(modifier = Modifier.padding(17.dp)) {
+                    textout(
+                        title = "About Savera",
+                        modifier = Modifier,
+                        fontStyle = MaterialTheme.typography.headlineSmall
+                    )
+                    Spacer(modifier = Modifier.height(7.dp))
 
                     textout(
-                        title = "Volunteers Ranking",
+                        title = "Savera School is an evening school in DCRUST Murthal run by Student volunteers to educate the underprivileged section of the society.\n",
                         modifier = Modifier,
-                        fontStyle = MaterialTheme.typography.titleLarge
+                        fontStyle = MaterialTheme.typography.bodyLarge
                     )
-                }
-                Spacer(modifier = Modifier.height(7.dp))
+                    button(text = "More Info") {
 
-                if (list.value.isNotEmpty()&&list.value.size>=3){
+                    }
+
+                }
+
+
+            }
+
+
+
+
+
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+
+            // ranking
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = Color(0xffEEEEEE),
+                shape = RoundedCornerShape(20.dp),
+                shadowElevation = 10.dp
+            ) {
+
+                LaunchedEffect(list.value) {
+                    list.value = list.value.sortedByDescending { it.attendance }
+                }
+
+                Column(modifier = Modifier.padding(17.dp)) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp),
+                        modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
 
-                        Column(
-                            modifier = Modifier
-                                .align(Alignment.CenterVertically)
-                                .weight(1f),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable._ndpos),
-                                contentDescription = "",
-                                modifier = Modifier.size(90.dp)
-                            )
 
-                            textout(
-                                title =
-                                list.value[1].name,
-                                modifier = Modifier,
-                                fontStyle = MaterialTheme.typography.bodySmall
-                            )
-
-                        }
-
-
-                        Column(horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.weight(1f)) {
-                            Image(
-                                painter = painterResource(id = R.drawable._st),
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .size(90.dp)
-                            )
-                            textout(
-                                title = list.value[0].name,
-                                modifier = Modifier,
-                                fontStyle = MaterialTheme.typography.bodySmall
-                            )
-
-
-                        }
-
-
-                        Column(
-                            modifier = Modifier
-                                .weight(1f)
-                                .align(Alignment.CenterVertically),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable._rdpos),
-                                contentDescription = "",
-                                modifier = Modifier.size(90.dp)
-                            )
-
-                            textout(
-                                title = list.value[2].name,
-                                modifier = Modifier,
-                                fontStyle = MaterialTheme.typography.bodySmall
-                            )
-
-                        }
-
+                        textout(
+                            title = "Volunteers Ranking",
+                            modifier = Modifier,
+                            fontStyle = MaterialTheme.typography.titleLarge
+                        )
                     }
-            }
+                    Spacer(modifier = Modifier.height(7.dp))
+
+                    if (list.value.isNotEmpty() && list.value.size >= 3) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+
+                            Column(
+                                modifier = Modifier
+                                    .align(Alignment.CenterVertically)
+                                    .weight(1f),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable._ndpos),
+                                    contentDescription = "",
+                                    modifier = Modifier.size(90.dp)
+                                )
+
+                                textout(
+                                    title =
+                                    list.value[1].name,
+                                    modifier = Modifier,
+                                    fontStyle = MaterialTheme.typography.bodySmall
+                                )
+
+                            }
+
+
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable._st),
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .size(90.dp)
+                                )
+                                textout(
+                                    title = list.value[0].name,
+                                    modifier = Modifier,
+                                    fontStyle = MaterialTheme.typography.bodySmall
+                                )
+
+
+                            }
+
+
+                            Column(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .align(Alignment.CenterVertically),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable._rdpos),
+                                    contentDescription = "",
+                                    modifier = Modifier.size(90.dp)
+                                )
+
+                                textout(
+                                    title = list.value[2].name,
+                                    modifier = Modifier,
+                                    fontStyle = MaterialTheme.typography.bodySmall
+                                )
+
+                            }
+
+                        }
+                    }
+
+                }
+
 
             }
-
-
-        }
-
 
 
 // developers
-        Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = Color(0xffEEEEEE),
-            shape = RoundedCornerShape(20.dp),
-            shadowElevation = 10.dp
-        ) {
-            Column(modifier = Modifier.padding(17.dp)) {
-           Row (modifier = Modifier.fillMaxWidth(),
-               horizontalArrangement = Arrangement.Center){
-
-
-               textout(
-                   title = "Our Developers",
-                   modifier = Modifier,
-                   fontStyle = MaterialTheme.typography.titleLarge
-               )
-           }
-                Spacer(modifier = Modifier.height(7.dp))
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = Color(0xffEEEEEE),
+                shape = RoundedCornerShape(20.dp),
+                shadowElevation = 10.dp
+            ) {
+                Column(modifier = Modifier.padding(17.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
 
 
-imageShower()
-
-            }
-
-
-        }
-
-
-
-        // ideas
-        val context = LocalContext.current
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = Color(0xffEEEEEE),
-            shape = RoundedCornerShape(20.dp),
-            shadowElevation = 10.dp
-        ) {
-            Column(modifier = Modifier.padding(17.dp)) {
-                textout(
-                    title = "Any Ideas Or Suggestions",
-                    modifier = Modifier,
-                    fontStyle = MaterialTheme.typography.titleLarge
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
-                OutlinedTextField(colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = Color.Transparent,
-                    cursorColor = Color.Black,
-                    focusedLabelColor = Color.Transparent,
-                    unfocusedLabelColor = Color.Transparent,
-                    containerColor = Color.White
-                ),
-
-
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(0.dp)
-                        .border(
-                            width = 2.dp,
-                            color = Color(0xffF57F17),
-                            shape = RoundedCornerShape(15.dp)
-                        )
-                        .clip(
-                            RoundedCornerShape(15.dp)
-                        ),
-
-                    value = feedback.value, onValueChange = { feedback.value = it }, placeholder = {
-                        Text(
-                            "Type your ideas here!",
-                            fontFamily = ralewayfamilt,
-                            color = Color(0xff33333380)
+                        textout(
+                            title = "Our Developers",
+                            modifier = Modifier,
+                            fontStyle = MaterialTheme.typography.titleLarge
                         )
                     }
-
-                )
-                Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(7.dp))
 
 
-                button(text = "Submit") {
-                    val gmail = FirebaseAuth.getInstance().currentUser?.email
-
-                    val localDate =
-                        LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-
-                    val localTime =
-                        LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"))
-
-                    homeScreenViewModel.addFeedback(collectionName = "Feedback",
-                        documentPath = gmail.toString(),
-                        data = hashMapOf(
-                            "$localDate $localTime" to feedback.value
-                        ),
-                        error = {
-                            Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
-                        },
-                        Successfull = {
-                            Toast.makeText(context, "Sent to Admin", Toast.LENGTH_SHORT).show()
-                            feedback.value = ""
-                        })
-
+                    imageShower()
 
                 }
+
 
             }
 
 
-        }
+            // ideas
+            val context = LocalContext.current
+            Spacer(modifier = Modifier.height(20.dp))
 
-        Spacer(modifier = Modifier.height(20.dp))
-
-        //   connext with us
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = Color(0xffEEEEEE),
-            shape = RoundedCornerShape(20.dp),
-            shadowElevation = 10.dp
-        ) {
-            Column(
-                modifier = Modifier.padding(17.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = Color(0xffEEEEEE),
+                shape = RoundedCornerShape(20.dp),
+                shadowElevation = 10.dp
             ) {
+                Column(modifier = Modifier.padding(17.dp)) {
+                    textout(
+                        title = "Any Ideas Or Suggestions",
+                        modifier = Modifier,
+                        fontStyle = MaterialTheme.typography.titleLarge
+                    )
 
-                textout(
-                    title = "Connect With us",
-                    modifier = Modifier,
-                    fontStyle = MaterialTheme.typography.titleLarge
-                )
-                Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
+                    OutlinedTextField(colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = Color.Transparent,
+                        unfocusedBorderColor = Color.Transparent,
+                        cursorColor = Color.Black,
+                        focusedLabelColor = Color.Transparent,
+                        unfocusedLabelColor = Color.Transparent,
+                        containerColor = Color.White,
+                        focusedTextColor = Color.Black,
+                        unfocusedTextColor = Color.Black
+                    ),
 
-                Row {
-                    Image(painter = painterResource(id = R.drawable.img),
-                        contentDescription = "",
+
                         modifier = Modifier
-                            .size(40.dp)
-                            .clickable {
-                                val intent = Intent(
-                                    Intent.ACTION_VIEW,
-                                    Uri.parse("https://www.facebook.com/saveradcrust")
-                                )
-                                openUrlLauncher.launch(intent)
-                            })
-                    Spacer(modifier = Modifier.width(20.dp))
-                    Image(painter = painterResource(id = R.drawable.img_1),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clickable {
+                            .fillMaxWidth()
+                            .padding(0.dp)
+                            .border(
+                                width = 2.dp,
+                                color = Color(0xffF57F17),
+                                shape = RoundedCornerShape(15.dp)
+                            )
+                            .clip(
+                                RoundedCornerShape(15.dp)
+                            ),
 
-                                val intent = Intent(
-                                    Intent.ACTION_VIEW,
-                                    Uri.parse("https://www.instagram.com/saveraschool/")
-                                )
-                                openUrlLauncher.launch(intent)
+                        value = feedback.value,
+                        onValueChange = { feedback.value = it },
+                        placeholder = {
+                            Text(
+                                "Type your ideas here!",
+                                fontFamily = ralewayfamilt,
+                                color = Color(0xff33333380)
+                            )
+                        }
 
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+
+
+                    button(text = "Submit") {
+                        val gmail = FirebaseAuth.getInstance().currentUser?.email
+
+                        val localDate =
+                            LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+
+                        val localTime =
+                            LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"))
+
+                        homeScreenViewModel.addFeedback(collectionName = "Feedback",
+                            documentPath = gmail.toString(),
+                            data = hashMapOf(
+                                "$localDate $localTime" to feedback.value
+                            ),
+                            error = {
+                                Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
+                            },
+                            Successfull = {
+                                Toast.makeText(context, "Sent to Admin", Toast.LENGTH_SHORT).show()
+                                feedback.value = ""
                             })
-                    Spacer(modifier = Modifier.width(20.dp))
-                    Image(painter = painterResource(id = R.drawable.img_9),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clickable {
-                                val intent = Intent(
-                                    Intent.ACTION_VIEW,
-                                    Uri.parse("https://www.youtube.com/@SaveraSchool")
-                                )
-                                openUrlLauncher.launch(intent)
-                            })
+
+
+                    }
+
                 }
+
+
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            //   connext with us
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = Color(0xffEEEEEE),
+                shape = RoundedCornerShape(20.dp),
+                shadowElevation = 10.dp
+            ) {
+                Column(
+                    modifier = Modifier.padding(17.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+                    textout(
+                        title = "Connect With us",
+                        modifier = Modifier,
+                        fontStyle = MaterialTheme.typography.titleLarge
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    Row {
+                        Image(painter = painterResource(id = R.drawable.img),
+                            contentDescription = "",
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clickable {
+                                    val intent = Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse("https://www.facebook.com/saveradcrust")
+                                    )
+                                    openUrlLauncher.launch(intent)
+                                })
+                        Spacer(modifier = Modifier.width(20.dp))
+                        Image(painter = painterResource(id = R.drawable.img_1),
+                            contentDescription = "",
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clickable {
+
+                                    val intent = Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse("https://www.instagram.com/saveraschool/")
+                                    )
+                                    openUrlLauncher.launch(intent)
+
+                                })
+                        Spacer(modifier = Modifier.width(20.dp))
+                        Image(painter = painterResource(id = R.drawable.img_9),
+                            contentDescription = "",
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clickable {
+                                    val intent = Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse("https://www.youtube.com/@SaveraSchool")
+                                    )
+                                    openUrlLauncher.launch(intent)
+                                })
+                    }
+
+                }
+
 
             }
 
 
         }
-
-
     }
 
+    }
+    @Composable
+    fun imageShower() {
+        val x = arrayListOf(
+            developer(
+                name = "Lakshay Dureja",
+                post = "Android Developer",
+                pic = R.drawable.laskshyasir
+            ),
+            developer(
+                name = "Mannu",
+                post = "Android Developer",
+                pic = R.drawable.mannu
+            ),
+            developer(
+                name = "Alok Pandit",
+                post = "Ui Designer",
+                pic = R.drawable.alok
+            )
 
-}
-@Composable
-fun imageShower() {
-val x = arrayListOf(developer(
-    name = "Lakshay Dureja",
-    post = "Android Developer",
-    pic = R.drawable.laskshyasir
-),
-   developer(
-        name = "Mannu",
-        post = "Android Developer",
-        pic = R.drawable.mannu
-    ),
-        developer(
-            name = "Alok Pandit",
-            post = "Ui Designer",
-            pic = R.drawable.alok
         )
 
-    )
+        var i = 0
+        val image = remember {
+            mutableStateOf(x[0])
+        }
 
-    var i  = 0
-    val image = remember {
-        mutableStateOf(x[0])
-    }
-
-    LaunchedEffect(Unit) {
-        while(i<3){
-            image.value= x[i]
-            i++
-            delay(3000)
-            if (i==3){
-                i = 0
+        LaunchedEffect(Unit) {
+            while (i < 3) {
+                image.value = x[i]
+                i++
+                delay(3000)
+                if (i == 3) {
+                    i = 0
+                }
             }
         }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Image(
+                painter = painterResource(id = image.value.pic), contentDescription = "",
+                modifier = Modifier.size(200.dp)
+            )
+            textout(
+                title = image.value.name,
+                modifier = Modifier,
+                fontStyle = MaterialTheme.typography.titleMedium
+            )
+            textout(
+                title = image.value.post,
+                modifier = Modifier,
+                fontStyle = MaterialTheme.typography.titleMedium
+            )
+
+        }
+
+
     }
-    Column (horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()){
-        Image(painter = painterResource(id = image.value.pic), contentDescription = "",
-            modifier = Modifier.size(200.dp))
-  textout(title = image.value.name, modifier = Modifier, fontStyle =MaterialTheme.typography.titleMedium )
-        textout(title = image.value.post, modifier = Modifier, fontStyle =MaterialTheme.typography.titleMedium )
-
-    }
 
 
-}
+    @Composable
+    fun textout(
+        title: String,
+        modifier: Modifier,
+        fontStyle: TextStyle,
+        color: Color = Color.Black,
+        fontFamily: androidx.compose.ui.text.font.FontFamily = ralewayfamilt,
 
-
-@Composable
-fun textout(
-    title: String,
-    modifier: Modifier,
-    fontStyle: TextStyle,
-    color: Color = Color.Black,
-    fontFamily: androidx.compose.ui.text.font.FontFamily = ralewayfamilt,
-
-    ) {
-    Text(
-        text = title,
-        modifier = modifier,
-        style = fontStyle,
-        fontFamily = fontFamily,
-        color = color,
-        overflow = TextOverflow.Visible
-    )
-
-
-}
-
-@Composable
-fun button(
-    text: String,
-    modifier: Modifier = Modifier.background(
-        color = Color(0xffF57F17), shape = RoundedCornerShape(10.dp)
-    ),
-    press: () -> Unit,
-) {
-    Button(
-        onClick = { press() }, colors = ButtonColors(
-            containerColor = Color.Transparent,
-            contentColor = Color.White,
-            disabledContentColor = Color.White,
-            disabledContainerColor = Color.Transparent
-        ), modifier = modifier
-
-    ) {
+        ) {
         Text(
-            text = text, fontFamily = ralewayfamilt,
-            color = Color.White
+            text = title,
+            modifier = modifier,
+            style = fontStyle,
+            fontFamily = fontFamily,
+            color = color,
+            overflow = TextOverflow.Visible
         )
+
+
     }
 
+    @Composable
+    fun button(
+        text: String,
+        modifier: Modifier = Modifier.background(
+            color = Color(0xffF57F17), shape = RoundedCornerShape(10.dp)
+        ),
+        press: () -> Unit,
+    ) {
+        Button(
+            onClick = { press() }, colors = ButtonColors(
+                containerColor = Color.Transparent,
+                contentColor = Color.White,
+                disabledContentColor = Color.White,
+                disabledContainerColor = Color.Transparent
+            ), modifier = modifier
 
-}
-
-
-@Composable
-fun LazyYouTubePlayer(youtubestate: MutableState<Float>) {
-    var playerReady by remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) {
-        delay(1000)
-        playerReady = true
-    }
-
-    if (playerReady) {
-        YouTubePlayer(savedPosition = youtubestate)
-
-
-    } else {
-        // Display thumbnail preview or loading indicator
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .padding(5.dp),
-            shape = RoundedCornerShape(20.dp)
         ) {
+            Text(
+                text = text, fontFamily = ralewayfamilt,
+                color = Color.White
+            )
+        }
 
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+
+    }
+
+
+    @Composable
+    fun LazyYouTubePlayer(youtubestate: MutableState<Float>) {
+        var playerReady by remember { mutableStateOf(false) }
+        LaunchedEffect(Unit) {
+            delay(1000)
+            playerReady = true
+        }
+
+        if (playerReady) {
+            YouTubePlayer(savedPosition = youtubestate)
+
+
+        } else {
+            // Display thumbnail preview or loading indicator
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .padding(5.dp),
+                shape = RoundedCornerShape(20.dp)
             ) {
-                CircularProgressIndicator()
+
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CircularProgressIndicator()
+
+                }
+
 
             }
 
 
         }
-
-
     }
-}
 
 
-@Composable
-fun YouTubePlayer(
-    savedPosition: MutableState<Float>,
+    @Composable
+    fun YouTubePlayer(
+        savedPosition: MutableState<Float>,
     ) {
 
-    val youtubeVideoId = rememberSaveable { mutableStateOf("z8cqhEywCzc") }
+        val youtubeVideoId = rememberSaveable { mutableStateOf("z8cqhEywCzc") }
 
-    val savedState = rememberSaveable { mutableStateOf(youtubeVideoId.value) }
+        val savedState = rememberSaveable { mutableStateOf(youtubeVideoId.value) }
 
-    val lifecycleOwner = LocalLifecycleOwner.current
+        val lifecycleOwner = LocalLifecycleOwner.current
 
-    AndroidView(modifier = Modifier
-        .fillMaxSize()
-        .padding(8.dp)
-        .clip(RoundedCornerShape(16.dp)),
-        factory = { context ->
+        AndroidView(modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp)
+            .clip(RoundedCornerShape(16.dp)),
+            factory = { context ->
 
-            YouTubePlayerView(context = context).apply {
-                lifecycleOwner.lifecycle.addObserver(this)
+                YouTubePlayerView(context = context).apply {
+                    lifecycleOwner.lifecycle.addObserver(this)
 
-                addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
-                    override fun onReady(youTubePlayer: YouTubePlayer) {
+                    addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+                        override fun onReady(youTubePlayer: YouTubePlayer) {
 
-                        youTubePlayer.loadVideo(savedState.value, savedPosition.value)
-                        youTubePlayer.setVolume(0)
+                            youTubePlayer.loadVideo(savedState.value, savedPosition.value)
+                            youTubePlayer.setVolume(0)
 
-                    }
+                        }
 
-                    override fun onCurrentSecond(youTubePlayer: YouTubePlayer, second: Float) {
+                        override fun onCurrentSecond(youTubePlayer: YouTubePlayer, second: Float) {
 
-                        savedPosition.value = second
+                            savedPosition.value = second
 
-                    }
-                })
-            }
-        })
-}
+                        }
+                    })
+                }
+            })
+    }

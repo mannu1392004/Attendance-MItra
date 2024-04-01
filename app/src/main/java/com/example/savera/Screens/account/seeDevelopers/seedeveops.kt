@@ -43,7 +43,8 @@ fun seeDevops(nav: NavHostController) {
 
     Surface(modifier = Modifier
        .fillMaxSize()
-       .verticalScroll(rememberScrollState())) {
+       .verticalScroll(rememberScrollState()),color = Color.White
+    ) {
 Column(
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier.padding(9.dp)

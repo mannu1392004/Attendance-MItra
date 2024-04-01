@@ -202,25 +202,6 @@ object AppRepository {
         return eventsState
     }
 
-    // newUser check code
-//    suspend fun checkYearInformation(
-//        currentUser: String,
-//        exist: () -> Unit,
-//        notexist: () -> Unit,
-//    ) {
-//        val firestore = FirebaseFirestore.getInstance()
-//
-//        if (currentUser != null) {
-//            val userDocRef = firestore.collection("teachers")
-//                .document(currentUser)
-//            val documentSnapshot = userDocRef.get().await()
-//            if (documentSnapshot.exists()) {
-//                exist()
-//            } else {
-//                notexist()
-//            }
-//        }
-//    }
     suspend fun checkYearInformation(
         currentUser: String,
         informationExists: () -> Unit,

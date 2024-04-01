@@ -452,7 +452,7 @@ fun topbar(nav: NavHostController,Heading:String="Edit Profile") {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 10.dp, end = 10.dp),
+            .padding(start = 10.dp, end = 10.dp,top= 10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
 
@@ -508,7 +508,9 @@ fun adjustinput(
         singleLine = singleLine, colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = Color.Transparent,
             unfocusedBorderColor = Color.Transparent,
-            focusedLabelColor = Color.Black
+            focusedLabelColor = Color.Black,
+            unfocusedTextColor = Color.Black,
+            focusedTextColor = Color.Black
 
         ),
         modifier = modifier
