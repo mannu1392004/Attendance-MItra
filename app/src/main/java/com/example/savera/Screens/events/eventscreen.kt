@@ -64,6 +64,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
+import com.example.savera.Model.UserInformation
 import com.example.savera.Model.events_Data
 import com.example.savera.R
 import com.example.savera.Screens.homeScreen.button
@@ -81,8 +82,10 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun eventscreen(
     selectindex: MutableIntState,
-    eventScreenViewmodel: eventScreenViewmodel = viewModel()
-) {
+    userInfo: MutableState<UserInformation?>,
+    eventScreenViewmodel: eventScreenViewmodel = viewModel(),
+
+    ) {
     BackHandler {
         selectindex.value = 2
     }
@@ -108,6 +111,7 @@ val deleteDialogue =   remember {
     Scaffold(
         modifier = Modifier.background(color = MaterialTheme.colorScheme.surfaceVariant),
         floatingActionButton = {
+          if (userInfo.value?.admin=="True")
             FloatingActionButton(
                 onClick = { showDialogue.value = !showDialogue.value },
                 modifier = Modifier.background(

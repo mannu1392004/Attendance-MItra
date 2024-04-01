@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.savera.Model.ChapterList
+import com.example.savera.Model.UserInformation
 import com.example.savera.Model.topicList
 import com.example.savera.Screens.dashboard.MainSyllabus.syllabus.syllabus
 import com.example.savera.Screens.dashboard.MainSyllabus.syllabusDetail.syllabusDetail
@@ -17,7 +18,7 @@ import com.example.savera.Screens.dashboard.MainSyllabus.topicDetail.topicDetail
 import com.example.savera.Screens.dashboard.viewmodel.dashboardViewmodal
 
 @Composable
-fun syllabusMainScreen(notShowTop: MutableState<Boolean>) {
+fun syllabusMainScreen(notShowTop: MutableState<Boolean>, userInfo: MutableState<UserInformation?>) {
     val navigation = rememberNavController()
 
 
@@ -41,7 +42,7 @@ fun syllabusMainScreen(notShowTop: MutableState<Boolean>) {
 
     if (selected.value != "") {
 
-        LaunchedEffect(Unit) {
+        LaunchedEffect(selected.value) {
             dashboardViewmodel.fetchChapters(
                 classname = selectedclass.value,
                 subject = selected.value,
@@ -90,15 +91,15 @@ fun syllabusMainScreen(notShowTop: MutableState<Boolean>) {
         composable(route = syllabusScreens.MainScreen.name){
             notShowTop.value = true
 
-            syllabus(dashboardViewmodel, selectedclass,navigation,selected)
+            syllabus(dashboardViewmodel, selectedclass,navigation,selected,userInfo)
         }
 
         composable(route = syllabusScreens.SyllabusDetail.name) {
-            syllabusDetail(selected, dashboardViewmodel,data,chapterSelected,navigation)
+            syllabusDetail(selected, dashboardViewmodel,data,chapterSelected,navigation,userInfo)
         }
 
         composable(route =syllabusScreens.TopicDetails.name){
-            topicDetail(topicData,selected,selectedclass,dashboardViewmodel,chapterSelected)
+            topicDetail(topicData,selected,selectedclass,dashboardViewmodel,chapterSelected,userInfo)
         }
 
     }

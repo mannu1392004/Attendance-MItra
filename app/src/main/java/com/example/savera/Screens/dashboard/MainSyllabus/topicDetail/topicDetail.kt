@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.savera.Model.UserInformation
 import com.example.savera.Model.topicList
 import com.example.savera.Screens.account.mainScreen.accountpic
 import com.example.savera.Screens.dashboard.viewmodel.dashboardViewmodal
@@ -36,6 +37,7 @@ fun topicDetail(
     selectedclass: MutableState<String>,
     dashboardViewmodel: dashboardViewmodal,
     chapterSelected: MutableState<String>,
+    userInfo: MutableState<UserInformation?>,
                 ) {
 
     Surface(
@@ -64,17 +66,21 @@ fun topicDetail(
                         color = Color.White
                     )
 
-                    textout(
-                        title = "Mannu", modifier = Modifier,
-                        fontStyle = MaterialTheme.typography.titleLarge,
-                        color = Color.White
-                    )
+                    userInfo.value?.let {
+                        textout(
+                            title = it.name, modifier = Modifier,
+                            fontStyle = MaterialTheme.typography.titleLarge,
+                            color = Color.White
+                        )
+                    }
 
                 }
 
-                accountpic(
-                    profilePic = "https://firebasestorage.googleapis.com/v0/b/savera-504a2.appspot.com/o/Profile%20Pictures%2Fmannu1392004%40gmail.com%2F1000143376?alt=media&token=29d92201-21dd-44ca-b26f-cfcb908ee9fa",
-                )
+                userInfo.value?.let {
+                    accountpic(
+                        profilePic = it.profilePic
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -101,12 +107,7 @@ fun topicDetail(
                     fontStyle = MaterialTheme.typography.titleMedium,
                     fontFamily = ralewaybold
                 )
-                textout(
-                    title = "10%",
-                    modifier = Modifier,
-                    fontStyle = MaterialTheme.typography.titleMedium,
-                    fontFamily = ralewaybold
-                )
+
             }
 
             Column(modifier = Modifier.fillMaxSize()) {
@@ -116,15 +117,15 @@ fun topicDetail(
                 ) {
                     Row(modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 5.dp, bottom = 5.dp, start = 10.dp, end = 10.dp),
+                        .padding(top = 25.dp, bottom = 25.dp, start = 10.dp, end = 10.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
 
                     ) {
-                    textout(title = "Ch 1", modifier = Modifier, fontStyle =MaterialTheme.typography.titleMedium )
-                        textout(title =selected.value , modifier = Modifier, fontStyle =MaterialTheme.typography.titleMedium )
+                        textout(title =chapterSelected.value , modifier = Modifier,
+                            fontStyle =MaterialTheme.typography.titleMedium )
 
-Checkbox(checked = true, onCheckedChange = {})
+
 
                     }
 
@@ -204,6 +205,10 @@ textout(title = it.name, modifier = Modifier, fontStyle =MaterialTheme.typograph
                      "done" to state.value
                  )
              )
+
+
+
+
          })
 
             }

@@ -34,14 +34,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.savera.Components.ChatScreenTopBar
 import com.example.savera.Components.TopAppBar
+import com.example.savera.Model.UserInformation
 import com.example.savera.R
 import com.example.savera.Screens.ChatsScreen.chatScreen
 import com.example.savera.Screens.account.attendanceScreenNav
 import com.example.savera.Screens.attendanceScreen.AttendanceScreen
 import com.example.savera.Screens.dashboard.dashboard
+import com.example.savera.Screens.dashboard.viewmodel.dashboardViewmodal
 import com.example.savera.Screens.events.eventscreen
 import com.example.savera.Screens.homeScreen.homeScreen
 import com.example.savera.ui.theme.ralewayfamilt
@@ -56,10 +59,35 @@ val notShowTop = remember {
     mutableStateOf(false)
 }
 
+    val dashboardViewmodal :dashboardViewmodal  = viewModel()
+
+
+
+    val userInfo = remember {
+        mutableStateOf<UserInformation?>(null)
+    }
+    LaunchedEffect(Unit) {
+        dashboardViewmodal.fetchUserDetails(
+            info = {
+
+                userInfo.value = it
+
+            },
+            failure = {
+
+            }
+        )
+    }
+
+
+
+
+
+
     val activity = LocalContext.current as? Activity
 
     val selectindex = remember {
-        mutableIntStateOf(2)
+        mutableIntStateOf(0)
     }
     val showmessagetopbar = remember {
         mutableStateOf(false)
@@ -502,11 +530,11 @@ val notShowTop = remember {
 
 
 
-                    dashboard(selectindex = selectindex,notShowTop)
+                    dashboard(selectindex = selectindex,notShowTop,userInfo)
 
                 }
                 if (selectindex.value == 3) {
-                    eventscreen(selectindex = selectindex)
+                    eventscreen(selectindex = selectindex,userInfo)
                     notShowTop.value  = false
 
                 }

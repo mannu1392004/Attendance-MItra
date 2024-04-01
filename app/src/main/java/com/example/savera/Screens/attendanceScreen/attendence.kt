@@ -403,7 +403,7 @@ fun attendanceTaken() {
             modifier = Modifier.scale(x.value))
 
 
-        textout(title = "Attendance Taken", modifier = Modifier, fontStyle = MaterialTheme.typography.titleMedium)
+        textout(title = "Attendance Submitted", modifier = Modifier, fontStyle = MaterialTheme.typography.titleMedium)
 
 
 

@@ -52,7 +52,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.example.savera.Model.developer
+import com.example.savera.Model.nameAndAtt
 import com.example.savera.R
+import com.example.savera.Repository.AppRepository
 import com.example.savera.ui.theme.ralewayfamilt
 import com.google.firebase.auth.FirebaseAuth
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
@@ -71,6 +74,19 @@ fun homeui(youtubestate: MutableState<Float>, homeScreenViewModel: HomeScreenVie
     val openUrlLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { }
+val list = remember {
+    mutableStateOf<List<nameAndAtt>>(emptyList())
+}
+
+
+LaunchedEffect(Unit) {
+    AppRepository.calculateTop3 {
+        list.value = it
+    }
+
+
+}
+
 
 
     val feedback = remember {
@@ -136,6 +152,151 @@ fun homeui(youtubestate: MutableState<Float>, homeScreenViewModel: HomeScreenVie
 
 
         }
+
+
+
+
+
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+
+
+        // ranking
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            color = Color(0xffEEEEEE),
+            shape = RoundedCornerShape(20.dp),
+            shadowElevation = 10.dp
+        ) {
+
+            LaunchedEffect(list.value) {
+                list.value = list.value.sortedByDescending { it.attendance }
+            }
+
+            Column(modifier = Modifier.padding(17.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+
+
+                    textout(
+                        title = "Volunteers Ranking",
+                        modifier = Modifier,
+                        fontStyle = MaterialTheme.typography.titleLarge
+                    )
+                }
+                Spacer(modifier = Modifier.height(7.dp))
+
+                if (list.value.isNotEmpty()&&list.value.size>=3){
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+
+                        Column(
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically)
+                                .weight(1f),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable._ndpos),
+                                contentDescription = "",
+                                modifier = Modifier.size(90.dp)
+                            )
+
+                            textout(
+                                title =
+                                list.value[1].name,
+                                modifier = Modifier,
+                                fontStyle = MaterialTheme.typography.bodySmall
+                            )
+
+                        }
+
+
+                        Column(horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.weight(1f)) {
+                            Image(
+                                painter = painterResource(id = R.drawable._st),
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .size(90.dp)
+                            )
+                            textout(
+                                title = list.value[0].name,
+                                modifier = Modifier,
+                                fontStyle = MaterialTheme.typography.bodySmall
+                            )
+
+
+                        }
+
+
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .align(Alignment.CenterVertically),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable._rdpos),
+                                contentDescription = "",
+                                modifier = Modifier.size(90.dp)
+                            )
+
+                            textout(
+                                title = list.value[2].name,
+                                modifier = Modifier,
+                                fontStyle = MaterialTheme.typography.bodySmall
+                            )
+
+                        }
+
+                    }
+            }
+
+            }
+
+
+        }
+
+
+
+// developers
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            color = Color(0xffEEEEEE),
+            shape = RoundedCornerShape(20.dp),
+            shadowElevation = 10.dp
+        ) {
+            Column(modifier = Modifier.padding(17.dp)) {
+           Row (modifier = Modifier.fillMaxWidth(),
+               horizontalArrangement = Arrangement.Center){
+
+
+               textout(
+                   title = "Our Developers",
+                   modifier = Modifier,
+                   fontStyle = MaterialTheme.typography.titleLarge
+               )
+           }
+                Spacer(modifier = Modifier.height(7.dp))
+
+
+imageShower()
+
+            }
+
+
+        }
+
 
 
         // ideas
@@ -286,6 +447,52 @@ fun homeui(youtubestate: MutableState<Float>, homeScreenViewModel: HomeScreenVie
 
         }
 
+
+    }
+
+
+}
+@Composable
+fun imageShower() {
+val x = arrayListOf(developer(
+    name = "Lakshay Dureja",
+    post = "Android Developer",
+    pic = R.drawable.laskshyasir
+),
+   developer(
+        name = "Mannu",
+        post = "Android Developer",
+        pic = R.drawable.mannu
+    ),
+        developer(
+            name = "Alok Pandit",
+            post = "Ui Designer",
+            pic = R.drawable.alok
+        )
+
+    )
+
+    var i  = 0
+    val image = remember {
+        mutableStateOf(x[0])
+    }
+
+    LaunchedEffect(Unit) {
+        while(i<3){
+            image.value= x[i]
+            i++
+            delay(3000)
+            if (i==3){
+                i = 0
+            }
+        }
+    }
+    Column (horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth()){
+        Image(painter = painterResource(id = image.value.pic), contentDescription = "",
+            modifier = Modifier.size(200.dp))
+  textout(title = image.value.name, modifier = Modifier, fontStyle =MaterialTheme.typography.titleMedium )
+        textout(title = image.value.post, modifier = Modifier, fontStyle =MaterialTheme.typography.titleMedium )
 
     }
 
