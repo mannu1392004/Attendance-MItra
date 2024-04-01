@@ -207,7 +207,7 @@ fun newUserUi(
 
     Surface(modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(10),
-        shadowElevation = 20.dp
+        shadowElevation = 20.dp,
     ) {
         if (loading.value==0)
         Column(

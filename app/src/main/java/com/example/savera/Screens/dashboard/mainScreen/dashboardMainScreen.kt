@@ -45,6 +45,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -106,7 +107,7 @@ fun dashboardMainScreen(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
-        color = MaterialTheme.colorScheme.surfaceVariant
+        color = Color.White
     ) {
         Column(
             modifier = Modifier
@@ -602,13 +603,6 @@ val status = remember {
 
 }
 
-@Composable
-fun showVolunterAtt(showVolunteersAttendance: MutableState<Boolean>, context: Context) {
-    Dialog(onDismissRequest = { /*TODO*/ }) {
-
-
-    }
-}
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
@@ -648,7 +642,7 @@ fun AddStudents(
     val list = dashboardViewmodel.classList.collectAsState()
 
     Dialog(onDismissRequest = { /*TODO*/ }) {
-        Surface {
+        Surface(color = Color.White, modifier = Modifier.clip(RoundedCornerShape(10.dp))) {
 
             if (state.value == 0)
                 Column(
@@ -838,11 +832,11 @@ fun AdduserDialogue(showAddUserDialogue: MutableState<Boolean>) {
         }
 
 
-        Surface(modifier = Modifier.fillMaxWidth()) {
+        Surface(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)), color = Color.White) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(10.dp)
+                modifier = Modifier.padding(14.dp)
             ) {
 
                 Row(

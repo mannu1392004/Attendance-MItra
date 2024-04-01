@@ -1,6 +1,7 @@
 package com.example.savera.Screens.dashboard.addSyllabus
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +26,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuItemColors
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,8 +37,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.PopupProperties
 import androidx.navigation.NavHostController
 import com.example.savera.Model.UserInformation
 import com.example.savera.Repository.AppRepository
@@ -106,7 +110,7 @@ fun addSyllabus(
     notShowTop.value = true
     val email = FirebaseAuth.getInstance().currentUser?.email
 
-    Surface(modifier = Modifier.fillMaxSize()) {
+    Surface(modifier = Modifier.fillMaxSize(), color = Color.White) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(10.dp)
@@ -189,42 +193,46 @@ fun addSyllabus(
 
                                 })
 
+                                DropdownMenu(
+                                    expanded = dropdown.value,
+                                    onDismissRequest = { dropdown.value = false },
+                                    modifier = Modifier.height(250.dp).background(Color.White),
 
-                            DropdownMenu(
-                                expanded = dropdown.value,
-                                onDismissRequest = { dropdown.value = false },
-                                modifier = Modifier.height(100.dp)
-                            ) {
-
-                                Column {
-
-
-                                    classList.value.forEach {
-
-                                        DropdownMenuItem(text = {
-                                            textout(
-                                                title = it,
-                                                modifier = Modifier,
-                                                fontStyle = MaterialTheme.typography.bodyMedium,
-                                                fontFamily = lightrale
-
-                                            )
-                                        }, onClick = {
-
-                                            selectClass.value = it
-                                            dropdown.value = false
+                                ) {
+                                    Surface(color = Color.White) {
 
 
-                                        })
+                                    Column(
+                                        modifier = Modifier.background(Color.White)
+                                    ) {
 
 
+                                        classList.value.forEach {
+
+                                            DropdownMenuItem(text = {
+                                                textout(
+                                                    title = it,
+                                                    modifier = Modifier,
+                                                    fontStyle = MaterialTheme.typography.bodyMedium,
+                                                    fontFamily = lightrale
+
+                                                )
+                                            }, onClick = {
+
+                                                selectClass.value = it
+                                                dropdown.value = false
+
+                                            })
+
+
+                                        }
                                     }
+
+
                                 }
 
 
                             }
-
-
                         }
                     }
 
@@ -277,7 +285,7 @@ fun addSyllabus(
                         if (data.value.isNotEmpty())
                             items(data.value) {
 
-                                listmakers(it = it){
+                                listmakers(it = it) {
                                     navigator.navigate("${addSyllabusScreens.AddChapters}/$it/${selectClass.value}")
                                 }
 
@@ -291,7 +299,7 @@ fun addSyllabus(
         }
 
         if (showDialog.value) {
-            showDialogu11(showDialog,selectClass)
+            showDialogu11(showDialog, selectClass)
         }
 
     }
@@ -307,7 +315,7 @@ fun showDialogu11(showDialog: MutableState<Boolean>, selectClass: MutableState<S
     }
 
     Dialog(onDismissRequest = { /*TODO*/ }) {
-        if (states.value == 0){
+        if (states.value == 0) {
             Surface {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -316,8 +324,7 @@ fun showDialogu11(showDialog: MutableState<Boolean>, selectClass: MutableState<S
 
 
                     Row(
-                        modifier = Modifier.fillMaxWidth()
-                            ,
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
 
                         Spacer(modifier = Modifier.weight(1f))
@@ -341,7 +348,7 @@ fun showDialogu11(showDialog: MutableState<Boolean>, selectClass: MutableState<S
                     Spacer(modifier = Modifier.height(20.dp))
 
                     button(text = "Add") {
-                        if (subjectname.value != ""){
+                        if (subjectname.value != "") {
                             states.intValue = 1
                             AppRepository.addSubjects(
                                 className = selectClass.value,
@@ -350,21 +357,21 @@ fun showDialogu11(showDialog: MutableState<Boolean>, selectClass: MutableState<S
                                 states.intValue = 2
                                 subjectname.value = ""
                             }
-                    }
+                        }
 
                     }
 
                 }
             }
-    }
+        }
 
-        if (states.intValue ==1){
+        if (states.intValue == 1) {
             CircularProgressIndicator(color = Color(0xffF9A825))
         }
 
-        if (states.intValue==2){
+        if (states.intValue == 2) {
 
-            animation(newUser = showDialog, Boolean = true, state =states )
+            animation(newUser = showDialog, Boolean = true, state = states)
 
         }
     }
@@ -372,11 +379,11 @@ fun showDialogu11(showDialog: MutableState<Boolean>, selectClass: MutableState<S
 }
 
 @Composable
-fun listmakers(it: String,click:()->Unit) {
+fun listmakers(it: String, click: () -> Unit) {
     Surface(
         modifier = Modifier
             .clickable {
-               click()
+                click()
             }
             .fillMaxWidth()
             .padding(7.dp),

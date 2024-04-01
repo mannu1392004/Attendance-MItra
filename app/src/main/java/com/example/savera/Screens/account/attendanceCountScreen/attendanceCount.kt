@@ -1,5 +1,6 @@
 package com.example.savera.Screens.account.attendanceCountScreen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -54,7 +55,7 @@ fun attendanceCount(
     }
 
 if (data.value!=null) {
-    Surface(modifier = Modifier.fillMaxSize()) {
+    Surface(modifier = Modifier.fillMaxSize(), color = Color.White) {
         Column(modifier = Modifier.padding(top = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally) {
 

@@ -82,7 +82,7 @@ fun feedback(accountScreenViewmodel: AccountScreenViewmodel, nav: NavHostControl
 
         if (data.value != null) {
 
-                Surface(modifier = Modifier.fillMaxSize()) {
+                Surface(modifier = Modifier.fillMaxSize(), color = Color.White) {
                     Column(
                         modifier = Modifier.padding(20.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
@@ -96,10 +96,8 @@ fun feedback(accountScreenViewmodel: AccountScreenViewmodel, nav: NavHostControl
                             modifier = Modifier
                                 .size(100.dp)
                                 .padding(2.dp)
-                                .border(
-                                    width = 1.dp,
-                                    color = Color(0xfff707070), shape = CircleShape
-                                )
+                                .border(width = 1.dp,
+                                    color = Color(0xfff707070), shape = CircleShape)
                         )
 
                         textout(
@@ -135,7 +133,7 @@ fun feedback(accountScreenViewmodel: AccountScreenViewmodel, nav: NavHostControl
                                     paragraphStyle = paragraphStyle,
                                 ),
                                 modifier = Modifier.padding(vertical = 8.dp),
-                                style = MaterialTheme.typography.bodyMedium
+                                style = MaterialTheme.typography.bodyMedium, color = Color.Black
                             )
                         }
 
@@ -144,7 +142,8 @@ fun feedback(accountScreenViewmodel: AccountScreenViewmodel, nav: NavHostControl
                             value = feedback,
                             singleLine = false,
                             placeholder = "Type your ideas here.....",
-                            need = false
+                            need = false,
+
                         )
 
                         Spacer(modifier = Modifier.height(10.dp))
@@ -246,7 +245,7 @@ Dialog(onDismissRequest = { /*TODO*/ }) {
                     paragraphStyle = ParagraphStyle(textAlign = TextAlign.Center),
                 ),
                 modifier = Modifier.padding( 8.dp),
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium, color = Color.Black
             )
             
             button(text = "  Ok  ") {

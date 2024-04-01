@@ -215,7 +215,9 @@ fun LoginScreen(navController: NavHostController,
                     maxLines = 1, colors = TextFieldDefaults.colors(
                         focusedContainerColor = androidx.compose.ui.graphics.Color.White,
                         unfocusedContainerColor = androidx.compose.ui.graphics.Color.White,
-                        focusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent
+                        focusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent,
+                        unfocusedTextColor = Color.Black, focusedTextColor = Color.Black
+
                     )
 
 
@@ -250,8 +252,10 @@ fun LoginScreen(navController: NavHostController,
                                     Color(0xffFFFF45)
                                 )
                             ), shape = RoundedCornerShape(8.dp)
-                        ),
-
+                        ), colors = TextFieldDefaults.colors(focusedContainerColor = androidx.compose.ui.graphics.Color.White,
+                        unfocusedContainerColor = androidx.compose.ui.graphics.Color.White,
+                        focusedIndicatorColor = androidx.compose.ui.graphics.Color.Transparent,
+                        unfocusedTextColor = Color.Black, focusedTextColor = Color.Black),
 
                     shape = RoundedCornerShape(8.dp),
                     placeholder = {
