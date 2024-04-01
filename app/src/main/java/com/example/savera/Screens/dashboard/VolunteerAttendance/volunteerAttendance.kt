@@ -479,11 +479,6 @@ Dialog(onDismissRequest = { value.value = !value.value }) {
                      mutableStateOf(false) }
 
 
-LaunchedEffect(Unit) {
-    AppRepository.fetchStatusforportal {
-        status.value = it
-    }
-}
 
 
 
