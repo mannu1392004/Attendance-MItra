@@ -170,7 +170,7 @@ fun MessageBubble(message: Message, viewModel: messageScreenViewModel) {
                     painter = rememberAsyncImagePainter(url),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(50.dp)
+                        .size(45.dp)
                         .clip(CircleShape)
                 )
             }
@@ -230,18 +230,18 @@ fun MessageBubble(message: Message, viewModel: messageScreenViewModel) {
             )
         }
 
-        if (isSender) {
-        Spacer(modifier = Modifier.width(8.dp))
-            profilePicUrl?.let { url ->
-                Image(
-                    painter = rememberAsyncImagePainter(url),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(50.dp)
-                        .clip(CircleShape)
-                )
-            }
-        }
+//        if (isSender) {
+//        Spacer(modifier = Modifier.width(8.dp))
+//            profilePicUrl?.let { url ->
+//                Image(
+//                    painter = rememberAsyncImagePainter(url),
+//                    contentDescription = null,
+//                    modifier = Modifier
+//                        .size(50.dp)
+//                        .clip(CircleShape)
+//                )
+//            }
+//        }
     }
 }
 
