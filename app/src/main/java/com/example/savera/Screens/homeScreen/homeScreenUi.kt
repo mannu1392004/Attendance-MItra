@@ -102,7 +102,6 @@ LaunchedEffect(Unit) {
     ) {
 
 
-
         // documentry
         Surface(
             modifier = Modifier.fillMaxWidth(),
@@ -507,7 +506,7 @@ fun textout(
     modifier: Modifier,
     fontStyle: TextStyle,
     color: Color = Color.Black,
-    fontFamily: androidx.compose.ui.text.font.FontFamily = ralewayfamilt
+    fontFamily: androidx.compose.ui.text.font.FontFamily = ralewayfamilt,
 
     ) {
     Text(
@@ -523,9 +522,13 @@ fun textout(
 }
 
 @Composable
-fun button(text: String, modifier: Modifier =Modifier.background(
-    color = Color(0xffF57F17), shape = RoundedCornerShape(10.dp)
-), press: () -> Unit, ) {
+fun button(
+    text: String,
+    modifier: Modifier = Modifier.background(
+        color = Color(0xffF57F17), shape = RoundedCornerShape(10.dp)
+    ),
+    press: () -> Unit,
+) {
     Button(
         onClick = { press() }, colors = ButtonColors(
             containerColor = Color.Transparent,
@@ -586,10 +589,7 @@ fun LazyYouTubePlayer(youtubestate: MutableState<Float>) {
 
 @Composable
 fun YouTubePlayer(
-
-
     savedPosition: MutableState<Float>,
-
     ) {
 
     val youtubeVideoId = rememberSaveable { mutableStateOf("z8cqhEywCzc") }

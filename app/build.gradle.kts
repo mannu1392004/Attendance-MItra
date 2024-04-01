@@ -63,6 +63,10 @@ dependencies {
     implementation("com.google.firebase:firebase-database-ktx:20.3.1")
     implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
     implementation("com.google.android.gms:play-services-location:21.2.0")
+    implementation("androidx.lifecycle:lifecycle-process:2.7.0")
+    implementation("androidx.datastore:datastore-core-android:1.1.0-beta02")
+    implementation("androidx.room:room-common:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
     implementation("androidx.wear.compose:compose-material:1.3.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -115,10 +119,19 @@ dependencies {
 // firebase
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
 
+    //coil
+    implementation("io.coil-kt:coil-compose:1.4.0")
+
+
     // auth and firestore
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
 
+    //analytics
+    implementation("com.google.firebase:firebase-analytics")
+
+    //fcm
+    implementation("com.google.firebase:firebase-messaging-ktx")
 
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
@@ -127,7 +140,6 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
     implementation("com.google.firebase:firebase-database-ktx:20.3.1")
-
 
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
