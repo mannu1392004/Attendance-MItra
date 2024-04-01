@@ -19,6 +19,7 @@ import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
+
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.tasks.await
@@ -663,7 +664,8 @@ fun calculateTop3(list:(List<nameAndAtt>)->Unit){
                 data.add(
                     nameAndAtt(
                         name = document.getString("Name")?:"",
-                        attendance = attendan.toInt()
+                        attendance = attendan.toInt(),
+                        profile = document.getString("ProfilePic")?:"0"
                     )
                 )
 

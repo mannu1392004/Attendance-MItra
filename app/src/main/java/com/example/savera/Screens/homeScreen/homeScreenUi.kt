@@ -52,10 +52,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import coil.compose.rememberImagePainter
 import com.example.savera.Model.developer
 import com.example.savera.Model.nameAndAtt
 import com.example.savera.R
 import com.example.savera.Repository.AppRepository
+import com.example.savera.Screens.account.mainScreen.accountpic
 import com.example.savera.ui.theme.ralewayfamilt
 import com.google.firebase.auth.FirebaseAuth
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
@@ -205,11 +207,7 @@ fun homeui(youtubestate: MutableState<Float>, homeScreenViewModel: HomeScreenVie
                                     .weight(1f),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable._ndpos),
-                                    contentDescription = "",
-                                    modifier = Modifier.size(90.dp)
-                                )
+                              accountpic(profilePic =  list.value[1].profile)
 
                                 textout(
                                     title =
@@ -217,7 +215,7 @@ fun homeui(youtubestate: MutableState<Float>, homeScreenViewModel: HomeScreenVie
                                     modifier = Modifier,
                                     fontStyle = MaterialTheme.typography.bodySmall
                                 )
-
+                                Image(painter = painterResource(id = R.drawable._ndpos), contentDescription = "")
                             }
 
 
@@ -225,18 +223,13 @@ fun homeui(youtubestate: MutableState<Float>, homeScreenViewModel: HomeScreenVie
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 modifier = Modifier.weight(1f)
                             ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable._st),
-                                    contentDescription = "",
-                                    modifier = Modifier
-                                        .size(90.dp)
-                                )
+                                accountpic(profilePic =  list.value[0].profile)
                                 textout(
                                     title = list.value[0].name,
                                     modifier = Modifier,
                                     fontStyle = MaterialTheme.typography.bodySmall
                                 )
-
+                                Image(painter = painterResource(id = R.drawable._st), contentDescription = "")
 
                             }
 
@@ -247,11 +240,7 @@ fun homeui(youtubestate: MutableState<Float>, homeScreenViewModel: HomeScreenVie
                                     .align(Alignment.CenterVertically),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable._rdpos),
-                                    contentDescription = "",
-                                    modifier = Modifier.size(90.dp)
-                                )
+                                accountpic(profilePic =  list.value[2].profile)
 
                                 textout(
                                     title = list.value[2].name,
@@ -259,6 +248,7 @@ fun homeui(youtubestate: MutableState<Float>, homeScreenViewModel: HomeScreenVie
                                     fontStyle = MaterialTheme.typography.bodySmall
                                 )
 
+                                Image(painter = painterResource(id = R.drawable._rdpos), contentDescription = "")
                             }
 
                         }
@@ -271,36 +261,7 @@ fun homeui(youtubestate: MutableState<Float>, homeScreenViewModel: HomeScreenVie
 
 
 // developers
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                color = Color(0xffEEEEEE),
-                shape = RoundedCornerShape(20.dp),
-                shadowElevation = 10.dp
-            ) {
-                Column(modifier = Modifier.padding(17.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-
-
-                        textout(
-                            title = "Our Developers",
-                            modifier = Modifier,
-                            fontStyle = MaterialTheme.typography.titleLarge
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(7.dp))
-
-
-                    imageShower()
-
-                }
-
-
-            }
+       
 
 
             // ideas
@@ -358,6 +319,8 @@ fun homeui(youtubestate: MutableState<Float>, homeScreenViewModel: HomeScreenVie
                     )
                     Spacer(modifier = Modifier.height(20.dp))
 
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+
 
                     button(text = "Submit") {
                         val gmail = FirebaseAuth.getInstance().currentUser?.email
@@ -383,7 +346,7 @@ fun homeui(youtubestate: MutableState<Float>, homeScreenViewModel: HomeScreenVie
 
 
                     }
-
+                }
                 }
 
 
@@ -460,7 +423,7 @@ fun homeui(youtubestate: MutableState<Float>, homeScreenViewModel: HomeScreenVie
     }
 
     }
-    @Composable
+  /*  @Composable
     fun imageShower() {
         val x = arrayListOf(
             developer(
@@ -519,7 +482,7 @@ fun homeui(youtubestate: MutableState<Float>, homeScreenViewModel: HomeScreenVie
 
 
     }
-
+*/
 
     @Composable
     fun textout(

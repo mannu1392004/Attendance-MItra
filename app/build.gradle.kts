@@ -145,4 +145,9 @@ dependencies {
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
 
     implementation("com.google.android.gms:play-services-location:21.2.0")
+
+    implementation("com.google.firebase:firebase-messaging-ktx:23.4.1")
+
+    implementation("com.google.firebase:firebase-analytics:21.6.1")
+
 }
