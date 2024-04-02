@@ -276,12 +276,12 @@ fun addSyllabus(
                 }
             else {
                 Surface(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(), color = Color.White,
 
                     shape = RoundedCornerShape(10.dp)
                 ) {
 
-                    LazyColumn(modifier = Modifier.padding(5.dp)) {
+                    LazyColumn(modifier = Modifier.padding(5.dp).background(Color.White)) {
                         if (data.value.isNotEmpty())
                             items(data.value) {
 

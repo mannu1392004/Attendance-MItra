@@ -35,6 +35,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
@@ -491,7 +493,19 @@ maxLines = 1
     else
         KeyboardType.Text
     )
-,
+, colors = TextFieldDefaults.colors(
+        disabledTextColor = Color.Gray,
+        cursorColor = Color.Black,
+        focusedContainerColor = Color(0xFFDAD7D7),
+        unfocusedContainerColor = Color(0xFFDAD7D7),
+        focusedIndicatorColor = Color.Transparent,
+        unfocusedIndicatorColor = Color.Transparent,
+        disabledIndicatorColor = Color.Transparent,
+        focusedLabelColor = Color.Black,
+        unfocusedLabelColor = Color.Black,
+        disabledLabelColor = Color.Gray,
+        errorLabelColor = Color.Red, focusedTextColor = Color.Black, unfocusedTextColor = Color.Black
+),
     label = { Text(text = placeholder)}
 , modifier = modifier
 )

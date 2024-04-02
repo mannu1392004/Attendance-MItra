@@ -298,14 +298,14 @@ Column(modifier = Modifier
     .padding(20.dp)) {
    Row(modifier = Modifier.fillMaxWidth()) {
        Text(
-           text = it.eventName,
+           text = it.eventName,color = Color.Black,
            fontFamily = ralewaybold,
            style = MaterialTheme.typography.headlineSmall
        )
        Spacer(modifier = Modifier.weight(1f))
 
        if (email==it.createdBy){
-           Icon(imageVector = Icons.Filled.Delete, contentDescription ="",
+           Icon(imageVector = Icons.Filled.Delete, contentDescription ="", tint = Color.Black,
                modifier = Modifier.clickable {
 deleteDialogue.value = true
                    valueToDelete.value = it.document
@@ -335,7 +335,7 @@ Row(verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.Center) {
   Icon(painter = painterResource(id = R.drawable.calender), contentDescription ="",
       tint = Color(0xffFB5607))
-    Text(text = it.date,
+    Text(text = it.date, color = Color.Black,
         fontFamily = ralewaybold,
         modifier = Modifier.padding(6.dp))
 
@@ -346,7 +346,7 @@ Row(verticalAlignment = Alignment.CenterVertically,
             Icon(painter = painterResource(id = R.drawable.claenderrrr), contentDescription ="",
                 tint = Color(0xffFB5607),
                 modifier = Modifier.size(18.dp))
-            Text(text = it.time,
+            Text(text = it.time,color = Color.Black,
                 fontFamily = ralewaybold,
                 modifier = Modifier.padding(6.dp))
         }
@@ -358,7 +358,7 @@ Row(verticalAlignment = Alignment.CenterVertically,
             tint = Color(0xffFB5607),
             modifier = Modifier.size(18.dp))
         Spacer(modifier = Modifier.width(6.dp))
-        Text(text = it.description,
+        Text(text = it.description,color = Color.Black,
             fontFamily = ralewayfamilt)
 
 
@@ -408,7 +408,6 @@ fun textoutput(
 
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("SuspiciousIndentation")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun alertdialogue(
     showDialogue: MutableState<Boolean>,
@@ -457,7 +456,7 @@ fun alertdialogue(
 
         Surface(modifier = Modifier,
             shape = RoundedCornerShape(20.dp),
-            shadowElevation = 10.dp
+            shadowElevation = 10.dp, color = Color.White
         ) {
             
             if (loading.value==0)
@@ -593,7 +592,7 @@ buttonCreation(title = "Upload img", modifier = Modifier.clickable {
 
                 Column(verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(10.dp)) {
+                    modifier = Modifier.padding(10.dp).background(Color.White)) {
 
 
                     Row(
@@ -603,7 +602,7 @@ buttonCreation(title = "Upload img", modifier = Modifier.clickable {
                         Icon(imageVector = Icons.Filled.Close, contentDescription = "",
                             modifier = Modifier.clickable {
                                 showDialogue.value = !showDialogue.value
-                            })
+                            }, tint = Color.Black)
                     }
 
                     Image(painter = painterResource(id = R.drawable.done), contentDescription = "")

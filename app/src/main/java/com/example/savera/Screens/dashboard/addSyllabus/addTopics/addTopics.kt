@@ -30,6 +30,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -82,7 +83,7 @@ fun addTopics(
 
     val email = FirebaseAuth.getInstance().currentUser?.email
 
-    Surface(modifier = Modifier.fillMaxSize()) {
+    Surface(modifier = Modifier.fillMaxSize(), color = Color.White) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(10.dp)
@@ -216,7 +217,7 @@ fun showDialogu14(
 
     Dialog(onDismissRequest = { /*TODO*/ }) {
         if (states.intValue == 0){
-            Surface {
+            Surface (color = Color.White, modifier = Modifier.clip(RoundedCornerShape(8.dp))) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.padding(10.dp)

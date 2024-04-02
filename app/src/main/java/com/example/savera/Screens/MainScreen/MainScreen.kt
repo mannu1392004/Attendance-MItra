@@ -544,7 +544,7 @@ val notShowTop = remember {
                 }
 
             } else {
-                chatScreen(userInfo)
+                chatScreen(userInfo,selectindex)
             }
         }
     }
