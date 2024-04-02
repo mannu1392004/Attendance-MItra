@@ -41,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -164,11 +165,11 @@ val courotine = rememberCoroutineScope()
 
 
 
-    Surface(modifier = Modifier.fillMaxSize()) {
+    Surface(modifier = Modifier.fillMaxSize(),color = Color.White) {
         Column {
             Spacer(modifier = Modifier.height(20.dp))
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(start = 10.dp),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -215,7 +216,8 @@ val courotine = rememberCoroutineScope()
             // date timer
             Surface(
                 color = Color(0xffF9A825),
-                shape = RoundedCornerShape(10.dp)
+                shape = RoundedCornerShape(10.dp),
+                modifier = Modifier.padding(start = 10.dp, end = 10.dp)
             ) {
                 Row(
                     modifier = Modifier
@@ -459,7 +461,7 @@ Dialog(onDismissRequest = { value.value = !value.value }) {
     }
 
 
-    Surface(modifier = Modifier.fillMaxWidth(),
+    Surface(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)),
         color = Color.White) {
         Column (horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(top = 20.dp)){

@@ -387,7 +387,7 @@ val date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
                         fontStyle = MaterialTheme.typography.titleMedium
                     )
                     Spacer(modifier = Modifier.weight(1f))
-                    Icon(imageVector = Icons.Filled.Close, contentDescription = "",
+                    Icon(imageVector = Icons.Filled.Close, contentDescription = "",tint = Color.Black,
                         modifier = Modifier.clickable {
                             showSeeAttendance.value = false
 
@@ -502,7 +502,7 @@ fun ShowMakeAdmindialogue(
 
 
     Dialog(onDismissRequest = { /*TODO*/ }) {
-        Surface(modifier = Modifier.fillMaxWidth(),
+        Surface(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)),
             color = Color.White) {
             Column {
                 Row(modifier = Modifier
@@ -513,7 +513,7 @@ fun ShowMakeAdmindialogue(
                     textout(title = "Admin Control Unit", modifier = Modifier,
                         fontStyle =MaterialTheme.typography.titleMedium )
                     Spacer(modifier = Modifier.weight(1f))
-                    Icon(imageVector = Icons.Filled.Close, contentDescription ="" ,
+                    Icon(imageVector = Icons.Filled.Close, tint = Color.Black, contentDescription ="" ,
                         modifier =Modifier.clickable {
                             showMakeAdmin.value = false
                         })
@@ -656,7 +656,7 @@ fun AddStudents(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End
                     ) {
-                        Icon(imageVector = Icons.Filled.Close, contentDescription = "",
+                        Icon(imageVector = Icons.Filled.Close, contentDescription = "",tint = Color.Black,
                             modifier = Modifier.clickable {
                                 showAddStudentDialogue.value = false
                             })
@@ -843,7 +843,7 @@ fun AdduserDialogue(showAddUserDialogue: MutableState<Boolean>) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    Icon(imageVector = Icons.Filled.Close, contentDescription = "",
+                    Icon(imageVector = Icons.Filled.Close, contentDescription = "", tint = Color.Black,
                         modifier = Modifier.clickable {
                             showAddUserDialogue.value = false
                         })

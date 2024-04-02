@@ -1,5 +1,6 @@
 package com.example.savera.Screens.ChatsScreen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,7 +40,13 @@ import com.example.savera.R
 import com.example.savera.ui.theme.ralewayfamilt
 
 @Composable
-fun groupChatsScreen(messagebar: NavHostController, year: String?) {
+fun groupChatsScreen(messagebar: NavHostController, year: String?, selectindex: MutableIntState) {
+
+  BackHandler {
+    selectindex.value =0
+  }
+
+
     var showDialog = remember { mutableStateOf(false) }
 
     Column(

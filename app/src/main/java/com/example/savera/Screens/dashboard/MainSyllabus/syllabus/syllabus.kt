@@ -145,7 +145,6 @@ fun mainUi(
             shape = RoundedCornerShape(10.dp)
         ) {
             Row(modifier = Modifier.padding(start = 10.dp, top = 20.dp, bottom = 20.dp)) {
-
                 textout(
                     title = "Subjects",
                     modifier = Modifier,
@@ -288,7 +287,7 @@ val dropdown = remember {
                 DropdownMenu(
                     expanded = dropdown.value,
                     onDismissRequest = { dropdown.value = false },
-                    modifier = Modifier.height(100.dp)
+                    modifier = Modifier.height(250.dp).background(Color.White)
                 ) {
 
                         Column {

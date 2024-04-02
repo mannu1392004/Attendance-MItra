@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -93,7 +94,7 @@ Surface(color = Color.White,
 
 @Composable
 fun feedbackMaker(feedBackType: feedBackType) {
-    Card(modifier = Modifier.padding(10.dp)) {
+    Card(modifier = Modifier.padding(10.dp), colors = CardColors(containerColor = Color(0xFFBDB9B9), contentColor = Color.Black, disabledContainerColor = Color(0xFFBDB9B9), disabledContentColor = Color.Black)) {
         Column(modifier = Modifier.padding(10.dp)) {
             Row(modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start) {
