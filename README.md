@@ -24,14 +24,10 @@ To set up the app locally:
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/mannu1392004/savera-school-app.git
+    git clone https://github.com/mannu1392004/Savera-Project.git
     ```
 
 2. **Navigate to the app directory:**
-
-    ```bash
-    cd savera-school-app/frontend
-    ```
 
 3. **Configure Firebase:**
 
@@ -52,6 +48,3 @@ Contributions are welcome! Please fork the repository and submit a pull request 
 
 For any inquiries or feedback, reach out to me at [mannu1392004@gmail.com](mailto:mannu1392004@gmail.com).
 
-## License
-
-This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
